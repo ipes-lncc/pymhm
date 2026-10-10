@@ -31,7 +31,7 @@ throughout the tutorials:
 6. Plot fields, check conservation and measure approximation errors.
 
 Built-in interface spaces handle numbering and orientation. The
-[custom interface tutorial](../tutorials/custom-interface.md) explains the
+[custom interface tutorial](../guides/custom-interface.md) explains the
 explicit contracts available when you supply another representation.
 
 ## 3. Choose a method through its formulation
@@ -45,8 +45,8 @@ local spaces or independent cell/face constructions.
 ## 4. Choose an environment and a physical example
 
 [Guides](../guides/index.md) explain mesh exchange, material markers, parallel
-execution and accelerators. [Gallery](../gallery/index.md) lets you explore
-the same numerical evidence by physical problem or by dimension.
+execution and accelerators. The [Gallery](../gallery/index.md) presents
+applications with their physical data, formulation, implementation and plots.
 
 The [download catalogue](../data.md) provides source notebooks and their
 declared inputs. Numerical datasets are separate from the installed Python

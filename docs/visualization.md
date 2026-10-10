@@ -1,7 +1,7 @@
-# Optional PyVista visualization
+# Visualizing and exporting reconstructed fields
 
-From a checkout, run `python -m pip install '.[visualization]'`, or use the locked `visualization` and `notebooks`
-Pixi environments. `pymhm.postprocessing.visualization` loads PyVista only when a conversion or
+Install `pymhm[visualization]`, or use the locked `visualization` and `notebooks`
+Pixi profiles. `pymhm.postprocessing.visualization` loads PyVista only when a conversion or
 plot is requested. Importing the numerical package requires neither VTK nor a
 windowing system.
 
@@ -13,19 +13,33 @@ fields into nodal fields, or rescale physical coordinates.
 ## Broken finite-element fields
 
 A reconstructed MHM field has independent values on opposite sides of a
-macroface. Keep these values separate during conversion:
+macroface. Keep these values separate during conversion. For a scalar P1 field
+registered with the bound problem API, gather its local mesh-aware views:
+
+```python
+pressure = solution.field("pressure")
+local_meshes = tuple(field.mesh for field in pressure)
+local_values = tuple(field.portable_coefficients for field in pressure)
+```
+
+`portable_coefficients` uses each view's executed nodal ordering. The selected
+macro mesh is `macro`, as declared when binding the problem. The following
+converter accepts triangular local meshes; use the corresponding data/grid
+adapter for another geometry:
+
 
 ```python
 from pymhm.postprocessing.visualization import broken_triangle_grid, plot_field
 
 grid = broken_triangle_grid(
-    result.local_meshes,
-    result.pressure,
-    degree=result.degree,
-    macro_mesh=result.skeleton.mesh,
+    local_meshes,
+    local_values,
+    degree=1,
+    macro_mesh=macro,
     name="pressure",
     subdivision=4,
 )
+grid.save("pressure.vtu")
 plotter = plot_field(grid, "pressure", off_screen=True)
 try:
     plotter.show(screenshot="pressure.png", auto_close=False)
@@ -119,19 +133,22 @@ static output can use `plotter.show(jupyter_backend="static")`; interactive web
 backends require PyVista's additional notebook dependencies. See its
 [installation and headless rendering guidance](https://docs.pyvista.org/getting-started/installation).
 
-Native Linux rendering was verified with PyVista 0.49.0, VTK 9.6.2 and
-`vtkEGLRenderWindow`, with `DISPLAY` unset and no Xvfb process. EGL availability
-depends on the VTK build and system OpenGL libraries; `off_screen=True` is a rendering request, not a promise
-of a particular graphics device. The package does not start displays or install
-system libraries at import time.
+Headless rendering requires a VTK build and system OpenGL libraries with an
+appropriate EGL, OSMesa or display backend. `off_screen=True` requests offscreen
+rendering; it does not select a particular graphics device. Configure the
+rendering environment before launch. PyMHM does not start display servers or
+install system libraries at import time.
 
-The four-platform lockfile resolves Linux, Windows and both macOS architectures.
-The manually dispatched full native CI suite exercises conversion, VTI/VTU
-round trips, structured ordering and actual offscreen images on Linux x86-64.
-Native rendering on Windows and macOS requires separate local qualification.
-Portable unit tests inspect data contracts without VTK on the Core CI targets;
-those checks are distinct from the native rendering tests.
+## Preserve scientific conventions
 
-```bash
-pixi run --locked -e visualization test-visualization
-```
+Overlay the actual macro mesh on analytical, numerical and error panels.
+Keep independent one-sided interface values in profiles and mark macroface
+intersections. Use matching field color limits when comparing solutions, and
+reserve space for each panel's axes, title and color scale. Display sampling
+and interpolation are for visualization; calculate field errors with the
+stated physical quadrature instead of comparing image pixels.
+
+Label Darcy quantities as flux or flux magnitude, and vector flow quantities
+as velocity or velocity magnitude. Distinguish raw pressure gradients from
+recovered H(div) fluxes. The [field recovery tutorials](tutorials/index.md)
+explain their mathematical meaning.

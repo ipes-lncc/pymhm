@@ -29,6 +29,49 @@ are not integrated fluxes unless that normalization is part of the basis
 definition. Reversing the face parametrization also transforms odd polynomial
 modes, independently of the normal sign.
 
+## Variational equations before matrices
+
+Let $V(K)$ be the local trial/test space and $\Lambda_H$ the selected
+interface space. In the symmetric Neumann construction, let
+$V_0(K)$ be the physical kernel and choose a complement
+$\widetilde V(K)$ through physical moments. For diffusion these are
+mean-zero pressures; for strain elasticity they are displacements
+orthogonal to every rigid motion. Write $u_K=u_K^0+\widetilde u_K$.
+
+**Local problems.** For prescribed interface data $\lambda$, solve
+
+$$
+a_K(\widetilde u_K,v)
+ +\langle\lambda_K,v\rangle_{\partial K}=F_K(v),
+\qquad v\in\widetilde V(K).
+$$
+
+**Global problem.** Determine $\lambda\in\Lambda_H$ and
+$u^0\in\prod_KV_0(K)$ from
+
+$$
+\begin{aligned}
+\sum_K\langle\mu_K,u_K\rangle_{\partial K}
+ &=\langle\mu,g_D\rangle_{\Gamma_D},
+ &&\mu\in\Lambda_H^0,\\
+\langle\lambda_K,z\rangle_{\partial K}&=F_K(z),
+ &&z\in V_0(K).
+\end{aligned}
+$$
+
+The first equation couples neighboring primal fields and prescribes
+their Dirichlet moments. The second supplies local compatibility: mass
+balance for scalar diffusion, force and moment balance for elasticity.
+Here $\Lambda_H^0$ excludes fixed natural-boundary coefficients; those
+coefficients carry the prescribed physical multiplier. One fixed face
+orientation gives the opposite outward signs on its two incident cells.
+
+This is the kernel-constrained symmetric construction. Robin locals,
+mixed fields, moment reconstructions and nonsymmetric operators use the
+specific pairings on their method pages. In particular, a mixed pressure
+or displacement in $L^2(K)$ needs its variational boundary functional;
+it is not assigned an arbitrary pointwise boundary trace.
+
 ## Local matrices and condensation
 
 The decomposition into local complements and operator kernels follows
@@ -70,7 +113,7 @@ $$
 where the assembled contributions are
 $S_K=B_K^TW_K$, $G_K=B_K^TZ_K$, $b_K=B_K^Tw_K^f$, and
 $F_{0,K}=Z_K^Tf_K$. The vector $g$ carries prescribed primal boundary moments.
-This sign convention agrees with the Darcy equations above. Other literature
+This sign convention agrees with the [Darcy equations](elliptic.md). Other literature
 conventions may negate the multiplier; comparing matrices requires translating
 that convention first.
 

@@ -1,0 +1,64 @@
+{
+  "field": "MHM-USFEM scalar u",
+  "epsilon": 1e-05,
+  "macro_triangles": 512,
+  "fine_triangles": 32768,
+  "local_space": "P1 on eight-subdivision red-refined local triangles",
+  "trace_space": "Four P0 segments per macroface",
+  "basis": "Literal executed source, lifts and retained basis; portable free-node injection",
+  "replay_blas_threads": [
+    1,
+    2
+  ],
+  "retained_basis_sha256": "02ffd174bd745d71841b4cc899c2bd276383cb4c047a24cbf0ef581534f4da2d",
+  "current_input_archive": "build/introduction/rad-resolved-eps1e-05-n16-mhm-usfem-state.npz",
+  "current_input_archive_sha256": "81ac5919e0ab61f924738d1d1f73e29a4a40c3ad9243d9a56fdc46567f818ff1",
+  "published_input_archive_sha256": "607fe0169f69b54c6ac8fc718184b6e7cf7eec33009a506ad3d18b60e2d8e756",
+  "evaluator_validation": "Physical fields reproduce the published norms at two quadrature orders",
+  "physical_norms_by_duffy_order": {
+    "24": {
+      "scalar_l2": 0.033115431616295654,
+      "flux_l2": 0.00010318176578351813,
+      "gradient_l2": 10.318176578351812,
+      "scalar_relative_l2": 0.03327363845626651,
+      "nodal_error": 0.1530380547529956,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0068824167868782
+    },
+    "32": {
+      "scalar_l2": 0.033115431616295626,
+      "flux_l2": 0.00010318176578351829,
+      "gradient_l2": 10.318176578351828,
+      "scalar_relative_l2": 0.03327363845626649,
+      "nodal_error": 0.1530380547529956,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0068824167868782
+    }
+  },
+  "scalar_extrema": [
+    -2.3008574419786245e-17,
+    1.0068824167868782
+  ],
+  "one_sided_values": "Independent original fine-cell triangles; no macroface averaging",
+  "color_range": [
+    -2.3008574419786245e-17,
+    1.0068824167868782
+  ],
+  "sample_points_sha256": "888aaec69f1854635c96e91e634217f2e87b4ddd251f13e2d11650554203ab28",
+  "sample_values_sha256": "e025c1575b6ced14622110752e13bc95d5f6be57793689577ecf1ef6bf8098a0",
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "build/introduction/rad-resolved-eps1e-05-n16-mhm-usfem-state.npz",
+  "input_archive_sha256": "81ac5919e0ab61f924738d1d1f73e29a4a40c3ad9243d9a56fdc46567f818ff1",
+  "figure_sha256": "d722d117d6124b5bc320a728157b5fde411ab325eaad7bf1298e1a56c6ea21ed",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/results/introduction-layers/mhm-usfem-rad.json": "2781bc311fd719e32a7ff0fa019b83ef2f9b8246cd3d1316ab447362331f6ef0",
+    "examples/introduction/vector.py": "2d2cde7f23af2401311d28d8454c97cc65993219a2973d7b677e508f2eacdee7",
+    "examples/introduction/transport.py": "b9b1b76f03e87c9609c5fb962475881d531aacfac3612c65041fbe08c984d6fb",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6",
+    "notebooks/introduction/mhm_usfem_rad.ipynb": "ffdd2f0295f150630af757150ffe7ec035e316e443ee4f5318421d5df2ab1a85"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0",
+  "acquisition": "Replay of existing executed fields; no numerical solve"
+}

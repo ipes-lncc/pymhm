@@ -1,4 +1,4 @@
-# Repeated solves, distributed assembly and resident GPU algebra
+# Execution details and repeated solves
 
 The execution APIs operate on the same local and condensed equations as
 `HybridSystem`. They provide three distinct capabilities: reuse an unchanged
@@ -145,8 +145,7 @@ Physical mean rows must be supplied explicitly to `solve`; the compact system
 cannot infer them from missing local lifts. Persist the executed local basis,
 constraints, orientation maps and operator identity alongside coarse and trace
 coefficients. A matching matrix dimension does not identify a reconstruction
-basis. The [periodic acquisition](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/periodic.md) implements this procedure
-for its declared constant kernel and fixed Q1/P0 spaces.
+basis.
 
 ## Repeated sources and boundary values
 
@@ -245,18 +244,11 @@ remain replicated, as in the benchmark; local algebra and global rows are
 partitioned. A MUMPS factorization failure propagates instead of selecting a
 sequential fallback.
 
-Native tests launch two MPI ranks and exercise nonhomogeneous Dirichlet data,
-Neumann mean constraints, an empty rank and collective error propagation.
-The recorded performance study uses one host; it cannot establish inter-node
-communication efficiency.
-
-`local_bases` stores the executed retained matrix for each owned cell. Archive
-these matrices and their digests with persisted coefficients; declared-kernel
-dimensions or source hashes alone do not specify a replayable numerical basis.
-Native controls compare one/two ranks, four-block forms and nonzero gauges
-against independently assembled full systems. The combined GPU/MPI controls
-assign the two GPUs to separate ranks and use distributed MUMPS globally.
-They verify one-host execution, not inter-node efficiency.
+`local_bases` stores the executed retained matrix for each owned cell.
+Archive these matrices and their digests with persisted coefficients; declared
+kernel dimensions alone do not identify a replayable numerical basis.
+For cell assignment and boundary ownership, use the focused
+[MPI guide](guides/mpi.md).
 
 ## Resident batches on one GPU
 
@@ -334,15 +326,7 @@ Device transfers and asynchronous GPU work remain outside this entry lock.
 Separate MPI ranks have independent host analysis; a thread per GPU within
 one process does not make the host analysis parallel.
 
-Native controls exercise two NVIDIA RTX A5000 devices, heterogeneous dense and
-sparse systems, nonzero physical gauges, device switching and exception cleanup.
-These controls establish correctness and resource ownership. They establish no
-multiGPU speedup or inter-node scalability result.
-The [500×500 complete-workflow pilot](performance.md#one-and-two-gpu-local-condensation)
-reports comparable physical errors and no two-GPU speedup against its CPU
-or classical baselines, including setup, transfer and synchronization costs.
-
-## HPC placement and scaling interpretation
+## HPC placement and timing
 
 The MPI path owns local responses and reconstructed fields on their ranks and
 keeps the skeleton matrix row-distributed. Assign one MPI rank to each GPU and
@@ -361,26 +345,6 @@ native BLAS/OpenMP thread budgets before launching ranks and respect the batch
 memory bound; adding CPU workers around a GPU rank does not automatically
 create useful concurrent device work.
 
-[Gomes et al. (2017)](https://arxiv.org/abs/1703.10435v1) motivate independent
-local solves, task scheduling and a distributed global solve. Their reported
-baseline is a 24-core MHM implementation; the Galerkin table compares unknown
-counts, not measured classical runtimes. Their speedups cannot be transferred
-to this implementation or interpreted as a classical-solver crossover.
-[Penna et al. (2019)](https://doi.org/10.1002/cpe.5170) study workload-aware
-scheduling and reuse of cost estimates in elastodynamics. PyMHM's rolling
-window performs dynamic bounded scheduling; it does not implement BinLPT's
-cost estimator or longest-processing-time assignment.
-
-The inspected MSL_MHM `Facade/problem_mhmlocal.h` at recorded revision
-[`4cb8cf8`](https://github.com/ipes-lncc/msl_mhm/tree/4cb8cf81518284313b680b13fd586ee619f08b99)
-computes reduced blocks in each local worker. MSL_Core
-`Assemble/local_contrib_set.h` at recorded revision
-[`7f15f45`](https://github.com/ipes-lncc/msl_core/tree/7f15f455717173d29080d411a7e732c72c1e87f8)
-reduces numbered sparse contributions. This is source inspection, not execution
-of those revisions in the present campaign. Current anonymous upstream access
-could not be verified. PyMHM uses its own shared algebra and deterministic
-coordinator reduction; MPI uses PETSc's distributed additive assembly.
-
 Report local-work speedup separately from complete-solve speedup. Complete
 timers include setup, worker startup, transfer, sparse assembly, synchronization,
 global solve and reconstruction. Strong scaling fixes the entire discretization;
@@ -389,62 +353,7 @@ Compare classical methods at stated pressure and physical-flux accuracy, with
 their own refinement check. One-host two-rank/two-GPU controls cannot establish
 multi-node performance.
 
-## Recorded measurements
-
-The [three-dimensional Darcy study](cases/darcy-3d-accelerators.md) reports
-complete CPU PARDISO and one/two-GPU workflows, strong and weak scaling,
-and separate pressure and physical-flux errors. Its
-[numerical records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
-preserve the executed environments, timing scope and each field's own controls.
-
-The campaign in `benchmarks/execution_modes.py` records one untimed warmup and
-three repetitions, native library threads fixed to one, source hashes, hardware
-and numerical checks. MPI times include owned local assembly, condensation,
-distributed global assembly/solution and reconstruction. They use the affine
-Darcy patch on the unit square; the largest field/flux/residual check was
-`4.55e-13`.
-
-| Macrotriangles / fine subdivisions | One MPI rank | Two MPI ranks | Four MPI ranks | Four-rank gain |
-| --- | ---: | ---: | ---: | ---: |
-| 32 / 16 | 1.202 s | 0.683 s | 0.431 s | 2.786× |
-| 128 / 32 | 14.408 s | 7.252 s | 3.870 s | 3.723× |
-
-All ranks ran on the same Linux workstation, with MPICH 4.3.1 and PETSc 3.23.0.
-The workloads contain 8,192 and 131,072 fine triangles. The global matrices have
-88 and 336 unknowns: these are local-work-dominated cases, not a study of large
-coarse-solver scaling. Other project campaigns were paused during acquisition;
-the host had no exclusive operating-system reservation or CPU affinity policy.
-Individual durations and ownership counts are in
-[the MPI reports](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution).
-
-For 32 macrotriangles with 16 fine subdivisions, twelve changing source/boundary
-queries per preparation gave median preparation `0.08227 s`, median online
-query `0.01973 s`, and median independently refactored query `0.10012 s`.
-Both query paths exclude their common `0.93095 s` finite-element assembly.
-The ratio of query medians is `5.075`; preparation must also be included when
-assessing a complete sequence. Fields agreed to `1.78e-15`. The manufactured
-family contains a quadratic potential; agreement compares the same P1 discrete
-solutions and does not claim that quadratic fields are exactly represented.
-
-On an NVIDIA GeForce RTX 3060 with CuPy 14.2.0, batches of 64 local P1 problems
-used 91 or 325 pressure unknowns plus one mean multiplier. With twelve repeated
-multi-RHS solves, median complete device-path times were `0.02659 s` and
-`0.10565 s`. Timers include initial uploads, resident volume assembly,
-constraint/boundary upload, LU, first and repeated solves, synchronization and
-final download. Maximum differences from CPU local lifts were `9.77e-15` and
-`4.24e-14`. These timings demonstrate the measured resident path; no GPU
-speedup is claimed because an equivalent CPU batch campaign was not measured.
-The [GPU and offline records](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution)
-preserve phase times and every repetition.
-
-```bash
-pixi run --locked -e fem mpiexec -n 4 python benchmarks/execution_modes.py mpi --mesh 8 --refinement 32 --output mpi.json
-pixi run --locked -e test-core python benchmarks/execution_modes.py offline --mesh 4 --refinement 16 --queries 12 --output offline.json
-pixi run --locked -e gpu python benchmarks/execution_modes.py gpu --refinement 24 --batch 64 --queries 12 --output gpu.json
-```
-
-## References
-
-- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
-
-- Pedro Henrique Penna, Antônio Tadeu A. Gomes, Márcio Castro, Patricia D.M. Plentz, Henrique C. Freitas, François Broquedis, and Jean‐François Méhaut (2019). *A comprehensive performance evaluation of the BinLPT workload‐aware loop scheduler*. Concurrency and Computation: Practice and Experience 31(18) e5170. [DOI: 10.1002/cpe.5170](https://doi.org/10.1002/cpe.5170).
+For configuration snippets, use the [CPU](guides/cpu.md),
+[MPI](guides/mpi.md) and [GPU](guides/gpu.md) guides. Measured speedups,
+scaling figures and application data are collected in the [Gallery](gallery/index.md)
+and [performance report](performance.md).

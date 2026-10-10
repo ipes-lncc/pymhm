@@ -16,6 +16,28 @@ balance and piecewise constant trace segments aligned with fine boundary
 edges. The result satisfies the stated fine-cell balances; the raw gradient
 and original pressure remain independent fields.
 
+**Local problem.** On each macrocell, find
+
+$$
+\begin{aligned}
+q_K^{\mathrm E}
+ &=\underset{q\in RT_0(K)}{\operatorname{argmin}}
+    \frac12\lVert A^{-1/2}(q+A\nabla p_h)\rVert_K^2,\\
+\operatorname{div}q\big\vert_\tau
+ &=\frac1{\lvert\tau\rvert}\int_\tau f,
+ &&\tau\text{ a fine cell},\\
+q\cdot n_K&=\lambda_K,
+ &&\text{on the macrocell boundary}.
+\end{aligned}
+$$
+
+The normal constraints use the same oriented physical trace as the
+global MHM solve. **There is no additional global solve**: the already
+shared multiplier makes independently recovered fields agree normally
+across macrofaces. Local solvability requires that the prescribed total
+boundary flux equal the fine-cell source sum. The recovery leaves the
+pressure and skeletal coefficients unchanged.
+
 This implementation is a constrained energy minimization. Its defining
 constraints differ from the moment reconstruction of
 [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073), whose theorem
@@ -30,7 +52,43 @@ The reconstruction of
 macro-boundary RT moments from the skeletal multiplier, interior fine-face
 moments from averaged raw fluxes, and interior moments from the pressure
 field. Oriented normal moments produce a globally $H(\mathrm{div})$ field
-and preserve its projected source divergence under the stated conditions.
+whose divergence agrees with the source against the selected continuous
+local test space under the stated conditions. This is distinct from
+fine-cell constant conservation in the minimum-energy RT0 construction.
+
+**Local construction.** For $q^{\rm raw}=-A\nabla p_h$, determine the
+RT$_m$ degrees of freedom from
+
+$$
+\begin{aligned}
+\int_e(q_K^{\mathrm R}\cdot n_e)\phi
+ &=\int_e\lambda_e\phi,
+ &&e\subset\partial K,\quad\phi\in P_m(e),\\
+\int_e(q_K^{\mathrm R}\cdot n_e)\phi
+ &=\int_e\{q^{\rm raw}\}\cdot n_e\,\phi,
+ &&e\text{ internal to }K,\\
+\int_\tau q_K^{\mathrm R}\cdot w
+ &=\int_\tau q^{\rm raw}\cdot w,
+ &&w\in P_{m-1}(\tau)^d.
+\end{aligned}
+$$
+
+The braces are the arithmetic average of the two physical one-sided
+fluxes. RT$_0$ has no interior volume moments. Reference-element moments
+are mapped with the contravariant Piola transform; the equations above
+state their physical meaning. **Global conformity** follows from the
+single normal moment on each face, including the macro boundary moments
+inherited from the MHM solution. No new global pressure problem is solved.
+
+Integration by parts then gives the continuous-test conservation identity
+
+$$
+(\operatorname{div}q_K^{\mathrm R},v_h)_K=(f,v_h)_K,
+\qquad v_h\in V_h^{\mathrm{cont},m}(K).
+$$
+
+It does not state equality against every independent discontinuous
+fine-cell constant, or pointwise equality to a non-polynomial source.
 
 Let $k$ be primal local degree, $\ell$ skeletal normal degree and $m$ RT
 reconstruction order in spatial dimension $d$. The theorem's sufficient
@@ -60,6 +118,19 @@ incident fine element. Its boundary trace represents prescribed Dirichlet
 data. It is distinct from the original MHM pressure and from a smoothed
 plot of that pressure.
 
+The recovery is a **global nodal identification**, without a variational
+global solve. At a shared interior Lagrange node $a$,
+
+$$
+s_h(a)=\frac1{\#\mathcal T(a)}
+ \sum_{\tau\in\mathcal T(a)}p_h\big\vert_\tau(a).
+$$
+
+Here $\mathcal T(a)$ contains incident fine elements, not just macrocells.
+Dirichlet nodes use the declared boundary interpolation. Compatible
+fine-node geometry is required: averaging unrelated nodes from
+nonmatching meshes would not define a conforming potential.
+
 With reconstructed flux $q_h^R$, a material-weighted estimator includes
 the flux mismatch and nonconformity terms
 
@@ -76,6 +147,24 @@ $H_K/(\pi\sqrt{\alpha_K})$, for a certified lower diffusion eigenvalue
 $\alpha_K$. Mixed-boundary versions must represent both the prescribed
 potential and natural flux; unmeasured boundary errors cannot be omitted.
 Point wells do not satisfy the $L^2$-source assumption of this estimate.
+
+The **local estimator data** are $p_h$, $q_h^{\mathrm R}$, $s_h$, the
+source projection and certified material bounds. Local norms are
+assembled into a global squared sum. The divergence and source terms
+are kept separately, for example
+
+$$
+\begin{aligned}
+\eta_{3,K}&=\frac{H_K}{\pi\sqrt{\alpha_K}}
+ \lVert\Pi f-\operatorname{div}q_h^{\mathrm R}\rVert_K,\\
+\operatorname{osc}_K&=\frac{H_K}{\pi\sqrt{\alpha_K}}
+ \lVert f-\Pi f\rVert_K.
+\end{aligned}
+$$
+
+The projection $\Pi$ and boundary terms must be the ones of the selected
+estimator. These are postprocessing quantities; they do not modify the
+local or global MHM equations.
 
 For general material, the printed unweighted indicator and the physical
 energy-normalized estimator have different coefficient scalings. The
@@ -94,6 +183,30 @@ include Oseen convection; [Harder, Paredes and Valentin (2015)](https://doi.org/
 provide the conservative RAD face construction. Primal elasticity retains
 traction and displacement residual conventions from
 [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
+
+The **local volume residuals** use the physical operator, for example
+
+$$
+\begin{aligned}
+r_K^{\rm Darcy}&=f-\operatorname{div}q_h^{\rm raw},\\
+r_K^{\rm flow}&=f+\nu\Delta u_h-\Theta u_h-\nabla p_h,
+ &r_K^{\rm mass}&=\operatorname{div}u_h,\\
+r_K^{\rm RAD}&=f-\operatorname{div}j_h-\sigma u_h,\\
+r_K^{\rm elasticity}&=f+\operatorname{div}\tau_h.
+\end{aligned}
+$$
+
+Oseen adds $-(\alpha\cdot\nabla)u_h$ to the flow momentum residual.
+Material derivatives belong to these expressions when coefficients
+vary. The **global/interface residuals** measure jumps of the primal
+field (pressure, concentration or displacement/velocity) and mismatch
+between the local physical normal quantity and its skeletal multiplier.
+Fine-face normal jumps and prescribed-boundary defects are distinct
+contributions. For weak-symmetry stress, the tested symmetry defect is
+another quantity, separate from force balance. The article's material
+weights, face/cell length scales and data oscillation complete the
+selected estimator; an unweighted sum of these residuals does not
+inherit its reliability bound.
 
 These are separate equation-specific estimators. The selected variant must
 match its physical operator, boundary data, material weights, local residual
@@ -124,6 +237,21 @@ mesh quality. A monotone error reduction or optimal-complexity theorem is
 not asserted for every implemented marking/refinement policy.
 The [adaptivity tutorial](../tutorials/methods/adaptivity.md) follows
 solve → estimate → mark → refine → rebuild compatible spaces → solve.
+
+For a bulk parameter $0<\theta\le1$, an admissible marked set
+$\mathcal M$ satisfies
+
+$$
+\sum_{i\in\mathcal M}\eta_i^2\ge\theta\sum_i\eta_i^2.
+$$
+
+The marking set belongs to the refinement scale being used. Refining a
+local mesh rebuilds that cell's source and trace responses. Refining a
+skeletal space rebuilds its incident local lifting operators and the
+global trace system. Macro refinement changes both. The next solution
+is obtained by solving the same physical variational equations on these
+new compatible spaces, rather than by interpolating the old pressure
+and treating it as a newly solved field.
 
 ## References
 

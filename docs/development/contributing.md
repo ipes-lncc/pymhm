@@ -41,6 +41,26 @@ The `pixi run --locked -e packaging lock-check` task performs both checks; its
 - Wheel and source distribution metadata are checked, and every runtime module,
   typing stub and marker must match the current source tree byte for byte.
 
+## Documentation contributions
+
+Method tutorials explain the variational formulation alongside a step-by-step
+implementation. Guides demonstrate one configuration task, such as selecting a
+solver or reading a tagged mesh. Gallery pages present applications with their
+physical data, formulation, implementation and computed fields; each card links
+to one case and shows a representative image.
+
+Use a spatial resolution appropriate to the application for Gallery fields,
+and check refinement before reporting numerical accuracy. Small patch meshes
+belong in elementary verification examples. When reproducing a published case,
+keep the paper's prescribed meshes and approximation spaces and identify them
+explicitly. Draw the actual macro partition on spatial plots, and distinguish
+local resolution from macro resolution. Refining an image's sampling grid does
+not refine the solution.
+
+Retain execution and figure provenance when moving notebook pages. Build the
+site with `pixi run --locked -e docs docs-check`, then inspect the rendered
+equations, plots and navigation at desktop and mobile widths in both themes.
+
 ## Git hooks and editor commits
 
 Install the Git hook once and run the checks with the portable environment:
@@ -251,10 +271,11 @@ link to that catalog does not replace a page's bibliography. Distinguish a
 preprint version from its journal publication, and distinguish an original
 PyMHM application from a reproduction of an article's numerical experiment.
 References in rendered introductory tutorials belong in their source
-notebooks. Regenerate those pages with
-`pixi run --locked -e introduction tutorials-render` after editing notebook
-Markdown; preserve the recorded execution and numerical outputs when only
-the exposition changes.
+notebooks. Render the six application notebook pages with
+`pixi run --locked -e introduction gallery-render`. Scalar method lessons have
+one canonical page under Tutorials, including their separate asymptotic study.
+Preserve the recorded execution and numerical outputs when only exposition
+changes; a new numerical execution has its own source identity.
 
 Identify each reference implementation by its project name, module, revision
 and source URL when available. State whether the result comes from an unchanged

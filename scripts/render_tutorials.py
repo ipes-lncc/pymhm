@@ -1,11 +1,13 @@
-"""Publish introductory notebooks as static Markdown with their executed figures.
+"""Publish application notebooks in the Gallery with their executed figures.
 
 Run after executing the current source notebooks. Contributors can use the
 locked ``introduction`` Pixi environment; published users download notebooks
 and verified companions separately from the library.
 Documentation builds consume the published pages without executing notebooks or
 importing an optional finite-element backend. Source and execution digests retain
-the provenance of every published numerical output.
+the provenance of every published numerical output. The four scalar method
+lessons are maintained in ``docs/tutorials/methods`` together with their
+asymptotic studies; this exporter does not publish a second copy of them.
 """
 
 from __future__ import annotations
@@ -29,6 +31,12 @@ from nbconvert.filters import DataTypeFilter
 from nbformat import NotebookNode
 
 _SOURCE_URL = "https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction"
+_METHOD_NOTEBOOKS = {
+    "darcy_multiscale_convergence",
+    "mh2m_multiscale",
+    "mshho_multiscale",
+    "mhm_usfem_rad",
+}
 _DISPLAY = re.compile(r"\$\$(.*?)\$\$", re.DOTALL)
 _FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
 _INLINE_CODE = re.compile(r"(`+[^`]*`+)")
@@ -208,7 +216,7 @@ def _reproduction_instructions(source: Path, execution_source_sha256: str) -> st
     be newer; running them creates a separate execution receipt.
     """
     return (
-        "\n\n## Reproduce this tutorial\n\n"
+        "\n\n## Run this application notebook\n\n"
         f"[View the source notebook]({_SOURCE_URL}/{source.name}) or "
         "[download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/"
         f"main/notebooks/introduction/{source.name}), then open it:\n\n"
@@ -244,7 +252,7 @@ def _reproduction_instructions(source: Path, execution_source_sha256: str) -> st
 def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutorial:
     """Export one verified execution while preserving its code and output order."""
     notebook = deepcopy(_validated_execution(source, executed))
-    page = Path("tutorials/introduction") / f"{source.stem}.md"
+    page = Path("gallery/notebooks") / f"{source.stem}.md"
     title = next(
         cell.source.splitlines()[0] for cell in notebook.cells if cell.cell_type == "markdown"
     )
@@ -291,9 +299,10 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
     )
     heading, _, body = markdown.partition("\n")
     markdown = (
-        heading + "\n\nFollow the numbered steps: state the variational problem, choose the local "
-        "and trace spaces, declare the local and global equations, solve, and inspect "
-        "the physical fields.\n\n" + body.lstrip("\n")
+        heading + "\n\nThis complete application notebook contains the problem data, local and "
+        "global equations, implementation and recorded results. For the general "
+        "workflow, start with the [method tutorials](../../tutorials/methods/index.md).\n\n"
+        + body.lstrip("\n")
     )
     assets: dict[Path, bytes] = {}
     for name, content in resources.get("outputs", {}).items():
@@ -307,7 +316,7 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
             raise ValueError(f"Unexpected extracted asset path: {name}")
         if path.suffix == ".svg":
             # Keep textual figures stable under the repository's whitespace hook.
-            content = re.sub(rb"[ \t]+(?=\r?\n|$)", b"", content)
+            content = re.sub(rb"[ \t]+(?=\r?\n|$)", b"", content).rstrip(b"\r\n") + b"\n"
         assets[image_directory / path.name] = content
     if not assets:
         raise ValueError(f"Exporter produced no static figures: {source.name}")
@@ -352,7 +361,7 @@ def _publish(tutorials: list[_RenderedTutorial], output_dir: Path, *, check: boo
         "generator": "scripts/render_tutorials.py",
         "notebooks": [tutorial.provenance for tutorial in tutorials],
     }
-    files[Path("tutorials/introduction/manifest.json")] = (
+    files[Path("gallery/notebooks/manifest.json")] = (
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
     ).encode("utf-8")
     if check:
@@ -371,7 +380,7 @@ def _publish(tutorials: list[_RenderedTutorial], output_dir: Path, *, check: boo
 
 
 def main() -> None:
-    """Render all introductory tutorials using existing verified notebook outputs."""
+    """Render application notebooks using existing verified notebook outputs."""
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -385,7 +394,11 @@ def main() -> None:
     )
     parser.add_argument("--check", action="store_true", help="Check without writing any files")
     args = parser.parse_args()
-    sources = sorted((root / "notebooks/introduction").glob("*.ipynb"))
+    sources = sorted(
+        source
+        for source in (root / "notebooks/introduction").glob("*.ipynb")
+        if source.stem not in _METHOD_NOTEBOOKS
+    )
     if not sources:
         parser.error("No introductory source notebooks found")
     try:
@@ -397,7 +410,8 @@ def main() -> None:
     except ValueError as error:
         parser.error(str(error))
     verb = "Verified" if args.check else "Rendered"
-    print(f"{verb} {len(tutorials)} tutorials and {sum(len(t.assets) for t in tutorials)} figures")
+    figures = sum(len(tutorial.assets) for tutorial in tutorials)
+    print(f"{verb} {len(tutorials)} application notebooks and {figures} figures")
 
 
 if __name__ == "__main__":

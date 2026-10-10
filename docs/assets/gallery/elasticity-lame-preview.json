@@ -1,0 +1,27 @@
+{
+  "field": "Exact Lam\u00e9 material lambda=mu",
+  "scope": "Declared heterogeneous material coefficient; no computed stress is represented",
+  "macro_triangles": 32,
+  "wavelength": 0.125,
+  "coefficient_contrast": 20.085536923187668,
+  "color_range": [
+    0.22313016014842982,
+    4.481689070338063
+  ],
+  "sample_points_sha256": "08f12ea82728938e9fcfca046c9ce11cee2667166b8a359eb0b9983dc6711533",
+  "sample_values_sha256": "93e5355de1e2bb79ec6ea9d263af454f264e03d97ee42267f1cea35e5f3d4599",
+  "one_sided_values": "Independent samples on each actual macrotriangle",
+  "input_kind": "Application notebook declaring the exact coefficient",
+  "acquisition": "Evaluation of the notebook-supplied exact Lam\u00e9 material; no numerical solve",
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "notebooks/introduction/multiscale_elasticity.ipynb",
+  "input_archive_sha256": "404b17616adc5b54d95f053ade10ed96a88d551a132dc7c77fcbf6f1ea3ed2f8",
+  "figure_sha256": "537b1b69d0d27af919e1cfd57ebd2224457313f31020d716c2deab0a04ec2143",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/introduction/vector.py": "2d2cde7f23af2401311d28d8454c97cc65993219a2973d7b677e508f2eacdee7",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0"
+}

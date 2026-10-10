@@ -15,9 +15,32 @@ $$
 -\nabla\cdot(\rho^{-1}\nabla p)-\omega^2\kappa^{-1}p=f.
 $$
 
-The complex local bilinear form contains gradient and negative mass terms.
-Local responses to source and oriented normal traces enter the global
-pressure-continuity equations. Polynomial and oscillatory face spaces are
+Define $q=-\rho^{-1}\nabla p$ and outward normal trace
+$\lambda_K=q\cdot n_K$. **Locally**, source and trace responses solve
+
+$$
+\begin{aligned}
+a_K^\omega(p_K,v)+\langle\lambda_K,v\rangle_{\partial K}
+ &=(f,v)_K,\\
+a_K^\omega(p,v)
+ &=(\rho^{-1}\nabla p,\nabla v)_K
+   -\omega^2(\kappa^{-1}p,v)_K.
+\end{aligned}
+$$
+
+The inner products conjugate the test field for complex coefficients.
+**The global unknown** is the complex normal-trace vector, determined by
+
+$$
+\sum_K\langle\mu_K,p_K(\lambda)\rangle_{\partial K}
+ =\langle\mu,p_D\rangle_{\Gamma_D}.
+$$
+
+Prescribed natural traces are fixed; impedance boundaries contribute
+their pressure/normal-trace relation to the same global equations.
+There is no elliptic pressure-mean kernel at a resolved nonzero
+frequency, and an arbitrary mean constraint cannot repair a resonant
+operator. Polynomial and oscillatory face spaces are
 different trial bases; absorbing boundary forms and PML introduce complex
 coefficients and additional boundary/material conventions.
 
@@ -58,6 +81,50 @@ The implemented transverse-magnetic 2D fields have scalar $e_z$ and vector
 $(h_x,h_y)$; the tetrahedral 3D path has full electric and magnetic vectors.
 This implementation uses discontinuous polynomial local fields, not a
 conforming Nédélec discretization.
+
+**Local semidiscrete problem.** Let $M_{e,K}$ and $M_{h,K}$ be the
+positive material mass matrices, $C_K$ the central-DG magnetic evolution
+operator (the discrete $-\operatorname{curl}$), and $B_K$ the oriented
+tangential coupling. The cell fields satisfy
+
+$$
+\begin{aligned}
+M_{h,K}\dot h_K&=C_Ke_K,\\
+M_{e,K}\dot e_K&=-C_K^Th_K-B_K\lambda_K+f_K.
+\end{aligned}
+$$
+
+Paired operators $C_K$ and $-C_K^T$ encode the discrete energy exchange.
+The global multiplier supplies magnetic tangential loading to the
+electric update. **The global problem** enforces the electric tangential
+moments:
+
+$$
+\sum_K B_K^Te_K-Z\lambda=g.
+$$
+
+Interior faces and perfect-electric-conductor (PEC) faces have $Z=0$.
+On an absorbing exterior face, $Z$ is the positive impedance trace mass
+for $e_{\rm tan}-\alpha(h\times n)=g$, with $\alpha>0$.
+The outward orientation and tangential basis are part of $B_K$.
+
+For an electric kick of duration $\Delta t$, compute the free local
+prediction $e_K^*$ from magnetic fields and forcing. The midpoint
+constraint gives the global trace system
+
+$$
+\begin{aligned}
+\left(\frac{\Delta t}{2}S+Z\right)\lambda
+ &=\sum_KB_K^T\frac{e_K^{\rm old}+e_K^*}{2}-g,\\
+S&=\sum_KB_K^TM_{e,K}^{-1}B_K,\\
+e_K^{\rm new}&=e_K^*-\Delta t\,M_{e,K}^{-1}B_K\lambda_K.
+\end{aligned}
+$$
+
+Thus only tangential coefficients are solved globally at the kick;
+cell mass solves and the magnetic update are local. Boundary forcing is
+evaluated at the corresponding midpoint. This positive mass trace
+system is different from the indefinite Helmholtz trace system.
 
 Leapfrog stores $e^{n+1/2}$ and $h^n$ at different times. Compare each field
 with the exact field at its own recorded time. The conserved discrete

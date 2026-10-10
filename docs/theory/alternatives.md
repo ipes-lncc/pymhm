@@ -20,6 +20,29 @@ a_K(p,v)&=(A\nabla p,\nabla v)_K
 \end{aligned}
 $$
 
+**Local problem.** For each source or Robin trace basis, find
+$p_K\in V_h(K)$ from
+
+$$
+a_K(p_K,v)+\langle\lambda_K,v\rangle_{\partial K}=(f,v)_K,
+\qquad v\in V_h(K).
+$$
+
+**Global problem.** The only interior hybrid unknown is $\lambda$.
+Determine it by the pressure moment equations
+
+$$
+\sum_K\langle\mu_K,p_K(\lambda)\rangle_{\partial K}
+ =\langle\mu,p_D\rangle_{\Gamma_D}.
+$$
+
+The Robin correction has opposite normal signs on the two sides of a
+shared face; pressure continuity therefore also gives physical normal
+flux continuity in the represented moments. On $\Gamma_N$ the physical
+condition is $\lambda_K+p_K\sigma\cdot n_K=q_N$, rather than
+$\lambda_K=q_N$. Its boundary pressure moments form the additional
+unknowns of the natural-boundary extension.
+
 Unlike kernel-constrained MHM, this coercive Robin problem does not remove a
 constant mean locally. The global unknown is the Robin multiplier. The
 physical normal flux is $q\cdot n_K=\lambda_K+p\sigma\cdot n_K$, so its
@@ -63,6 +86,32 @@ a_K(\widetilde T_hf,v)&=(f,v)_K,\\
 \end{aligned}
 $$
 
+**Local problems.** The cell field is reconstructed from these Neumann
+maps and the selected pressure-trace values. The conormal coefficients
+on the two sides of a face are independent local variables before the
+global coupling; this differs from the signed single normal-flux field
+of primal MHM.
+
+**Global problem.** Before elimination, the three fields satisfy
+
+$$
+\begin{aligned}
+a_K(p_K,v)-\langle\lambda_K,v\rangle_{\partial K}
+ &=(f,v)_K,\\
+\langle\mu_K,p_K-\rho\rangle_{\partial K}&=0,\\
+\sum_K\langle\lambda_K,\xi\rangle_{\partial K}&=0.
+\end{aligned}
+$$
+
+The first equation is local equilibrium. The second matches the cell
+pressure to the global pressure trace in conormal moments. The third
+imposes conormal continuity against globally continuous trace tests
+$\xi$ vanishing on the Dirichlet boundary. Thus $\rho$ is the global
+unknown after local elimination. Dirichlet data prescribe the pressure
+trace interpolation on $\Gamma_D$; natural data prescribe conormal
+moments of $-q_N$ on $\Gamma_N$ and enter the third equation's
+right-hand side.
+
 The pressure reconstruction includes its source lifting:
 
 $$
@@ -105,6 +154,42 @@ nonpolynomial for heterogeneous $A$. Condensing cell coefficients gives a
 global system of face **pressure** moments, distinct from the normal-flux
 coordinates of MHM.
 
+**Local problem.** Collect the volume and face moment functionals in
+$M_K$. If $\boldsymbol u_K$ contains their values, the reconstruction
+$R_K\boldsymbol u_K$ and its multiplier $\zeta_K$ solve
+
+$$
+\begin{aligned}
+a_K(R_K\boldsymbol u_K,v)
+ +\zeta_K^TM_Kv&=0,\qquad v\in V_h(K),\\
+M_K(R_K\boldsymbol u_K)&=\boldsymbol u_K.
+\end{aligned}
+$$
+
+Here $a_K(v,w)=(A\nabla v,\nabla w)_K$. The moment map must be
+surjective and fix the constant mode; independent cell/face data cannot
+be represented by an inadequate local space. Moment coordinates are
+integrals in PyMHM, so converting polynomial coefficients to moments
+uses the corresponding volume or face Gram matrix.
+
+**Global problem.** Share one pressure-moment vector on every macroface
+and find cell and face moments satisfying
+
+$$
+\sum_K a_K(R_K\boldsymbol u_K,R_K\boldsymbol v_K)
+ =\sum_K F_K(\boldsymbol v_K)
+  -\langle q_N,v_F\rangle_{\Gamma_N}.
+$$
+
+The test moments vanish on fixed Dirichlet faces; $v_F$ is the face
+polynomial represented by those moments. For the reconstructed-source
+variant, $F_K(\boldsymbol v_K)=(f,R_K\boldsymbol v_K)_K$;
+for the projected-source variant, it loads the cell polynomial moments.
+Cell moments are condensed locally, leaving the shared face system.
+Dirichlet moments integrate $p_D$ against the face basis. Pure Neumann
+data require mass compatibility and one mean of the reconstructed
+pressure, rather than a mean of the face vector alone.
+
 The reconstructed-source variant loads the energy-reconstructed test
 functions. The projected-source variant uses the cellwise $L^2$ projection
 onto $P_m$. Theorem 5.1's MHM equivalence requires the stated polynomial
@@ -130,6 +215,34 @@ $$
 \tau_F=\frac{\alpha A_{\min}}{2H_F},\qquad
 \lambda_R=-\tau_F(J_Fp-g_F).
 $$
+
+**Local problems.** First compute the ordinary mean-zero Darcy source
+and trace responses. After coupling, reconstruct an additional
+mean-zero pressure $p_K^R$ from
+
+$$
+a_K(p_K^R,v)=-\langle\lambda_{R,K},v\rangle_{\partial K},
+\qquad \int_Kv=0.
+$$
+
+**Global problem.** Let $z=(\lambda,\{c_K\})$ contain the base trace
+and pressure means, and write the reconstructed base-pressure jump as
+$J_Fp^0(z)=D_Fz+j_F^f$. If $\mathcal K_0z=b_0$ denotes the original
+MHM equations, the residual-enriched equations are
+
+$$
+\mathcal K_0z
+ +\sum_F D_F^T\tau_F(D_Fz+j_F^f-g_F)=b_0.
+$$
+
+Face integrals and quadrature weights are understood in each contraction.
+The sum contains interior and Dirichlet faces; natural-flux faces have
+fixed normal data and no residual enrichment. On Dirichlet faces $g_F$
+uses the local polynomial projection of the boundary datum. Both its
+base boundary functional and its residual term use the same physical
+partition. The final pressure is $p^0+p^R$ and the final multiplier is
+$\lambda+\lambda_R$. A pure-Neumann problem additionally fixes the
+physical mean pressure.
 
 The global equations add the associated positive jump form, and the local
 pressure correction solves a zero-mean Neumann problem driven by

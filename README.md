@@ -143,7 +143,7 @@ $-u+\lambda_F=0$ on each face. The binding owns the shared numbering and geometr
 maps; the user supplies both equations. The
 [variational guide](docs/variational.md) describes UFL forms, retained modes,
 physical constraints and recursive problems, and states the supported limits.
-For complete control, see the [custom-space tutorial](docs/tutorials/custom-interface.md),
+For complete control, see the [custom-space guide](docs/guides/custom-interface.md),
 which declares a nonorthogonal basis and its independent trial/test maps.
 
 The wheel contains every `pymhm` runtime module, typing and distribution metadata.

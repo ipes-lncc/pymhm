@@ -7,6 +7,42 @@ contain triangles and a polyhedron can contain tetrahedra. The boundary
 faces remain the original macrofaces, not the diagonals of the local
 triangulation.
 
+## Where the unknowns live
+
+The macro partition fixes which local problems exchange data. A scalar
+primal family uses the broken local space
+
+$$
+V_{H,h}=
+ \{v\in L^2(\Omega):v\big\vert_K\in V_h(K)
+       \text{ for every macrocell }K\}.
+$$
+
+There is no imposed primal continuity across macrofaces in this space.
+The global skeletal equation imposes the method's selected continuity
+moments. Its normal-flux space is assembled from independently
+partitioned macrofaces:
+
+$$
+\Lambda_H=
+ \prod_{F\in\mathcal F_H}\Lambda(F),
+\qquad
+\Lambda(F)=\{\mu:\mu\big\vert_e\in P_{\ell_e}(e)
+              \text{ on each subface }e\subset F\}.
+$$
+
+Continuity within a macroface is an additional space choice; it is not
+continuity of the broken volume solution. Vector traction spaces use
+components of this construction; pressure-moment and tangential spaces
+use their method-specific transformations. Retained cell constants or
+rigid modes form a separate global coarse space. MH²M additionally
+identifies pressure-trace values at shared macro vertices/edges, giving
+the globally continuous trace required by its formulation.
+
+These distinct spaces explain why a local mesh can be much finer than
+the global approximation. Its degrees of freedom are eliminated locally
+rather than added to the global volume system.
+
 ## Implemented geometries
 
 | Macrocell | Local geometry | Current formulation scope |
@@ -41,6 +77,22 @@ Qk means tensor-product polynomials on a Cartesian element. RT and BDM
 vector elements use the contravariant Piola transformation, preserving
 normal-trace integrals and divergence identities. An ordinary componentwise
 scalar mapping does not preserve those properties.
+
+For a physical map $x=\Phi(\widehat x)$ with Jacobian $J$ and positive
+determinant, the contravariant transform is
+
+$$
+q(x)=\frac{J(\widehat x)}{\det J(\widehat x)}\widehat q(\widehat x),
+\qquad
+\operatorname{div}q(x)=
+ \frac{\operatorname{div}_{\widehat x}\widehat q(\widehat x)}
+      {\det J(\widehat x)}.
+$$
+
+Face-normal and DOF transformations must use this same map. Mapped-cell
+validity and orientation are checked before integrating or restricting
+normal traces. A high-order field on a distorted cell does not bypass
+those geometric conditions.
 
 On two-dimensional macroedges, `FaceSpace` supports discontinuous polynomial
 segments or continuous interpolation within the macroface. Triangular
@@ -88,7 +140,7 @@ Persisted meshes and solution bases must retain material tags, boundary
 tags, basis ordering, orientation and coefficient identity for replay.
 
 The [mesh guide](../meshing.md) gives generation, import and export examples
-with Gmsh, Netgen and meshio. The [custom interface tutorial](../tutorials/custom-interface.md)
+with Gmsh, Netgen and meshio. The [custom interface guide](../guides/custom-interface.md)
 explains explicit maps for users who need to control them.
 
 ## References

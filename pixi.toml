@@ -276,7 +276,7 @@ docs-check = { cmd = "python scripts/check_docs_math.py", depends-on = ["docs-bu
 docs-serve = "mkdocs serve"
 
 [feature.notebooks.tasks]
-tutorials-render = "python scripts/render_tutorials.py"
+gallery-render = "python scripts/render_tutorials.py"
 
 [feature.notebooks.tasks.mh-campaign]
 cmd = "python -m examples.mh_campaign --workers 8"

@@ -8,9 +8,9 @@ three-dimensional cell families. Gmsh and Netgen generate external meshes;
 meshio imports and exports them. Optional dependencies load only when used.
 
 ```bash
-pip install '.[meshing]'
+python -m pip install "pymhm[meshing]"
 # Reproducible development environment:
-pixi run --locked -e meshing test-meshing
+pixi install --locked -e meshing
 ```
 
 ## Generate a mesh
@@ -158,16 +158,13 @@ verify that an existing Gmsh model survives generation.
 `pymhm.io.tetrahedral.read_tetra_mesh` and `write_tetra_mesh` separately exchange
 linear tetrahedra and integer volume/boundary tags through meshio. Their
 `TetraMeshData` container keeps volume cells distinct from boundary triangles.
-Use the [three-dimensional Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md),
-[RAD](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad3d.md) and [elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity3d.md) paths with these
-tetrahedral meshes.
+Select approximation spaces and boundary data separately from these mesh labels.
 
 `PolygonMesh` retains original polygonal edges, `PolyhedralMesh` retains original
 polygonal faces of star-shaped cells (including nonconvex cells), and `HexMesh` supplies trilinear hexahedral
 maps. These native geometry constructors have their own validation contracts;
 they do not silently convert arbitrary CAD or curved high-order elements.
-See [polyhedral RAD](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polyhedral-rad.md) and the
-[mapped RT well](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) for concrete constructions.
+See [mesh theory](theory/meshes.md) for geometric hypotheses.
 
 ## Conforming adaptive triangles
 
@@ -214,17 +211,11 @@ new_mesh = remesh_freefem(mesh, metric.requested, executable="FreeFem++-nw")
 
 `remesh_freefem` invokes the separately installed FreeFEM/BAMG mesh generator
 with a P1 physical size field, `IsMetric=1`, `splitpbedge=1` and a configurable
-vertex limit. It solves no PDE. Version 4.13 from conda-forge was used for the
-recorded native validation. FreeFEM is available through its
-[official installation instructions](https://doc.freefem.org/introduction/installation.html)
-and the conda-forge `freefem` package; it is not a Python runtime dependency.
-Pass an executable path when it is outside `PATH`. The locked Linux environment
-and native integration check are available with
-
-```bash
-pixi run --locked -e remeshing pytest -q tests/test_metric_freefem.py tests/test_metric_adapt.py
-```
-
+vertex limit. It solves no PDE. Install its executable separately using the
+[FreeFEM installation instructions](https://doc.freefem.org/introduction/installation.html)
+or the conda-forge `freefem` package. It is a mesh-generation dependency for
+this optional operation, not a PyMHM PDE solver dependency. Pass an executable
+path when it is outside `PATH`.
 
 The returned `TriangleMesh` need not be nested. The adapter preserves the
 polygonal geometry and checks its area; it does not transfer physical labels,
@@ -303,19 +294,8 @@ or boundary geometry is rejected. Gmsh session ownership and restoration follow
 the same contract as the two-dimensional generator; calls must be serialized
 within a process.
 
-The native tests generate both unit-cube meshes, verify their volume and six
-boundary groups, and solve an affine Darcy patch on each. VTU tests exercise
-actual meshio writes and reads for all four families, including adjacent
-polyhedra with different vertex and face counts. These checks validate exchange
-and solver interoperability; they do not establish mesh-quality bounds or
-support for every CAD topology.
-
-```bash
-pixi run --locked -e meshing pytest tests/test_mesh_exchange.py tests/test_meshing_native3d.py
-```
-
-Notebook `60_mesh_exchange.ipynb` demonstrates the four in-memory geometries and
-real meshio round trips. For generator-specific CAD construction, consult the
+[The mesh-exchange notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/geometry/60_mesh_exchange.ipynb)
+demonstrates the four in-memory geometries and real meshio round trips. For generator-specific CAD construction, consult the
 [Gmsh API](https://gmsh.info/doc/texinfo/) and
 [Netgen three-dimensional CSG tutorial](https://docu.ngsolve.org/latest/netgen_tutorials/csg_3d.html).
 

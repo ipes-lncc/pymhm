@@ -33,7 +33,7 @@ approximation and linear solvers are separate choices.
   </a>
   <a href="gallery/">
     <strong>Explore the Gallery</strong>
-    <span>Browse problems and dimensions, field plots, convergence and scientific limits.</span>
+    <span>Explore reservoir flow, heterogeneous solids, waves and parallel simulations.</span>
   </a>
 </div>
 
@@ -47,11 +47,10 @@ spawn workers and installed-wheel verification, with the native FEM scope
 stated separately.
 
 Start with the [API overview tutorial](tutorials/overview.md) and the
-[rendered introductory course](tutorials/notebooks.md) for scalar and vector
+[notebook catalogue](tutorials/notebooks.md) for scalar and vector
 formulations and interchangeable local providers. Use the
-[visual case gallery](gallery/index.md) to compare numerical fields
-with exact references, inspect profiles and errors, and read what each case is
-expected to demonstrate.
+[Gallery](gallery/index.md) for applications with problem data, variational
+formulations, implementations and computed fields.
 
 The [overview](tutorials/overview.md) introduces UFL from its weak form.
 The portable coefficient interface follows the same mesh-first workflow;
@@ -87,7 +86,7 @@ $-u+\lambda_F=0$ on each face. The binding owns the shared numbering and geometr
 maps; the user supplies both equations. The
 [variational guide](variational.md) describes UFL forms, retained modes,
 physical constraints and recursive problems, and states the supported limits.
-For complete control, see the [custom-space tutorial](tutorials/custom-interface.md),
+For complete control, see the [custom-space guide](guides/custom-interface.md),
 which declares a nonorthogonal basis and its independent trial/test maps.
 
 The [vector UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
@@ -186,31 +185,17 @@ remaining mathematical requirements. The [Bibliography](literature.md) identifie
 reconstruction strategies and supporting numerical methods; a citation is not
 a claim of complete paper reproduction.
 
-## Evidence and reproducibility
+## Reproducible examples
 
-Use [verification](verification.md) for measured errors, conservation tests,
-convergence studies and backend integration results. Coverage measures executable
-branches; it does not prove stability, validate an unavailable backend or
-reproduce a paper. [Performance](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) records timings, including cases
-where parallel execution is slower.
-
-Executed comparisons identify their reference implementations explicitly:
-[MSL_MHM with MSL_CG and MSL_Core](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) for primal
-Darcy, and [NeoPZ](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) for conforming and restricted-trace RT0/P0
-Darcy. Their case pages record the source revisions, discrete spaces, boundary
-conditions and complete-field comparisons. Labmec/MHM's positive-order
-controller has a separate source-level description from the executed RT0 NeoPZ driver.
+Application pages link to notebooks, material data and numerical records.
+The [download guide](data.md) explains how to obtain those inputs and run the
+examples with an installed PyMHM. Method tutorials include refinement plots
+for their stated approximation spaces. Detailed [verification studies](cases/index.md)
+and [performance reports](performance.md) are available under Development.
 
 This is version 1.3.1, an official release of PyMHM. The
 [installation guide](installation.md) explains package installation through pip,
 optional backends and the locked environments used for reproducible studies.
-
-The [MSL GaLS comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) checks displacement,
-pressure, gradients and full stress for P1/P1, P2/P2 and P3/P3 elasticity.
-The [near-incompressibility study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity.md) includes finite material
-ratios through $10^8$, the exact incompressible limit and six refinement points.
-[BDM2 Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) and [mixed elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md)
-include independent DOLFINx/Basix assembly checks and analytical convergence cases.
 
 <section class="institutional-support" markdown="1">
 

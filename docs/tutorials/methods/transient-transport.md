@@ -203,7 +203,7 @@ independently refined classical comparisons. This experiment establishes the smo
 order of the displayed scheme; heterogeneous geometry, transport-dominated
 layers and monotonicity need separate assessments. The spatial study below
 qualifies the smooth spatial approximation independently. See the
-[transport gallery](../../gallery/transient-transport.md) for the other current
+[transport gallery](../../gallery/index.md) for the other current
 physical studies.
 
 The final provenance cell reads the executed notebook file, rather than expecting

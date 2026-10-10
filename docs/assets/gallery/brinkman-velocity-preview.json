@@ -1,0 +1,39 @@
+{
+  "field": "Single-element MHM-USFEM velocity magnitude",
+  "local_space": "P4 velocity / P4 pressure; one fine triangle per macrotriangle",
+  "trace_space": "Vector P2 multiplier on each macroface",
+  "macro_space": "8192 macrotriangles on the actual n=64 partition",
+  "basis": "Literal saved source/lifts/retained-basis replay; interleaved velocity then pressure",
+  "executed_basis_sha256": "7bb028a1dd6009c1bfd06818a36497790de616342d50011c32046c7d3e9f163d",
+  "evaluator_validation": "Physical norms reproduced against independent published archive measurements",
+  "physical_norms": {
+    "velocity_l2": 6.089645990090201e-05,
+    "pressure_l2": 0.00024764408081809987,
+    "velocity_h1_seminorm": 0.0356902253869943,
+    "divergence_l2": 0.0010188382599956498,
+    "pseudostress_l2": 0.0005027967772896176,
+    "macro_mass_defect": 1.6252579141922264e-15,
+    "pressure_integral": 2.851443243307404e-16
+  },
+  "sample_points_sha256": "fdf6c2653e4cbde9d012dc43a0b9aae88b68ec324b1533b65ed36e80cbcbc1f2",
+  "sample_values_sha256": "983f0e17cc3d43c30d1ae971dfeb6dd8b263f9a21d2886c918a396ab1645d4e6",
+  "one_sided_values": "Independent P4 polynomial display on every macrotriangle",
+  "color_range": [
+    1.790180836524724e-15,
+    1.3349334750772615
+  ],
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "build/introduction/brinkman-single-ell2-n64-state.npz",
+  "input_archive_sha256": "46fdd208061fbb97902351a2019dce21f0aa1a9b860412d6e6e25ff27fda51ba",
+  "figure_sha256": "6c3be7f2b3c54e96f315743260d8f27c2dcf1012056114798d51d173d036c3de",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/results/introduction-layers/stokes-brinkman-boundary-layer.json": "78f5f28be9a0d4c8c3c626b041fff6beb3d600292eff65dfdd1661f5d1e1c55e",
+    "examples/introduction/vector.py": "2d2cde7f23af2401311d28d8454c97cc65993219a2973d7b677e508f2eacdee7",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6",
+    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb": "b251ad4d6ec1d4b6a21f419a4bc1b048137fa6f2024778f5b59e482ef0ad31c1"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0",
+  "acquisition": "Replay of existing executed fields; no numerical solve"
+}

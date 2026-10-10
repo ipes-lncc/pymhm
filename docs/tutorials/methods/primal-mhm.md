@@ -784,7 +784,7 @@ python -m scripts.run_notebooks /path/to/darcy_multiscale_convergence.ipynb --ti
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
 
 ## Check the hypotheses before reading the convergence figure
 

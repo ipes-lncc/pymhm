@@ -18,6 +18,7 @@ from examples.formulations.darcy_transport import (
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.adaptivity.transport import TransportBounds, solve_adaptive_transport
+from pymhm.core.validation import positive_int
 from pymhm.io.workspace import case_workspace
 
 ROOT = case_workspace()
@@ -139,9 +140,19 @@ def transient_force(points: np.ndarray, time: float) -> np.ndarray:
     return np.exp(-time) * (-concentration(points) + 2 * diffusivity / 9 + flux * (3 - 2 * x) / 9)
 
 
-def transient() -> list[dict[str, Any]]:
-    """Check five time increments using the computed conservative Darcy RT0 flux."""
-    unit = TriangleMesh.unit_square(2)
+def layered_darcy(macro_divisions: int = 2) -> tuple[Any, SkeletonSpace]:
+    """Prepare the documented layered RT0/P0 Darcy field and P2 transport trace.
+
+    The domain is [0,3] by [0,1], with K=1 below y=1/2 and K=10 above.
+    Pressure 3-x is imposed on the exterior. An even number of Cartesian
+    divisions fits the material interface to both macro and fine triangles;
+    every macro retains four edge subdivisions, independent of this input.
+    The default preserves the original eight-macrotriangular campaign.
+    """
+    count = positive_int(macro_divisions, "macro divisions")
+    if count % 2:
+        raise ValueError("layered Darcy macro divisions must be even to fit y=1/2")
+    unit = TriangleMesh.unit_square(count)
     mesh = TriangleMesh(unit.points * (3, 1), unit.cells)
     darcy = solve_darcy(
         mesh,
@@ -152,23 +163,44 @@ def transient() -> list[dict[str, Any]]:
         quadrature_order=8,
     )
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(2) for _ in mesh.faces))
+    return darcy, skeleton
+
+
+def layered_trajectory(
+    darcy: Any, skeleton: SkeletonSpace, steps: int, *, check_original: bool = False
+) -> Any:
+    """Advance the existing analytical concentration to t=1 on the supplied field.
+
+    Darcy's actual fine partition is retained. Transport uses local P3/SUPG,
+    P2 macroface traces, unit capacity, zero reaction, the independently derived
+    transient_force, strong concentration exp(-t) at x=0,3 and zero diffusive
+    flux at y=0,1. The shared time integrator owns every numerical operation.
+    """
+    count = positive_int(steps, "time steps")
+    return solve_darcy_transport(
+        darcy,
+        np.linspace(0, 1, count + 1),
+        skeleton=skeleton,
+        initial=concentration,
+        source=transient_force,
+        dirichlet=lambda points, time: np.full(len(points), np.exp(-time)),
+        diffusive_flux=natural_horizontal(skeleton.mesh),
+        degree=3,
+        stabilization="supg",
+        quadrature_order=8,
+        check_original=check_original,
+    )
+
+
+def transient() -> list[dict[str, Any]]:
+    """Check five time increments using the computed conservative Darcy RT0 flux."""
+    darcy, skeleton = layered_darcy()
     flux_error = darcy.flux_l2_error(
         lambda points: np.column_stack((conductivity(points), np.zeros(len(points)))), 10
     )
     rows = []
     for steps in (4, 8, 16, 32, 64):
-        result = solve_darcy_transport(
-            darcy,
-            np.linspace(0, 1, steps + 1),
-            skeleton=skeleton,
-            initial=concentration,
-            source=transient_force,
-            dirichlet=lambda points, time: np.full(len(points), np.exp(-time)),
-            diffusive_flux=natural_horizontal(mesh),
-            degree=3,
-            stabilization="supg",
-            quadrature_order=8,
-        )
+        result = layered_trajectory(darcy, skeleton, steps)
         solution = result.solutions[-1]
         row = {
             "steps": steps,

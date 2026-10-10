@@ -25,9 +25,10 @@
     }
     document.querySelectorAll(
       ".md-content img[src*='figures/'], .md-content img[src*='assets/tutorials/'], " +
+      ".md-content img[src*='assets/gallery/'], " +
       ".md-content img[src$='assets/architecture.svg']"
     ).forEach(image => {
-      if (image.dataset.scientificFigure) return;
+      if (image.dataset.scientificFigure || image.closest(".pymhm-gallery-card")) return;
       image.dataset.scientificFigure = "true";
       image.tabIndex = 0;
       image.setAttribute("role", "button");

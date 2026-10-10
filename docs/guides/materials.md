@@ -77,11 +77,11 @@ K = fem.Constant(binding.mesh, np.float64(cell_permeability[local.cell]))
 a = K * ufl.inner(ufl.grad(p), ufl.grad(v)) * dx
 ```
 
-`p`, `v` and `dx` are defined on that binding as in the
-[common Darcy guide](heterogeneous-darcy.md). If the material interface crosses
+Define `p`, `v` and `dx` on that binding as in the
+[UFL guide](../fenics.md#write-the-operator-and-pairings-explicitly). If the material interface crosses
 a macrocell, retain its fine material mesh/tags and integrate the coefficient
 jump on those fine cells. Replacing it with a macrocell average changes the
-physical problem. The [SPE10 tutorial](../tutorials/introduction/darcy_spe10_layer.md)
+physical problem. The [SPE10 application](../gallery/applications/spe10.md)
 uses a cellwise Cartesian tensor field and aligns integration with its material
 grid; `CartesianCellField` evaluates one-sided values without averaging jumps.
 
@@ -96,7 +96,7 @@ not an exterior boundary merely because it has a physical ID.
 For a pure Neumann problem, verify the source/outward-flux compatibility and
 declare the physical mean pressure. For pressure Dirichlet data, preserve the
 sign of the global pressure pairing written in the selected formulation.
-The [MPI guide](mpi.md#boundary-and-gauge-ownership) adds ownership rules for
+The [MPI guide](mpi.md) adds ownership rules for
 these same physical moments on multiple ranks.
 
 ## 4. Write a lossless exchange file

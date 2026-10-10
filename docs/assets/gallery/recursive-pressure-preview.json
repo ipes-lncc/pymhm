@@ -1,0 +1,27 @@
+{
+  "field": "Recursive MHM pressure",
+  "local_space": "Continuous Q2 on 2x2 fine quadrilaterals per leaf, 25 nodal coordinates",
+  "trace_space": "P1=[1,2t-1] per inner face; two independent P1 segments per outer face",
+  "hierarchy": "16 outer macroquadrilaterals; 64 inner leaves; 256 fine quadrilaterals",
+  "basis": "Saved executed Q2 nodal injection and physical value tables",
+  "one_sided_values": "Independent bounded leaf pixels; no macroface averaging",
+  "sample_points_sha256": "6ab4e588405256ebe09961f67b92dd2ea32d8306c933a93569ee310f59f4e0bb",
+  "sample_values_sha256": "f59a706043b595fc3a519c82e99b1f85074fb0ad92195d779bbd80a23ae934a7",
+  "color_range": [
+    -0.0005829003851469672,
+    1.00000786784763
+  ],
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "examples/results/nested-current/n4-homogeneous.npz",
+  "input_archive_sha256": "0b8adcece28359c180f7e91ed3b9ac990d585749b7b3ae81fd8873522e44b229",
+  "figure_sha256": "19671227eefbeccb330884a68a7989c05674d91806bc73a3883782ee19a4b080",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/results/nested.json": "4a25cabfdeec84e015a054f6039c377eb781e47bbb3e434fe5a38e836c10e0fb",
+    "examples/nested_field_archive.py": "8692c4782885c8c42812bea558c178d9e42225cce3b052658becde7690afb1fb",
+    "examples/plot_nested.py": "322ad71d5ac06839831c8c200c91699a23f154588a7506c30d4b76f6af0ee0bb"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0",
+  "acquisition": "Replay of existing executed fields; no numerical solve"
+}

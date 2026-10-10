@@ -1,12 +1,16 @@
-# Numerical evidence guide
+# Verification studies
 
-The [initial convergence studies](minimal-convergence.md) collect short refinement
-series with separate physical field norms, original-equation diagnostics,
-quadrature controls and executed source identities. Analytical errors and
-increments between numerical solutions have distinct labels. A decreasing
-increment alone does not establish the accuracy of a numerical reference.
+These reports document analytical verification, reference refinement and
+independent assembly checks for specific discretizations. They complement the
+[method lessons](../tutorials/methods/index.md) and the
+[application Gallery](../gallery/index.md).
 
-The selected detailed pages provide additional evidence:
+The [refinement catalogue](minimal-convergence.md) retains the separate
+physical-field errors or successive-solution increments for its recorded
+configurations. Exact errors, numerical-reference differences and successive
+increments are identified on each report.
+
+The selected detailed pages cover the following checks:
 
 | Case | Verified scope | Scientific limit |
 | --- | --- | --- |

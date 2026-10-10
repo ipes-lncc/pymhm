@@ -304,7 +304,7 @@ parameter study.
 ![Measured Oseen product-norm and field errors, three terminal rates and normalized amplitudes](../../assets/tutorials/methods/oseen-convergence.svg)
 
 The notebook identifies the exact JSON acquisition and its source digest.
-The [flow gallery](../../gallery/flow.md) links the other current Oseen studies.
+The [flow gallery](../../gallery/index.md) links the other current Oseen studies.
 This study qualifies the declared uniform mesh family; adaptive refinement
 is evaluated in the separate gallery studies.
 

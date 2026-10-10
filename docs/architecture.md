@@ -157,7 +157,7 @@ physical boundary variable.
 
 Built-in bindings and fully manual definitions share the same numerical
 owners. See the [overview](tutorials/overview.md) for the principal workflow
-and [custom interfaces](tutorials/custom-interface.md) for arbitrary numbering,
+and [custom interfaces](guides/custom-interface.md) for arbitrary numbering,
 dense basis changes and explicitly supplied maps.
 
 The [API qualification record](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/api-binding-20261006)
@@ -193,7 +193,7 @@ constructs the normal-flux saddle in one owner. Element families supply their
 actual DOF maps, boundary moments and basis coordinates. They retain distinct
 normal degrees, pressure spaces, kernels and physical gauges; selecting a
 different family does not silently replace those contracts. See the
-[scalar tutorials](tutorials/scalar.md) for the available variants and the
+[scalar tutorials](tutorials/methods/index.md) for the available variants and the
 [Darcy API](api/darcy.md) for their parameters.
 
 Coefficient evaluation belongs to `materials.evaluation`: scalar, vector and

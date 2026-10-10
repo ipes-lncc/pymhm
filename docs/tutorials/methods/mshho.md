@@ -795,7 +795,7 @@ python -m scripts.run_notebooks /path/to/mshho_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
 
 ## Identify the source and energy terms in the estimate
 

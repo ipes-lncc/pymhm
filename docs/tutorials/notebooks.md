@@ -1,99 +1,15 @@
-# Learn PyMHM: tutorials and notebooks
+# Notebook catalogue
 
-Start with the [API overview](overview.md): define local equations,
-couple them through global traces, assemble, solve and reconstruct a field.
-Then follow the introductory problems below. Their pages show the mathematical
-formulations, executable code, measured outputs and plots directly in the docs.
-The ten source notebooks remain available for interactive use. Select a plot
-to enlarge it, or use its original image to inspect the field labels and scales.
+The [method tutorials](methods/index.md) teach the local/global formulation
+step by step. The [Gallery](../gallery/index.md) presents applications and
+performance examples. Their pages link to the corresponding English notebooks,
+which can be downloaded and run independently of the documentation site.
 
-## Self-contained introductory course
-
-Each tutorial declares its physical data, approximation spaces, local weak
-forms and global equations in focused cells. Importable helpers handle field
-evaluation, reference comparisons, plotting, archives and performance campaigns.
-The primary path expresses the local and global mathematics through executable
-UFL weak forms. `MeshHierarchy`, `LocalContext` and `bind_problem` associate
-those forms with meshes, spaces and interface representations. Prepared operator
-functions are introduced as conveniences. All notebooks are written in English.
-
-Start by editing the parameter cells, then follow the local equations, global
-assembly and field comparisons. Helpers are downloaded separately as local `examples` modules and
-use the same public numerical API. Spawned workers use importable definitions;
-their actual formulation source is shown or linked where it is introduced.
-The detailed reference, quadrature and conservation controls remain available
-alongside the plots and full campaign settings.
-
-Read Darcy convergence first, then choose a scalar or vector application. The
-parallel tutorials assume familiarity with this local/global workflow.
-
-| Problem | Read the rendered tutorial |
-| --- | --- |
-| Oscillatory Darcy and convergence | [Multiscale Darcy](introduction/darcy_multiscale_convergence.md) |
-| Reservoir permeability | [Darcy on a SPE10 layer](introduction/darcy_spe10_layer.md) |
-| Heterogeneous vector elasticity | [Multiscale elasticity](introduction/multiscale_elasticity.md) |
-| Cell and face moment reconstruction | [MsHHO](introduction/mshho_multiscale.md) |
-| Independent skeletal spaces | [MH²M](introduction/mh2m_multiscale.md) |
-| Reaction-dominated local layers | [MHM-USFEM](introduction/mhm_usfem_rad.md) |
-| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](introduction/stokes_brinkman_boundary_layer.md) |
-| Parallel local solves and performance | [Darcy speed-up and scalability](introduction/darcy_parallel_scalability.md) |
-| Spawned processes and complete workflow scaling | [Darcy process scalability](introduction/darcy_process_scalability.md) |
-| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](introduction/darcy_3d_parallel_scalability.md) |
-
-Each page links to its source notebook and gives a command for executing it
-with the installed library and a separately downloaded companion, without a clone. Install the notebook and
-plotting extras; native UFL examples additionally require the compatible
-DOLFINx/UFL backend described in the [installation guide](../installation.md).
-
-```bash
-python -m pip install 'pymhm[notebooks,visualization]'
-jupyter lab darcy_multiscale_convergence.ipynb
-```
-
-The examples compare with classical conforming methods and state how their
-references are checked: errors against an analytical solution where available,
-or differences between refined reference meshes. The parallel tutorials
-distinguish the current numerical control from the recorded or optional full
-campaign. Analytical solutions and fine numerical references are distinguished.
-Macro meshes appear on field panels, and the local and skeletal resolutions are
-declared separately.
-
-The [boundary-layer comparisons](../cases/introduction-layers.md) distinguish
-unresolved RAD profiles from admissible refinement controls and compare the
-Brinkman polynomial family with the literature's approximation spaces. Layer
-resolution and observed asymptotic rates are reported separately from algebraic
-residuals and conservation checks.
-
-For user-defined problems, start with the [variational guide](../variational.md)
-and the provider notebooks below. They declare local and global equations
-through the generic form interface. The introductory physical notebooks put
-user-written equations before their comparisons of established formulations.
-The main computational paths declare local and global forms. Comparisons and
-scientific acquisition helpers also use predefined formulations with their
-verified discretizations; archive-only notebooks display the recorded results.
-
-Rendered pages identify their retained validated numerical execution in the
-publication manifest. Current standalone instructions are presented
-alongside those outputs; running the current notebook produces a separate
-receipt for its actual sources and environment. Performance
-measurements belong to their recorded hardware and configurations; rendering a
-page does not run a new timing campaign. The plots and numerical outputs retain
-the notebook's distinction between analytical solutions and classical numerical
-references.
-
-The 2D scaling notebooks execute a bounded current numerical control by default
-and show the checksum-verified campaign recorded on 2026-10-04 with its original
-revision. The historical timing plots retain that provenance; they do not measure
-the current revision. Set `PYMHM_RUN_CAMPAIGN=1` to execute the full acquisition
-procedure and obtain new strong, weak and crossover measurements.
-
-## Custom spaces and manual definitions
-
-The [custom-interface tutorial](custom-interface.md) and its notebook
-show how to own the basis, numbering and orientation explicitly. Fully manual
-`LocalEquations`/`MultiscaleProblem` records reuse the same numerical owners.
-Choose that level for an external convention or a capability not supplied by
-the built-in mesh-associated adapters.
+Use [Getting Started](../getting-started/index.md) to select an environment.
+Native UFL examples require a compatible DOLFINx installation; portable
+Basix/SciPy examples use the installed core. The [provider guide](../guides/providers.md)
+and [custom-interface guide](../guides/custom-interface.md) explain the extension
+points for external local solvers and manually declared spaces.
 
 ## Introductory examples
 
@@ -134,7 +50,7 @@ same data and spaces used by its predefined-formulation controls.
 ## Problem folders and detailed studies
 
 The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
-contains all 98 notebooks and the methods used by each. The
+contains all 114 notebooks and the methods used by each. The
 [machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
 uses stable notebook selectors and logical resource paths. The library distribution contains only `pymhm`. Notebook sources and their
 verified support ZIPs are separate downloads; small configurations accompany
@@ -144,7 +60,7 @@ attribution, checksums and acquisition procedures.
 
 | Folder | Detailed studies |
 | --- | --- |
-| `introduction/` | Ten self-contained tutorials defining local and global equations, field plots and classical reference comparisons |
+| `introduction/` | Method lessons and application notebooks with local/global equations, fields and reference comparisons |
 | `darcy/` | Primal/mixed convergence, heterogeneous permeability, estimators, MH/MH²M/MsHHO/PGMHM, polygonal and 3D geometry, wells and reservoirs |
 | `flow/` | Velocity–pressure examples; `stokes/` and `brinkman_oseen/` contain their focused studies |
 | `elasticity/` | Displacement, pressure, stress and rotation; primal/mixed 2D/3D families and reference comparisons |
@@ -182,18 +98,19 @@ The runner uses the active Python and writes an executed copy and receipt to
 the notebook otherwise uses `.pymhm-companions/<SHA256>` below its current directory.
 No examples, notebooks, documentation or datasets are installed by pip.
 
-For documentation contributors working in a source checkout, refresh the ten
-rendered introductory pages after executing their notebooks:
+Documentation contributors can render the six application notebooks after
+executing their current sources:
 
 ```bash
-pixi run --locked -e introduction tutorials-render
+pixi run --locked -e introduction gallery-render
 pixi run --locked -e docs docs-check
 ```
 
-The renderer requires complete executed copies whose cell sources match the
-current notebooks. It writes Markdown, plot assets and a digest manifest;
-ordinary documentation builds use these saved pages and require no FEM solves
-or performance acquisitions.
+The renderer writes the Gallery notebook pages, plot assets and execution
+manifest. The four scalar method lessons are maintained in their canonical
+Tutorials pages together with their asymptotic studies; the Gallery does not
+publish a second copy of those lessons. Ordinary documentation builds consume
+saved pages and do not execute a numerical or performance campaign.
 
 Inspect the current reproduction plan and its declared inputs before execution:
 
@@ -227,6 +144,5 @@ formulas have their owners in the package and are not copied between notebooks.
 Create a new example in its problem folder, identify its methods and numerical
 conventions, and add it to `notebooks/catalogue.json` and `notebooks/README.md`.
 Keep large computed fields and executed outputs under `build/` or their declared
-scientific archive paths. The [scalar](scalar.md),
-[vector](vector.md) and [provider](providers.md) guides explain
+scientific archive paths. The [method lessons](methods/index.md) and [provider guide](../guides/providers.md) explain
 spaces and contracts used by these notebooks.

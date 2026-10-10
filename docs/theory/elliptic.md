@@ -20,12 +20,13 @@ $$
 a_K(p,v)+\langle\lambda_K,v\rangle_{\partial K}=(f,v)_K.
 $$
 
-The global trace equation imposes weak continuity of pressure and Dirichlet data:
+The coefficient field $\mathsf K$ and source $f$ are evaluated inside
+each macrocell, independently of the macro partition. Pressure is
+prescribed on $\Gamma_D$; outward physical flux is prescribed on
+$\Gamma_N$. One scalar skeletal space approximates the normal flux,
+with opposite outward signs on the two sides of an interior face.
 
-$$
-\sum_K\langle\mu_K,p_K\rangle_{\partial K}
-=\langle\mu,p_D\rangle_{\Gamma_D}.
-$$
+### Local problems and their pressure means
 
 For diffusion with pure local Neumann conditions, constants form the local kernel.
 Split $p_K=c_K+\widetilde p_K$, with
@@ -39,12 +40,29 @@ a_K(\widehat T_K f,v)&=(f,v)_K,
 \qquad \int_Kv=0.
 $$
 
-Then $p_K=c_K+T_K\lambda+\widehat T_K f$. Testing with a constant gives
-the coarse conservation equation
+Each trace basis function supplies one right-hand side for $T_K$;
+$\widehat T_Kf$ supplies the source response. Neither local solve
+determines the physical pressure mean $c_K$.
+
+### Global problem
+
+The global unknowns are $\lambda$ and the cell means $\{c_K\}$, with
+$p_K=c_K+T_K\lambda+\widehat T_Kf$. They satisfy
 
 $$
-\int_{\partial K}\lambda_K\,ds=\int_Kf\,dx.
+\begin{aligned}
+\sum_K\langle\mu_K,p_K\rangle_{\partial K}
+ &=\langle\mu,p_D\rangle_{\Gamma_D},\\
+\int_{\partial K}\lambda_K\,ds&=\int_Kf\,dx,
+ &&K\in\mathcal P_H.
+\end{aligned}
 $$
+
+Trace tests $\mu$ vanish on fixed Neumann coefficients. The first
+equation enforces pressure continuity and Dirichlet data in skeletal
+moments. The second enforces macrocell conservation; $\lambda=q_N$ on
+$\Gamma_N$ is fixed before solving. Macrocell balance follows by testing
+the full local equation with a constant.
 
 The source lifting is generally necessary. Omitting it solves a different
 discretization even if the global flux balance still holds. Local face basis
@@ -62,15 +80,39 @@ all macroelement means to zero would remove physical coarse unknowns.
 
 Choose $V_h(K)\subset H(\mathrm{div};K)$ and
 $Q_h(K)\subset L^2(K)$ with a stable pairing and matching divergence space.
-For prescribed normal trace, solve
+The global unknowns remain normal Darcy-flux coefficients and coarse
+pressure constants. **Locally**, impose $q_h\cdot n_K=\lambda_K$ and solve
+for flux interior coefficients and mean-zero pressure from
 
 $$
 \begin{aligned}
 (\mathsf K^{-1}q_h,v_h)_K-(p_h,\nabla\cdot v_h)_K&=0,
 &&v_h\cdot n_K=0,\\
-(\nabla\cdot q_h,r_h)_K&=(f,r_h)_K.
+(\nabla\cdot q_h,r_h)_K&=(f,r_h)_K,
+&&r_h\in Q_h(K),\quad\int_Kr_h=0.
 \end{aligned}
 $$
+
+The omitted constant test is the same global macrocell balance as in
+primal MHM. A source or trace response alone can carry a nonzero constant
+defect; that defect cancels in the final coupled solution.
+
+**Globally**, the pressure coupling uses the variational boundary
+functional of the mixed solve, rather than evaluating an $L^2$ pressure
+on a face. For a local lifting $v_{\mu,K}$ with
+$v_{\mu,K}\cdot n_K=\mu_K$, that equation is
+
+$$
+\begin{aligned}
+\sum_K\bigl[(\mathsf K^{-1}q_h,v_{\mu,K})_K
+ -(p_h,\nabla\cdot v_{\mu,K})_K\bigr]
+ &=-\langle\mu,p_D\rangle_{\Gamma_D}.
+\end{aligned}
+$$
+
+The local equation for zero-normal tests makes the functional independent
+of the selected lifting. Together with macrocell balance, fixed natural
+fluxes and a global gauge when needed, it determines the hybrid solution.
 
 The normal traces on the macro boundary are constrained to the selected skeletal
 space, while internal flux degrees of freedom can be refined or enriched. A
@@ -88,20 +130,10 @@ flux is not H(div). Reporting “conservative flux” therefore requires identif
 the field and the spatial scale. A reconstruction and a mixed local solve are
 distinct ways of obtaining an H(div) field.
 
-The implemented `equilibrate_flux` instead solves, independently in each
-macroelement, the constrained minimization
-
-$$
-\min_{q_h\in RT_0}\frac12\|q_h+\mathsf K\nabla p_h\|^2_{\mathsf K^{-1},K},
-\qquad
-\nabla\cdot q_h|_\tau=\frac1{|\tau|}\int_\tau f,
-\qquad q_h\cdot n_K=\lambda_K.
-$$
-
-The fine-cell balance and prescribed trace must be compatible. The current
-operator requires piecewise constant trace segments aligned with fine boundary
-edges. It is not the face-moment reconstruction analyzed in [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073): its defining
-constraints enforce fine-cell source moments explicitly.
+The [recovery page](recovery.md) states the separate local minimization for
+RT0 equilibration and the DOF equations for moment-based reconstruction.
+Their different divergence conditions determine which conservation
+statement is valid for the resulting field.
 
 
 ## Degrees, rates and geometry
@@ -126,6 +158,15 @@ and partitions must align. Interior enrichment can increase pressure or
 flux accuracy without increasing boundary normal degree.
 
 ## Face-based and unfitted approximation
+
+These are approximation-space choices for the same primal local and
+global equations above. A macrocell can cross a material interface: its
+local operator integrates $\mathsf K$ on the physical regions, while its
+skeletal flux space is partitioned along the material intersections with
+each macroface. The globally coupled unknown is still the oriented normal
+flux; material tags do not introduce an additional physical interface
+unknown. Pressure and normal-flux transmission follow from the weak
+operator and the hybrid coupling.
 
 [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415)
 analyze refinement of independently partitioned faces, with continuous

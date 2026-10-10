@@ -839,7 +839,7 @@ python -m scripts.run_notebooks /path/to/mh2m_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
 
 ## Verify convergence with admissible three-field spaces
 

@@ -184,7 +184,7 @@ inspect_elasticity_solution(system, solution, macro)
 
 The notebook evaluates the named displacement fields in their executed native bases, then assembles an independent conforming P2 reference on meshes 32, 64 and 128. It reports successive reference differences, displacement errors and Cauchy-stress errors separately. Analytical, numerical and error panels carry the actual macro mesh. Stress obtained from the primal gradient is a raw stress; it is not a mixed H(div) stress.
 
-[See the rendered heterogeneous fields](../introduction/multiscale_elasticity.md).
+[See the rendered heterogeneous fields](../../gallery/notebooks/multiscale_elasticity.md).
 
 ## 6. Verify the smooth asymptotic rate
 

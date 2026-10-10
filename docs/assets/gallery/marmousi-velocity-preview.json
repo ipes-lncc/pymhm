@@ -1,0 +1,75 @@
+{
+  "field": "Marmousi II P-wave velocity",
+  "scope": "Primary material coefficient; no acoustic solution is represented",
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "coordinate_bounds_m": [
+    0,
+    10240,
+    0,
+    2560
+  ],
+  "velocity_unit": "m/s",
+  "color_range": [
+    1027.9998779296875,
+    4699.999809265137
+  ],
+  "macro_overlay": "H=20 m comparison partition; 512 by 128 actual macrorectangles",
+  "array_shape": [
+    2048,
+    512
+  ],
+  "sample_values_sha256": "6400562946fb29f1cd0dfb6c3b4393a5314e13a382dbeee6a37e969b8076d72a",
+  "display": "Nearest primary material samples; full physical aspect; depth downwards",
+  "input_kind": "Pinned primary SEG-Y material file",
+  "acquisition": "Checksum-verified primary material sampling; no numerical solve",
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "build/datasets/marmousi/vp_marmousi-ii.segy",
+  "input_archive_sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91",
+  "figure_sha256": "da43b7a1cb4b0a67c66b06d021145417546efed7bedbe1c12c99fd54f5a38c98",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/marmousi_data.py": "b5874ec7910de76367e479bf574c7e9ac8c997d9f8323a6dd79dfc70699707e2",
+    "src/pymhm/materials/cartesian.py": "6894f7aa304daed79f6fbb84399a55bfbe4392e2a35b1ae7815b4dee74734367",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0"
+}

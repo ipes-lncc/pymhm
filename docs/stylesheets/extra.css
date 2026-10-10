@@ -416,6 +416,94 @@ body {
   }
 }
 
+/* Application cards reserve separate image and text regions in both themes. */
+.md-typeset .pymhm-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1.2rem;
+  margin: 1.8rem 0;
+}
+
+.md-typeset .pymhm-gallery-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--pymhm-border);
+  border-radius: 0.65rem;
+  background: var(--pymhm-surface);
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.md-typeset .pymhm-gallery-card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 5px 20px #17364e15;
+}
+
+.md-typeset .pymhm-gallery-card:focus-visible {
+  outline: 3px solid var(--md-accent-fg-color);
+  outline-offset: 4px;
+}
+
+.pymhm-gallery-card__figure {
+  position: relative;
+  aspect-ratio: 8 / 5;
+  min-height: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--pymhm-border);
+  background: #ffffff;
+}
+
+.md-typeset .pymhm-gallery-card__figure img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  padding: 0.65rem;
+  object-fit: contain;
+}
+
+.pymhm-gallery-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem 1.1rem;
+}
+
+.md-typeset .pymhm-gallery-card h2 {
+  margin: 0 0 0.6rem;
+  padding: 0;
+  border: 0;
+  font-size: 0.93rem;
+  line-height: 1.35;
+}
+
+.md-typeset .pymhm-gallery-card p {
+  margin: 0 0 1rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.73rem;
+  line-height: 1.6;
+}
+
+.pymhm-gallery-card__action {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  color: var(--md-typeset-a-color);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .pymhm-gallery-card {
+    transition: none;
+  }
+}
+
 /* Scientific figure interaction retains its own white plotting surface. */
 .md-typeset img[data-scientific-figure] {
   cursor: zoom-in;
