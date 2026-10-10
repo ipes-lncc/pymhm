@@ -8,7 +8,7 @@ are available on affine triangles. The RT2 vector space has 15 degrees of
 freedom per triangle: three normal moments on each edge and six interior
 vector moments.
 
-This is separate from the [energy-based RT0 reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy.md#conservation-skeleton-raw-gradient-and-recovered-field).
+This is separate from the [energy-based RT0 reconstruction](darcy.md#conservation-skeleton-raw-gradient-and-recovered-field).
 The moment construction does not solve an equilibrium minimization problem
 and does not impose an independent mass balance in every fine cell.
 

@@ -234,7 +234,7 @@ For local multiscale basis construction, one factorization solves the source
 and all trace right-hand sides together. A GPU factorization can therefore
 amortize setup over several local basis vectors, but transfer and setup costs
 remain significant for small local problems. See the measured
-[performance cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md).
+[performance cases](performance.md).
 
 ## CPU algebraic multigrid
 

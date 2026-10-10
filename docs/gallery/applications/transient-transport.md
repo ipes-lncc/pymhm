@@ -84,7 +84,7 @@ and the vertical concentration is imposed strongly.
 The [transient transport tutorial](../../tutorials/methods/transient-transport.md)
 writes the mass, local and global UFL equations and time loop explicitly.
 The [Darcy-coupled application notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/26_adaptive_transient_transport.ipynb)
-and [full report](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/transient-transport.md#a-five-level-temporal-verification)
+and [full report](../../cases/transient-transport.md#a-five-level-temporal-verification)
 provide coupling data, dispersion conventions and separate transient studies.
 The figure above is a current acquisition of this layered analytical case;
 it is not the report's separate random-material pilot.

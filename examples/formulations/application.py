@@ -78,11 +78,13 @@ def execute_definition(
     constraints: Any,
     execution: ExecutionConfig,
     solvers: SolverConfig,
+    *,
+    rtol: float | None = None,
 ) -> Any:
     """Execute generic assembly/solve with separately declared physical integral rows."""
     system = assemble(definition.problem, execution=execution, solvers=solvers)
     gauges = constraints(definition, system)
-    result = system.solve(fixed=definition.problem.fixed, constraints=gauges)
+    result = system.solve(fixed=definition.problem.fixed, constraints=gauges, rtol=rtol)
     return recovery(definition, system, result)
 
 
@@ -146,8 +148,12 @@ def bdm_darcy(mesh: Any, **options: Any) -> Any:
     )
 
 
-def hdiv_darcy(mesh: Any, **options: Any) -> Any:
-    """Execute affine tetrahedral/prismatic H(div) forms with literal Piola scaling."""
+def hdiv_darcy(mesh: Any, *, global_rtol: float | None = None, **options: Any) -> Any:
+    """Execute affine H(div) forms with Piola scaling and an explicit global solve target.
+
+    The tolerance belongs to the algebraic solve, independently of the local
+    mathematical forms and their unchanged physical-block acceptance checks.
+    """
     execution, solvers = execution_options(options)
     return execute_definition(
         define_hdiv_darcy(mesh, **options),
@@ -155,6 +161,7 @@ def hdiv_darcy(mesh: Any, **options: Any) -> Any:
         pressure_constraints,
         execution,
         solvers,
+        rtol=global_rtol,
     )
 
 

@@ -1,0 +1,35 @@
+{
+  "source": "examples/solve_elasticity_tensor_rt.py",
+  "source_sha256": "8ba1ca4a4790b3176728909d8684ca80a8b73a34bcecfa8c60680d22663dede9",
+  "original_record_sha256": "b023c3a18a61b88ee7e41cfda1add9729d6f7034eb302c609442dbffca933961",
+  "original_field_sha256": "e25de7b1ec9fd1dbddea4a7a52536526637bbd572b31146d3d3ec41d1fca3b24",
+  "replay_field_sha256": "262d80e5910cb9bfce9aaa189270903751b876383b06c912ba274e6fad2f552c",
+  "norms": {
+    "resolution": 16,
+    "macro_cells": 256,
+    "local_refinement": 1,
+    "degree": 1,
+    "enrichment": 1,
+    "trace_dofs": 2176,
+    "interior_trace_degree": 1,
+    "exterior_trace_degree": 1,
+    "lame_lambda": 1.0,
+    "displacement_l2": 0.0003627432589416135,
+    "stress_l2": 0.05525401140180498,
+    "divergence_l2": 0.013174497188486898,
+    "rotation_l2": 0.024125791983747712,
+    "algebraic_residual": 7.253275352971685e-16,
+    "force_moment_linf": 6.522560269672795e-16,
+    "fine_force_linf": 2.9569385300576324e-15,
+    "weak_symmetry_linf": 2.0731978416996255e-17,
+    "normal_traction_linf": 2.220446049250313e-16
+  },
+  "relative_change": {
+    "displacement_l2": 2.3642173832216554e-13,
+    "stress_l2": 1.2809335652604324e-14,
+    "rotation_l2": 3.192505447500261e-14
+  },
+  "seconds": 18.169732104986906,
+  "figure_png_sha256": "a503ad428cc3baea10a36c7ad69573073df7354fd4fad6621859a790f5e1530b",
+  "figure_svg_sha256": "2b558007f708eac339c01fe03d3c0d2290005929b661d23b6fd62c9b342e464e"
+}

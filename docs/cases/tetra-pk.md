@@ -119,6 +119,10 @@ Here the raw P5 gradient has degree four and is not generally contained in RT3.
 
 ![One-sided profiles across actual macro interfaces](../figures/tetra-pk/fixed-profiles.png)
 
+The [field replay record](../figures/tetra-pk/fields-replay.json) identifies the
+original fixed-geometry discretization, executed RT bases and agreement of the
+acquired fields with the physical norms in the tables.
+
 The slice is \(z=0.37\); profiles use \(y=0.413\). Every point is evaluated
 in its owning fine tetrahedron using the archived RT basis. Disconnected
 triangles and profile intervals preserve separate interface values. Exact and

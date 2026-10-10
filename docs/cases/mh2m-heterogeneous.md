@@ -43,7 +43,7 @@ additional value of $\gamma$ or a different forcing for the oscillatory case.
 
 ## Spaces and comparison scope
 
-The native [MH²M formulation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh2m.md) uses a continuous pressure trace
+The native [MH²M formulation](mh2m.md) uses a continuous pressure trace
 $\Gamma$, a broken conormal space $\Lambda$, and continuous local $P_1$
 pressures. Its conormal is $K\nabla p\cdot n$, the negative of the physical
 outward Darcy flux. The local Neumann maps include the full source correction
@@ -316,7 +316,7 @@ This discrete agreement supports the selected full heterogeneous cases,
 including their pressure-profile discrepancy with the publication. It does
 not recover unspecified historical inputs or establish equality with every
 printed curve. The independently refined classical reference below assesses
-approximation error, while the [smooth MH²M sequence](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh2m.md)
+approximation error, while the [smooth MH²M sequence](mh2m.md)
 checks the published gradient rates under smooth-data assumptions.
 
 ## Physical norms and reference refinement

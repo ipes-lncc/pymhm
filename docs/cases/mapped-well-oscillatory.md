@@ -3,7 +3,7 @@
 This case uses the three-dimensional hexahedral RT1 MHM spaces of
 [Durán et al. (2019), §7.4, Problem 5](https://doi.org/10.1016/j.cma.2019.05.013). The reservoir, producer pressure data,
 physical units and explicitly graded polygonal geometry are those described in
-[the analytical well case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md). The prescribed pressure trace is
+[the analytical well case](mapped-well.md). The prescribed pressure trace is
 continuous, while the discrete local mixed pressure is discontinuous.
 Fluxes use the contravariant Piola map and share normal moments.
 

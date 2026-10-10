@@ -199,9 +199,13 @@ from their approximation errors.
 
 ![Smooth Oseen convergence and separate estimator components](../figures/oseen/smooth-nu1-l1-uniform-history.png)
 
-
 ![Adaptive boundary-layer exact and numerical velocity and pressure](../figures/oseen/boundary-nu0.01-l1-adaptive-fields.png)
 
+The [spatial-map record](../figures/oseen/fields-replay.json) identifies the
+P3/P3 boundary-layer case at viscosity $0.01$, its P1 trace and four adaptive
+iterations. Its 2,566 fine triangles and physical norms agree with the
+retained configuration; the largest norm difference is below
+$3\times10^{-13}$ relatively.
 
 ![Internal-layer adaptive errors and effectivity](../figures/oseen/internal-nu0.001-l1-adaptive-history.png)
 

@@ -261,7 +261,7 @@ interpolants of the exact initial field.
 The exact solution is linear in time, so its backward-Euler difference quotient
 has no temporal truncation error. These curves assess the spatial approximation
 and initial interpolation in a transient solve. They do not measure a higher
-order of the time integrator. The [decaying-mode example](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/scalars.md) examines
+order of the time integrator. The [decaying-mode example](scalars.md) examines
 actual temporal discretization error separately.
 
 ## Reproduce and inspect

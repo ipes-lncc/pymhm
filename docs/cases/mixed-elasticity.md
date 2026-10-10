@@ -76,10 +76,8 @@ import numpy as np
 from pymhm import TriangleMesh
 from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
 
-
 def displacement(x):
     return np.column_stack((x[:, 0] ** 2, -2 * x[:, 0] * x[:, 1]))
-
 
 solution = solve_elasticity_mixed(
     TriangleMesh.unit_square(2),
@@ -123,7 +121,7 @@ The maps below use 128 macrotriangles, four fine triangles per macrotriangle,
 and \(\lambda=1\). Every panel shows the actual macro boundaries. Exact and
 numerical panels share scales; the third column shows signed differences.
 
-![Exact, pyMHM and error fields for mixed elasticity](../figures/mixed-elasticity/smooth-fields.svg)
+![Exact, pyMHM and error fields for mixed elasticity](../figures/mixed-elasticity/smooth-fields.png)
 
 | Grid resolution n | Macrotriangles | Displacement L2 | Full stress L2 | Rotation L2 |
 |---:|---:|---:|---:|---:|
@@ -140,7 +138,7 @@ the asymptotic trend is established by the subsequent levels.
 The material sweep includes nine cases through \(\lambda/\mu=10^8\) and
 the exact incompressible limit; the last two panels use categorical abscissae.
 
-![Convergence and incompressibility sweep](../figures/mixed-elasticity/convergence-and-incompressibility.svg)
+![Convergence and incompressibility sweep](../figures/mixed-elasticity/convergence-and-incompressibility.png)
 
 At fixed resolution \(n=4\), increasing \(\lambda/\mu\) from 1 to \(10^6\)
 changes displacement error from 0.00951962 to 0.00827563 and stress error from
@@ -178,7 +176,12 @@ spatial derivatives of both Lamé coefficients. The example independently
 checks \(f=-\operatorname{div}\sigma\) by complex-step differentiation of the
 analytical stress before solving.
 
-![Oscillatory modulus: exact fields, mixed approximation and signed errors](../figures/mixed-elasticity/oscillatory-fields.svg)
+![Oscillatory modulus: exact fields, mixed approximation and signed errors](../figures/mixed-elasticity/oscillatory-fields.png)
+
+The [spatial-map record](../figures/mixed-elasticity/fields-replay.json) identifies
+both executed cases. Integrated displacement, stress and rotation errors agree
+with the retained smooth and oscillatory configurations within
+$7\times10^{-14}$ relatively.
 
 On 512 diagonal macrotriangles with local refinement two, the measured errors
 are displacement 0.00240292, stress 9.38593, rotation 0.152634, and stress
@@ -226,20 +229,13 @@ corresponding native field norm. These small differences establish agreement of
 the matched discrete operators; the analytical errors reported above quantify
 discretization accuracy.
 
-![Independent displacement and rotation fields](../figures/mixed-elasticity/native-displacement-rotation.png)
-
-![Independent full stress components](../figures/mixed-elasticity/native-stress.png)
-
-The reference panels are labeled **MHM via trace restriction**: monolithic
-DOLFINx/UFL assembly and an independently assembled restriction of normal
-tractions on macrofaces. The comparison application also supplies the enriched
-stress coordinates.
-
-The two physical-field columns share scales. Difference panels retain their own
-finite-precision scales. All panels show the actual 512 macrotriangles; one-sided
-fine-cell polynomials are sampled without averaging across interfaces. Each fine
-triangle uses 36 display subtriangles. The archived quadrature values, rather
-than these display subdivisions, determine the reported norms.
+The independently assembled reference is **MHM via trace restriction**:
+monolithic DOLFINx/UFL assembly and a separately assembled restriction of normal
+tractions on macrofaces. The comparison also supplies the enriched stress
+coordinates. The table retains integrated displacement, stress and rotation
+differences; reconstructing their comparison maps requires the separate original
+coefficient archives. The analytical and PyMHM field maps above use the stated
+smooth and oscillatory physical problems.
 
 The [enriched-family comparison](mixed-families.md#oscillatory-coefficients-from-the-2021-paper)
 also verifies all four nominal Table 3 branches against this independent assembly.

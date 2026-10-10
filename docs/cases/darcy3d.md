@@ -17,7 +17,7 @@ physical volume mean. The raw field `-K grad(p)` is generally broken across
 macrofaces. Conservation concerns the oriented skeleton flux, and does not
 assert fine-cell conservation of that raw gradient.
 
-Positive local degrees are supported. The [general tetrahedral Pk study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md)
+Positive local degrees are supported. The [general tetrahedral Pk study](tetra-pk.md)
 includes independent P5/P6 element checks and a P5/P2 estimator campaign.
 
 The example helpers below are repository sources, supplied separately from the
@@ -112,14 +112,14 @@ These exact-field checks verify representation, orientations and macro
 conservation; they do not establish convergence or uniform stability.
 
 This convenience solver uses affine tetrahedral Pk local spaces for any positive
-degree; [P5/P6 native checks and a P5/P2 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) document the
+degree; [P5/P6 native checks and a P5/P2 study](tetra-pk.md) document the
 general-degree evaluation. Separate interfaces provide
-[star-shaped polyhedral macrocells](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md) and
+[star-shaped polyhedral macrocells](star-polyhedra.md) and
 [three-dimensional H(div) mixed local families](mixed-well-geometries.md).
 Curved tetrahedral geometry is not part of this primal solver. The [MPI assembly interface](../execution.md) accepts
 generic local algebra, while this convenience driver exposes serial, thread
 and spawned-process local factories with a single-process global solve.
-The [three-dimensional RAD case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad3d.md) uses the same geometric and polynomial
+The [three-dimensional RAD case](rad3d.md) uses the same geometric and polynomial
 spaces with the conservative Robin formulation and local P4/face P1 degrees.
 
 ## Explicit face and volume partitions

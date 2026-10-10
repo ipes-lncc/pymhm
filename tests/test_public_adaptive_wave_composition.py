@@ -6,14 +6,60 @@ import numpy as np
 import pytest
 from threadpoolctl import threadpool_limits
 
-from examples.formulations.application import tetrahedral_darcy, transport
+from examples.formulations.application import hdiv_darcy, tetrahedral_darcy, transport
 from pymhm.adaptivity.darcy_3d import solve_adaptive_darcy_3d
 from pymhm.adaptivity.transport import TransportBounds, solve_adaptive_transport
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.mixed import AffineMixedMesh
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.solutions import Darcy3DSolution, ScalarSolution
+
+
+@pytest.mark.parametrize("kind", ["prism", "tetrahedron"])
+def test_mixed_example_forwards_global_tolerance_and_preserves_physical_fields(
+    kind: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The well acquisition's solver target leaves affine pressure and Piola flux exact."""
+    from pymhm.core.multiscale import MultiscaleSystem
+
+    targets = []
+    original = MultiscaleSystem.solve
+
+    def observed(self: Any, **options: Any) -> Any:
+        """Record the algebraic target while executing the actual generic solve."""
+        targets.append(options["rtol"])
+        return original(self, **options)
+
+    monkeypatch.setattr(MultiscaleSystem, "solve", observed)
+    mesh = AffineMixedMesh.unit_cube(kind=kind)
+
+    def pressure(points: np.ndarray) -> np.ndarray:
+        """Prescribe nonzero affine pressure independently of the numerical operators."""
+        return 1 + points @ np.array([1.0, 2.0, -3.0])
+
+    caps = {
+        int(face): float(mesh.normals[face] @ np.array([-1.0, -2.0, 3.0]))
+        for face in mesh.boundary_faces
+        if abs(mesh.normals[face, 2]) > 0.99
+    }
+    with threadpool_limits(1):
+        solution = hdiv_darcy(
+            mesh,
+            pressure_degree=1,
+            local_refinement=2,
+            dirichlet=pressure,
+            neumann=caps,
+            global_rtol=5e-12,
+            quadrature_order=5,
+            boundary_quadrature_order=8,
+        )
+    assert targets == [5e-12]
+    errors = solution.errors(pressure, [-1.0, -2.0, 3.0], order=6)
+    assert max(errors.values()) < 1e-10
+    assert max(float(np.max(abs(row))) for row in solution.equilibrium_residuals()) < 1e-10
+    assert float(np.max(solution.physical_residuals)) < 1e-10
 
 
 def test_tetrahedral_adaptation_uses_public_equations_and_transfers_physical_boundary(

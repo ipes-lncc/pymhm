@@ -236,7 +236,16 @@ describe this replay, separately from the original acquisition. The same
 record documents the custom-partition regressions and independent UFL checks
 of the backward-Euler Galerkin and SUPG operators.
 
-![Darcy-coupled concentration at t=1](../figures/transport/darcy-transient.png)
+![Analytical concentration, MHM concentration and signed difference at t=1](../figures/transport/darcy-transient.png)
+
+This map uses the eight-macrotriangle mesh of the five-level temporal test,
+with 64 time steps. The [application Gallery](../gallery/applications/transient-transport.md)
+uses 128 macrotriangles and includes separate temporal and spatial controls.
+Both retain the same layered Darcy operator and concentration data. The
+[field-map record](../figures/transport/fields-replay.json) identifies this
+64-step reconstruction; its independently integrated error agrees with the
+temporal record within \(5\times10^{-13}\) relatively.
+
 ![Temporal and spatial refinement records](../figures/transport/refinement.png)
 
 `total_mass()` integrates \(\rho u_h\) using the capacity-weighted mass moments.

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "source_record": "examples/results/spe10-adaptive/published-profile-mhm.json",
+  "source_record_sha256": "4035bd93fa28786a6b2a01fa3eeb739ccf475041476aaa375321558996f9b9e7",
+  "figure": "Barrenechea et al. (2026), DOI 10.1137/24M1673073, Figure 9",
+  "rendering": "Only retained pointwise PyMHM and digitized published pressures are plotted; no reconstructed continuous or one-sided profile and no synthesized macroface markers.",
+  "sample_counts": [
+    190,
+    129
+  ],
+  "rms_and_maximum_recomputed": true,
+  "new_solve_performed": false
+}

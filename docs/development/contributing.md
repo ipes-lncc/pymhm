@@ -37,7 +37,9 @@ The `pixi run --locked -e packaging lock-check` task performs both checks; its
   uncondensed comparisons check numerical meaning beyond coverage.
 - Native integration tests verify actual libraries and hardware independently
   of portable optional-dependency contract tests.
-- MkDocs builds strictly; notebooks execute with nbclient and bounded cell timeouts.
+- MkDocs builds strictly; the generated site is checked for mathematical markup,
+  local links and anchors, missing figures and downloads, and untracked copied
+  documentation assets. Notebooks execute with nbclient and bounded cell timeouts.
 - Wheel and source distribution metadata are checked, and every runtime module,
   typing stub and marker must match the current source tree byte for byte.
 
@@ -60,6 +62,16 @@ not refine the solution.
 Retain execution and figure provenance when moving notebook pages. Build the
 site with `pixi run --locked -e docs docs-check`, then inspect the rendered
 equations, plots and navigation at desktop and mobile widths in both themes.
+Link reports using relative Markdown paths, rather than GitHub source links, so
+readers open rendered documentation with its figures and numerical records.
+
+The `docs-check` task also checks local stylesheet and script assets, generated
+HTML section anchors, and the Git index for assets copied from `docs/`. Use a
+repository checkout with Git available and stage new publication assets before
+running it. An ignored PNG that happens to exist locally fails this check until
+it is tracked; generated theme resources and intentionally unpublished sources
+require no asset entries. The check makes no network requests and does not
+replace browser inspection or scientific validation.
 
 ## Git hooks and editor commits
 
@@ -280,8 +292,8 @@ changes; a new numerical execution has its own source identity.
 Identify each reference implementation by its project name, module, revision
 and source URL when available. State whether the result comes from an unchanged
 application, an instrumented driver, or an independently assembled restriction.
-The [MSL comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) identifies MSL_MHM,
-MSL_CG and MSL_Core; the [NeoPZ comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) distinguishes its
+The [MSL comparison](../cases/reference-comparison.md) identifies MSL_MHM,
+MSL_CG and MSL_Core; the [NeoPZ comparison](../cases/neopz.md) distinguishes its
 RT0 driver from Labmec/MHM. Record source-access requirements when a repository
 cannot be fetched anonymously. Matching a library name or polynomial degree
 alone does not establish identical discrete equations.
@@ -445,10 +457,12 @@ archives. Use a checkout for those workflows, including scientific acquisitions,
 field replay and documentation builds. The full runtime includes the optional
 backend adapters; their native libraries are separate installation requirements.
 
-The selected figures required by the published gallery are versioned in an
+The selected figures required by the published documentation are versioned in an
 explicit `.gitignore` allowlist, so documentation builds need no field acquisition.
-Regenerate them from accepted scientific records when a case changes and inspect
-the rendered figures before updating the allowlist. Large field archives and
+Preserve valid figures. Regenerate missing assets or figures affected by accepted
+case-data changes, and inspect them at their intended viewing size. Update the
+allowlist when necessary and stage publication assets with `git add` before
+running `docs-check`. Large field archives and
 intermediate outputs remain outside Git. Documentation and publication figures
 are excluded from Python and Conda installation artifacts.
 

@@ -1,0 +1,35 @@
+{
+  "source": "examples/helmholtz_campaign.py",
+  "source_sha256": "adbfca71325f4003ccd8c8f100a63f6ef3a0c729a64aa3589adb0f9c7efeb8c9",
+  "original_record_sha256": "14cfc1f4ac0ad6ba38bfb2b3650e2eac43256115a75e563f285af44b3a175dbc",
+  "replay_field_sha256": "39134f24e20146bf76a54f5edf2ddd8e38a24f4d0943c3646c0dba6bd38b6ffc",
+  "configuration": {
+    "study": "convergence",
+    "wave": "plane",
+    "omega": 31.41592653589793,
+    "angle": 0.241660973353061,
+    "resolution": 16,
+    "trace_degree": 2,
+    "trace_basis": "oscillatory",
+    "local_degree": 4,
+    "local_refinement": 2
+  },
+  "physical_norms": {
+    "pressure_l2": 0.00014955660604053141,
+    "gradient_l2": 0.03753846100913031,
+    "pressure_exact_l2": 0.9999999999999999,
+    "gradient_exact_l2": 31.415926535897878,
+    "pressure_relative_error": 0.00014955660604053144,
+    "gradient_relative_error": 0.0011948863251330954,
+    "energy_relative_error": 0.0008515047000458758
+  },
+  "physical_checks": {
+    "original_field_trace_residual": 8.283676207545329e-16,
+    "original_local_equation_residual_max": 1.1739084454681012e-16
+  },
+  "relative_change": {
+    "pressure_l2": 1.5000729822572804e-11,
+    "gradient_l2": 2.0185356403455588e-13
+  },
+  "seconds": 19.85527801513672
+}

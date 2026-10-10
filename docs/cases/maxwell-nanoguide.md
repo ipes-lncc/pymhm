@@ -15,7 +15,10 @@ $[7.5,9.375]\times[4.375,5.625]$.
 Fifteen circular inclusions have radius $0.3125$ and centres in
 
 $$
-\{4.375,5.625,6.875\}\times\{2.5,3.75,5,6.25,7.5\}.
+\begin{aligned}
+x_c&\in\{4.375,5.625,6.875\},\\
+y_c&\in\{2.5,3.75,5,6.25,7.5\}.
+\end{aligned}
 $$
 
 Relative permittivity is 1 in air, 1.5 in silica and 3.14 in the inclusions;
@@ -24,6 +27,11 @@ without squaring them as refractive indices. Circular interfaces are sampled
 by the declared cell quadrature; increasing the quadrature order supplies a
 separate integration check. The Cartesian field spaces are unchanged.
 
+![Photonic-device permittivity on the two MHM macro partitions](../figures/maxwell-nanoguide/material.png)
+
+The panels show the same pointwise material distribution. Only the overlaid
+macro partition changes between the published $16\times16$ and $8\times8$
+configurations; these are coefficient maps, not electric-field solutions.
 
 The article specifies incident frequency $f=0.5$, absorbing exterior
 conditions and final time $16/\sqrt2$. Phase, amplitude, initial fields and
@@ -33,9 +41,12 @@ positive $x$ direction:
 
 $$
 \begin{aligned}
-E_i(t,x,y)&=\mathbf1_{t\geq x}\sin\bigl(\pi(t-x)\bigr),\\
-H_i&=(0,-E_i),\qquad E(0)=H(0)=0,\\
-E_z-(H\times n)&=(1-n_x)E_i\quad\text{on }\partial\Omega.
+s&=t-x,\\
+E_i(t,x,y)&=\mathbf1_{s\geq0}\sin(\pi s),\\
+H_i&=(0,-E_i),\\
+E(0)&=H(0)=0,\\
+E_z-(H\times n)&=(1-n_x)E_i\\
+&\quad\text{on }\partial\Omega.
 \end{aligned}
 $$
 
@@ -69,9 +80,11 @@ grids, using the actual discontinuous Q2 polynomials. Three Gauss points per
 coordinate integrate their squared differences exactly. The combined norm is
 
 $$
-\|e\|^2=\|E_z-E_{z,\mathrm{ref}}\|_{L^2}^2+
-\|H_x-H_{x,\mathrm{ref}}\|_{L^2}^2+
-\|H_y-H_{y,\mathrm{ref}}\|_{L^2}^2.
+\begin{aligned}
+\|e\|^2&=\|E_z-E_{z,\mathrm{ref}}\|_{L^2}^2\\
+&\quad+\|H_x-H_{x,\mathrm{ref}}\|_{L^2}^2\\
+&\quad+\|H_y-H_{y,\mathrm{ref}}\|_{L^2}^2.
+\end{aligned}
 $$
 
 It is an unweighted physical field norm. A refined numerical solution is
@@ -79,8 +92,12 @@ not an exact solution. Its spatial, temporal and material-integration
 increments determine how precisely it can assess MHM error.
 
 The finest classical calculation has $1024\times1024$ Q2 cells,
-9437184 electric coefficients and $\Delta t=0.00125$. Its float64
-matrix-free time integration runs with CuPy on an NVIDIA GeForce RTX 3060.
+9437184 electric coefficients and $\Delta t=0.00125$. The retained reference
+measurements use float64 matrix-free time integration with CuPy on an NVIDIA
+GeForce RTX 3060. The displayed fields use the same discretization and physical
+times, acquired on an NVIDIA RTX A5000; their recomputed component norms agree
+with every percentage in the table below. The field-display record identifies
+this acquisition separately from the retained measurements.
 At $256\times256$, the full CPU and GPU trajectories give a final combined
 field difference of $2.95\times10^{-15}$; independent small-matrix checks
 also cover mass inversion, derivatives and absorbing-boundary forcing.
@@ -104,6 +121,13 @@ controls quantify changes in space, time and material quadrature:
 | MHM $\Delta t:0.01\to0.005$ | $16\times16$ macros, published spatial spaces | 0.2704 |
 | MHM material rule $20\to28$ | $16\times16$ macros, $\Delta t=0.01$ | 0.0184 |
 
+![Componentwise physical differences from the finest classical reference](../figures/maxwell-nanoguide/recorded-component-errors.png)
+
+![Componentwise increments for spatial, temporal and material-integration controls](../figures/maxwell-nanoguide/recorded-refinement-controls.png)
+
+The summary plots display the retained norm measurements at their declared
+staggered times. Refinement increments compare two numerical calculations;
+they are not errors against an exact solution.
 Each increment uses the second configuration as its denominator, at the
 same staggered physical times. The last spatial increment is about six
 times smaller than the MHM differences, but remains measurable. These
@@ -138,6 +162,11 @@ smaller in the two MHM solutions.
 
 ![One-sided component profiles](../figures/maxwell-nanoguide/profiles.png)
 
+The [field-display record](../figures/maxwell-nanoguide/field-display.json)
+identifies the complete coefficient arrays, executed operators, physical times
+and recomputed component norms used by these maps and profiles. The tabulated
+comparisons and refinement controls retain their original acquisition digests.
+
 The publication uses the geometry and spaces declared here. Its unspecified
 incident-wave phase and turn-on prevent an unqualified comparison of the
 detailed phase and amplitude of the historical images.
@@ -145,8 +174,14 @@ detailed phase and amplitude of the historical images.
 
 ```bash
 pixi run --locked -e test-core python -m examples.maxwell_nanoguide --help
-pixi run --locked -e notebooks python -m examples.maxwell_nanoguide_results --plot
+pixi run --locked -e notebooks python -m examples.maxwell_nanoguide_results --records-only
 ```
+
+The record-only command regenerates the material and norm-summary figures
+without rerunning either solver. Regenerating the field maps and profiles with
+`--plot` additionally requires the complete Q2 coefficient archives named in
+the comparison record. Those large field arrays are not bundled with the
+package or notebook companion.
 
 ## References
 

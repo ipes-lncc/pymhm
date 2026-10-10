@@ -120,3 +120,65 @@ def test_nanoguide_sampling_preserves_discontinuous_traces(monkeypatch):
     values[:, 1] = np.array([3, -2, 4])
     points = np.array([[np.nextafter(5.0, 0), 2], [5.0, 2], [10.0, 2]])
     assert_allclose(replay.sample(values, points), [[1, 1, 1], [3, -2, 4], [3, -2, 4]])
+
+
+@pytest.mark.visualization
+def test_recorded_nanoguide_plot_preserves_component_denominators_without_fields(
+    tmp_path, monkeypatch
+):
+    """Archived physical measurements plot at their distinct times without field replay."""
+    import json
+
+    plt = pytest.importorskip("matplotlib.pyplot")
+    owner = importlib.import_module("examples.maxwell_nanoguide_results")
+    root = Path(__file__).resolve().parents[1] / "examples/results/maxwell-nanoguide"
+    captured = []
+    original_close = plt.close
+
+    def capture(figure):
+        """Inspect plotted component values before releasing the native figure."""
+        captured.append(figure)
+        original_close(figure)
+
+    def forbidden(*args, **kwargs):
+        """A norm-only plot must not require missing coefficient arrays."""
+        raise AssertionError("unexpected field read")
+
+    monkeypatch.setattr(plt, "close", capture)
+    monkeypatch.setattr(owner, "fields", forbidden)
+    result = owner.plot_recorded_results(
+        root / "comparison.json", root / "refinement-controls.json", tmp_path
+    )
+    records = json.loads((root / "comparison.json").read_text())["comparisons"]
+    expected = np.concatenate(
+        [100 * np.asarray(row["absolute_l2"]) / np.asarray(row["reference_l2"]) for row in records]
+    )
+    bars = [patch.get_height() for patch in captured[0].axes[0].patches]
+    assert_allclose(bars, expected, rtol=1e-12, atol=0)
+    assert result["electric_time"] == 11.315
+    assert result["magnetic_time"] == 11.31
+    assert len(result["figure_sha256"]) == 4
+    assert all((tmp_path / name).is_file() for name in result["figure_sha256"])
+
+
+@pytest.mark.visualization
+@pytest.mark.parametrize("defect", ["time", "denominator"])
+def test_recorded_nanoguide_plot_rejects_changed_physical_contract(tmp_path, defect):
+    """Unmatched times or invalid component denominators cannot become report figures."""
+    import json
+
+    pytest.importorskip("matplotlib.pyplot")
+    owner = importlib.import_module("examples.maxwell_nanoguide_results")
+    root = Path(__file__).resolve().parents[1] / "examples/results/maxwell-nanoguide"
+    payload = json.loads((root / "comparison.json").read_text())
+    if defect == "time":
+        payload["comparisons"][0]["field"]["electric_time"] += 0.5
+    else:
+        payload["comparisons"][0]["reference_l2"][0] = 0
+    comparison = tmp_path / "comparison.json"
+    comparison.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="physical components|different electric_time"):
+        owner.plot_recorded_results(
+            comparison, root / "refinement-controls.json", tmp_path / "plots"
+        )
+    assert not (tmp_path / "plots").exists()

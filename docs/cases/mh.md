@@ -3,7 +3,7 @@
 `solve_mh` implements the Multiscale Hybrid method of
 [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556). Its local problems and condensed
 global Dirichlet problem are elliptic. This formulation differs from both the
-kernel-constrained MHM and the [three-field MH²M method](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh2m.md).
+kernel-constrained MHM and the [three-field MH²M method](mh2m.md).
 
 The current implementation uses triangular or simple polygonal macroelements
 in two dimensions, including nonconvex polygons, continuous local Lagrange
@@ -14,7 +14,7 @@ Neumann data use a prescribed volume-mean pressure. The physical Neumann
 extension below retains the local Robin operators; its augmented global
 system is symmetric indefinite.
 
-The separately verified [tetrahedral driver](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh3d.md), `solve_mh_3d`, uses
+The separately verified [tetrahedral driver](mh3d.md), `solve_mh_3d`, uses
 the dimensionally consistent Robin field $\sigma=\nu(x-a)/3$ and the same
 physical boundary equations. The numerical studies on this page are
 two-dimensional.

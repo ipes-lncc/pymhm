@@ -174,6 +174,46 @@ def publication() -> None:
     save(fig, "published-components")
 
 
+def physical_history(record: dict, name: str) -> None:
+    """Replay recorded physical errors without requiring spatial coefficient arrays.
+
+    Constant-lid pressure and energy differences use the recorded fixed corner
+    cutouts; regularized-lid differences cover the entire domain. Percentages
+    retain each field's independently assembled classical-reference norm.
+    """
+    if not record.get("history"):
+        return
+    scope = "Interior" if record.get("corner_cutout") else "Physical"
+    lid = record.get("lid", "regularized").capitalize()
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.7), layout="constrained")
+    rows = record["history"]
+    for ax, xkey, xlabel in zip(
+        axes,
+        ("trace_and_coarse_dofs", "fine_cells"),
+        ("Trace and coarse DOFs", "Fine triangles"),
+        strict=True,
+    ):
+        for key, label in (
+            ("velocity_relative", "Velocity L²"),
+            ("pressure_relative", "Pressure L²"),
+            ("velocity_energy_relative", "Velocity energy"),
+        ):
+            ax.loglog(
+                [r[xkey] for r in rows],
+                [100 * r["norms"]["20"][key] for r in rows],
+                "o-",
+                label=label,
+            )
+        ax.set(xlabel=xlabel, ylabel="Relative difference (%)")
+        ax.grid(alpha=0.25)
+        ax.legend()
+    fig.suptitle(
+        f"{lid} cavity · γ={record['drag']:g} · {record['strategy']}\n"
+        f"{scope} physical differences from refined DOLFINx P2/P1"
+    )
+    save(fig, name + "-physical-convergence")
+
+
 def cavity_fields(record: dict, name: str) -> None:
     """Compare the regularized cavity against the independently refined classical baseline."""
     path = DATA / record["archive"]
@@ -334,34 +374,7 @@ def cavity_fields(record: dict, name: str) -> None:
             "Gray ticks mark actual macroface intersections"
         )
         save(fig, name + "-profiles")
-    if record.get("history"):
-        fig, axes = plt.subplots(1, 2, figsize=(12, 4.7), layout="constrained")
-        rows = record["history"]
-        for ax, xkey, xlabel in zip(
-            axes,
-            ("trace_and_coarse_dofs", "fine_cells"),
-            ("Trace and coarse DOFs", "Fine triangles"),
-            strict=True,
-        ):
-            for key, label in (
-                ("velocity_relative", "Velocity L²"),
-                ("pressure_relative", "Pressure L²"),
-                ("velocity_energy_relative", "Velocity energy"),
-            ):
-                ax.loglog(
-                    [r[xkey] for r in rows],
-                    [100 * r["norms"]["20"][key] for r in rows],
-                    "o-",
-                    label=label,
-                )
-            ax.set(xlabel=xlabel, ylabel="Relative difference (%)")
-            ax.grid(alpha=0.25)
-            ax.legend()
-        fig.suptitle(
-            f"{lid} cavity · γ={record['drag']:g} · {record['strategy']}\n"
-            f"{scope} physical differences from refined DOLFINx P2/P1"
-        )
-        save(fig, name + "-physical-convergence")
+    physical_history(record, name)
     if fine_geometry is not None:
         fig, axes = plt.subplots(1, 3, figsize=(13, 4.7), layout="constrained")
         points, cells = fine_geometry

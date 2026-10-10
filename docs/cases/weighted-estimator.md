@@ -72,7 +72,7 @@ gives the $A^{-1/2}$ weight in the flux term. Subtracting the macrocell mean
 and applying Poincaré's inequality gives $H_K/(\pi\sqrt{\alpha_K})$.
 Orthogonal energy projection separates the conforming residual and
 nonconformity contributions. For $A=I$ and zero Dirichlet data, the implementation
-reduces to the existing [unit-diffusion estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/estimator.md).
+reduces to the existing [unit-diffusion estimator](estimator.md).
 
 This bound requires continuous-test flux equilibrium, conforming local fine
 meshes, $k\geq\ell+2$, $\ell\leq m\leq k$, and exact integration. The code

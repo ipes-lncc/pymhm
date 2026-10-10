@@ -1,0 +1,15 @@
+{
+  "scope": "Retained signed-stress point samples at the original publication abscissae. Numerical samples are unconnected; pixel uncertainty intervals and actual macro columns are retained. No missing full-field coefficients are inferred from these samples.",
+  "sources": {
+    "examples/plot_hpc4e.py": "a7b0301cc25615e0501d366111576921a222ab833f1b4989f09bc8d413980435",
+    "examples/results/hpc4e/published-profile-comparison.json": "b66ffd3ae319c30ffe154ef970fa647551e28983e9c8a92a14f5e485fb96fa6f",
+    "examples/results/hpc4e/published-profile.json": "4e1a2970e25f09ae7186a291137389d62f4d4a2751db0230b08a76aa770b0245"
+  },
+  "numerical_sample_counts": {
+    "1": 139,
+    "2": 141,
+    "4": 144,
+    "8": 143
+  },
+  "figure_sha256": "4e0d07b8c1570eaaa2a2eef87d7769ed8c5d3e0f44df106554f42f96553ebc9f"
+}

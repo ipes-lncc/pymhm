@@ -1,0 +1,32 @@
+{
+  "operation": "redraw literal recorded measurements; no assembly, field reconstruction, or acquisition source relabelling",
+  "plot_owner": "examples/plot_helmholtz_article.py",
+  "plot_owner_sha256": "8f303cafae60b309fee83e223beb17f7b8fbee59e124aea613f5534928d9ad0b",
+  "records": {
+    "article.json": "29462978f3b5d0dfdcc6f95fbe4b71bcb444a0f653f2ea24dcf5d583fc3d9e2e",
+    "local-refinement-eight.json": "a2407e695105c6b7dc5bcb3ebf7b2a66643e6957d5ea74e72293b81b192bcaa1",
+    "published-convergence.json": "fcfae8fd22ded4b560dc6ad6fbfb7aecca7da8e2a5681cffaeff886ea6d12e9e",
+    "native-convergence-verification.json": "c93c3ecd9cc3f826fbcb560e6b72039753956adab3c5035334865eeb38d65b94"
+  },
+  "acquisition_source_sha256": {
+    "src/pymhm/helmholtz.py": "a224bad862c9a3e4d1f2a6bd5550ee9a873241423ebad445e6bee0016e085985",
+    "src/pymhm/helmholtz_forms.py": "e1711c2a9ffe74cc9465803151e1d3696bc08a49cb767a9252d5c2f1fa5dbc25",
+    "src/pymhm/helmholtz_spaces.py": "8e3afd13cee8ac53d0f6277e224ac3e567638f9bae130d0a2701c2e8029b3497",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+    "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "examples/helmholtz_campaign.py": "6ccd847b79b18ff0b636f24504a6f2e518e6ae4ab39e9817c45c6e1d4385decc",
+    "examples/helmholtz_article.py": "d91071dffa7d0f07e1e15baf0d652d03485057e1b0c743cfbdf673092c4e3c03",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca"
+  },
+  "figure_sha256": "839441775c2fe48bcf686195a53ca226590048ea4a7f30e4e09db9e1d1dfcbdd",
+  "rows": 1078
+}

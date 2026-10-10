@@ -7,7 +7,7 @@ $$
 $$
 
 on affine tetrahedral macrocells. Local continuous Lagrange spaces accept any
-positive degree through the [general tetrahedral Pk evaluator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md).
+positive degree through the [general tetrahedral Pk evaluator](tetra-pk.md).
 `TriangularSkeleton` selects independent Bernstein Pk modes on each
 triangular macroface subdivision, with different degrees and dyadic partitions
 per face when desired. Physical node identity uses integer barycentric weights

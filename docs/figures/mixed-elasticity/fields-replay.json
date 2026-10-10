@@ -1,0 +1,49 @@
+{
+  "source": "examples/plot_mixed_elasticity.py",
+  "source_sha256": "168589b0ef001a813f2b34d6381423bc9922ea2e4a683d024b4912ff6dab4e26",
+  "original_record_sha256": "755a03845b1568badb1cac2dd6ef04d1c7e63e773b011529393115893aabd853",
+  "rows": [
+    {
+      "case": "smooth-fields",
+      "macro_resolution": 8,
+      "physical_norms": {
+        "displacement_l2": 0.0019466925128955733,
+        "stress_l2": 0.061158503792327,
+        "rotation_l2": 0.04027103767457233,
+        "stress_divergence_l2": 0.034688401280248124,
+        "force_moment_linf": 5.35682609381638e-15,
+        "fine_force_linf": 7.742386613177858e-16,
+        "weak_symmetry_linf": 1.5657562848673352e-17,
+        "normal_traction_linf": 2.535948881443595e-16
+      },
+      "relative_change": {
+        "displacement_l2": 2.238922020051676e-14,
+        "stress_l2": 1.418219354962721e-14,
+        "rotation_l2": 3.015334352684082e-14
+      },
+      "seconds": 15.019862962886691,
+      "figure_sha256": "f83b207f17d4adc287fd260c947ab67f7bcd9518489562847049acacf1f2777e"
+    },
+    {
+      "case": "oscillatory-fields",
+      "macro_resolution": 16,
+      "physical_norms": {
+        "displacement_l2": 0.002402920730047514,
+        "stress_l2": 9.385932709318887,
+        "rotation_l2": 0.15263403853378577,
+        "stress_divergence_l2": 66.33443044995373,
+        "force_moment_linf": 1.3566925360919413e-13,
+        "fine_force_linf": 1.2902746778343608e-14,
+        "weak_symmetry_linf": 1.4666798998181838e-16,
+        "normal_traction_linf": 1.7763568394002505e-15
+      },
+      "relative_change": {
+        "displacement_l2": 6.100248413818161e-14,
+        "stress_l2": 1.703316233956053e-14,
+        "rotation_l2": 7.27375777572318e-16
+      },
+      "seconds": 56.35790233127773,
+      "figure_sha256": "b395a772fb8638149dc227ef3029b16de8b004a01d83b1ea2c07b1732533cb4c"
+    }
+  ]
+}

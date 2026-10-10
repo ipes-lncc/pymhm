@@ -9,7 +9,7 @@ continuous piecewise polynomials within each macroface. A boolean sequence
 mixes continuous and discontinuous faces. Face degrees and partitions remain
 independent of the local finite-element degree. Continuous faces accept every
 positive polynomial degree, subject to the
-[trace compatibility conditions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md).
+[trace compatibility conditions](../cases/darcy3d.md).
 
 User-defined formulations compose these public numerical owners with
 `LocalEquations` and `Equation`; their editable providers are listed in the

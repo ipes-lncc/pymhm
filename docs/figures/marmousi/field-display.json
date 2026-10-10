@@ -1,0 +1,934 @@
+{
+  "schema": "pymhm-scientific-field-display-v1",
+  "acquired_utc_date": "2026-10-10",
+  "scope": "Full declared 10240 by2560 m Marmousi crop, original pinned material pixels, 20 Hz unit Dirac, top zero Dirichlet and outgoing other boundaries. Complete fresh original H20/Q3/r8/ell1 MHM fields and classical P3/P4 fields. Historical norm acquisitions and original square derivative exclusion remain immutable.",
+  "classical_references": [
+    {
+      "complex_dofs": 9444865,
+      "residual_history": [
+        1.9584140671473165e-11
+      ],
+      "stored_original_residual": 1.9584140671473165e-11,
+      "pressure_l2": 267112.0067011446,
+      "elapsed_seconds": 592.7819943204522,
+      "storage": {
+        "structural_nonzeros": 641882116,
+        "nonzero_entries": 321033220
+      },
+      "native_versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "reference_project": "FEniCS DOLFINx/UFL",
+      "independent_application": "examples.marmousi_reference; original complex PDE expressed as a symmetric real indefinite CG saddle",
+      "runtime_provenance": {
+        "observed_before_execution_at_utc": "2026-10-10T18:48:01.571772+00:00",
+        "versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "ffcx": "0.9.0",
+          "numpy": "2.5.3",
+          "scipy": "1.17.1"
+        },
+        "scalar_type": "float64",
+        "loaded_cpp_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "loaded_libdolfinx_sha256": "30d4c7da44bf809e0457f5b0de59b6ff17be63ae17a56fc99fd1334b189dc2fb",
+        "runtime_packaging_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_packaging_hash_identifies": "conda-forge/fenics-dolfinx-feedstock recipe revision",
+        "upstream": {
+          "project": "FEniCS/dolfinx",
+          "tag": "v0.9.0",
+          "revision": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+          "release_url": "https://github.com/FEniCS/dolfinx/releases/tag/v0.9.0",
+          "revision_url": "https://github.com/FEniCS/dolfinx/commit/6443e3b27d29aec04ce83d8424b57c339e35f865",
+          "verification": "Release links the commit, its page defines version 0.9.0, and git ls-remote returns the same lightweight tag hash.",
+          "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+          "source_archive_verified_download_url": "https://codeload.github.com/FEniCS/dolfinx/tar.gz/refs/tags/v0.9.0",
+          "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+          "source_archive_observed_size_bytes": 778356,
+          "source_archive_digest_matches_packaged_recipe": true,
+          "documentation_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/"
+        },
+        "packaging": {
+          "project": "conda-forge/fenics-dolfinx-feedstock",
+          "revision": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+          "revision_url": "https://github.com/conda-forge/fenics-dolfinx-feedstock/commit/8067ef16087b9f364873e0e657dcda52fb989ce3",
+          "revision_url_verified": true,
+          "revision_description": "Rebuild for petsc 3.23, drop ppc",
+          "flow_run_id": "azure_20250422.2.1",
+          "recipe_url": "https://raw.githubusercontent.com/conda-forge/fenics-dolfinx-feedstock/8067ef16087b9f364873e0e657dcda52fb989ce3/recipe/recipe.yaml",
+          "recipe_sha256": "05ed0589f2e45679cc75a5c8cd5dd80f62e99ecbff0e5714dc1f625c530ac40f",
+          "recipe_remote_bytes_match_cached_package_recipe": true,
+          "package_about_metadata_sha256": "ca2b58b8ee502bd605e2e0e31c9cf924fa0e216e75b3c114c8683ed4c7defa87",
+          "applied_patches": [
+            {
+              "name": "unpin-cffi.patch",
+              "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4",
+              "scope": "Remove cffi<1.17 constraint in python/pyproject.toml; no C++ operator patch listed in the rendered recipe."
+            }
+          ]
+        },
+        "installed_conda_packages": {
+          "fenics-basix": {
+            "version": "0.9.0",
+            "build": "py313h867a91d_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-basix-0.9.0-py313h867a91d_2.conda",
+            "sha256": "90e53c993ae49ad125cf6c0d746380c906e126680f5a80ac2cb591c6dba50193",
+            "installed_metadata_sha256": "ad3c7e7a4781b66fe253f640b10ab27a76443fd6ebae9be54ca62257379bf93a"
+          },
+          "fenics-basix-nanobind-abi": {
+            "version": "0.2.1.13",
+            "build": "h6c05e69_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-basix-nanobind-abi-0.2.1.13-h6c05e69_2.conda",
+            "sha256": "a5c6129dc7e38d5fc6723d4143e50155a0c3d02ea2501567017b36cc3a01fb23",
+            "installed_metadata_sha256": "bc22869d5aa1153baaa8bace634a1cba84fff309c50168a8b3924e179d7f161b"
+          },
+          "fenics-dolfinx": {
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "installed_metadata_sha256": "d87f32e4a9d30c03aea063236346f56b8df5642397d50b20cecb17ca57c04a95"
+          },
+          "fenics-ffcx": {
+            "version": "0.9.0",
+            "build": "pyh2e48890_0",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ffcx-0.9.0-pyh2e48890_0.conda",
+            "sha256": "33b334558bfebafaa599294bc7d1c28b751abf8af1a04a454a861ee97b2187b4",
+            "installed_metadata_sha256": "58fc8d594e5b0f7d96557a55833d1e829819fc4ca3ae63dee5789edab0db0de7"
+          },
+          "fenics-libbasix": {
+            "version": "0.9.0",
+            "build": "h7cb7ce6_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libbasix-0.9.0-h7cb7ce6_2.conda",
+            "sha256": "f2265e51833b76dc85fc1f6b0dc6cd81a103bea88640951d7b73c6f63e6b162c",
+            "installed_metadata_sha256": "6e12c78c8f5250416394377b8d4c3331e4e9c8a9631e6bffd0aecd44a1d7d350"
+          },
+          "fenics-libdolfinx": {
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "installed_metadata_sha256": "2c3cc9ff73a01d1b73d4bb05363316d356067c2809793276ddfd9a9b3d69745f"
+          },
+          "fenics-ufcx": {
+            "version": "0.9.0",
+            "build": "hb7f7608_0",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ufcx-0.9.0-hb7f7608_0.conda",
+            "sha256": "b52f72ff1d371d7bf05e4b1fa42a9f1a88cc6c6f598e0b8921dc78e3fa91c348",
+            "installed_metadata_sha256": "dcb5c402e68a761e872a3f325ef7a363926ec372bef48b318a41f3245c62221f"
+          },
+          "fenics-ufl": {
+            "version": "2024.2.0",
+            "build": "pyhd8ed1ab_1",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ufl-2024.2.0-pyhd8ed1ab_1.conda",
+            "sha256": "25e9265973e29554ae2abfc0949a03ca3afe2d4a65c1e3ab2ba4d42d76727583",
+            "installed_metadata_sha256": "f13b73bdf4049141833afc62d80dc65ae165f038b9b5e5e36a43811d68516564"
+          }
+        },
+        "verified_attribution_record_sha256": "263e71c2e1308da79b9e8472f1cd5d99c37418557523d5f756ed8cfe3fcf2d5c",
+        "verification_limits": [
+          "No original package build workspace/log was inspected; ancestor Git discovery is an inference from CMake and the exact feedstock hash match.",
+          "Package URLs and archive SHA256 values come from installed Conda metadata and match pixi.lock. Native binary digests are current installed bytes, not a claim of bitwise reproducibility from upstream source.",
+          "The packaged source consists of upstream v0.9.0 plus the recorded packaging patch; it must not be described as an unmodified upstream Git checkout."
+        ]
+      },
+      "historical_article_application_identified": false,
+      "degree": 3,
+      "method": "DOLFINx/UFL conforming triangular CG",
+      "geometry": [
+        2048,
+        512
+      ],
+      "bounds": [
+        0,
+        10240,
+        0,
+        2560
+      ],
+      "boundary": "Top conforming Dirichlet zero; other sides outgoing first-order absorption zero",
+      "material": {
+        "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+        "doi": "10.1190/1.2172306",
+        "sources": {
+          "vp": {
+            "filename": "vp_marmousi-ii.segy",
+            "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+            "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+          },
+          "density": {
+            "filename": "density_marmousi-ii.segy",
+            "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+            "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+          }
+        },
+        "primary_shape": [
+          13601,
+          2801
+        ],
+        "primary_spacing_m": 1.25,
+        "crop_origin_m": [
+          3395.0,
+          515.0
+        ],
+        "cell_shape": [
+          2048,
+          512
+        ],
+        "cell_spacing_m": 5.0,
+        "sampling": "Primary nodes at material-cell centres; no interpolation",
+        "coordinate_order": [
+          "x",
+          "depth"
+        ],
+        "density_unit": "kg/m^3",
+        "velocity_unit": "m/s",
+        "bulk_modulus_unit": "Pa",
+        "historical_article_arrays_identified": false
+      },
+      "omega": 125.66370614359172,
+      "point_source": [
+        5000,
+        50,
+        1.0
+      ],
+      "mpi_ranks": 8,
+      "archives": [
+        {
+          "archive": "classical-p3-rank0.npz",
+          "sha256": "445380b1af73104b0701325e1cf3de7cc5ec6af84408560ea80a4c35adf3a43f",
+          "owned_complex_coefficients": 1180448
+        },
+        {
+          "archive": "classical-p3-rank1.npz",
+          "sha256": "c908272ca4bdef7bd9b3da8f3aa3d8759bddd1a5c2f01cfd2dd0b5e0616502d9",
+          "owned_complex_coefficients": 1181124
+        },
+        {
+          "archive": "classical-p3-rank2.npz",
+          "sha256": "1d1980232154c0a87db4cb0f78540209ba57ab534aead88da67762ca201e013d",
+          "owned_complex_coefficients": 1180302
+        },
+        {
+          "archive": "classical-p3-rank3.npz",
+          "sha256": "6a4a2f9a13423bad0583998c59a150360c9d2afe5b656a7de6b6d63aa0db146f",
+          "owned_complex_coefficients": 1180370
+        },
+        {
+          "archive": "classical-p3-rank4.npz",
+          "sha256": "7d5af3e8fa7ffef0f3cf0eb03cdb58e88a568fd2508eaafa41d2e292484c2bd0",
+          "owned_complex_coefficients": 1181180
+        },
+        {
+          "archive": "classical-p3-rank5.npz",
+          "sha256": "1237190f704778f9015989c87f1a1ba26e87759e2e1c5ec9f34449aae28ebc10",
+          "owned_complex_coefficients": 1180317
+        },
+        {
+          "archive": "classical-p3-rank6.npz",
+          "sha256": "d6187e876e5e223e690c90132129308bad4fa66b1ab35867194a356fda23ad24",
+          "owned_complex_coefficients": 1180544
+        },
+        {
+          "archive": "classical-p3-rank7.npz",
+          "sha256": "903397c15b7d97682eeb2acfbb4dd8d0eaaf05900ffe031dea3b8628f38159e8",
+          "owned_complex_coefficients": 1180580
+        }
+      ],
+      "source_changed_during_run": false,
+      "field_coordinates": "Owned continuous equispaced Pk nodal values on SW-NE triangles",
+      "solver": "PETSc/MUMPS symmetric-indefinite LDLt; five Ruiz congruences",
+      "acquisition_record_sha256": "00f0fffded73b02cb8a48c9c23d30f909594184b6f5c7bc70d0df2479fb781a6",
+      "source_manifest_sha256": "bb1324416683d483bdc0473712ab6a506f04df83c329eee6ffb2c80039d4d865",
+      "source_manifest_entries": 642,
+      "executed_source_sha256": {
+        "examples/marmousi_reference.py": "938f431ebbdc48cdfa5893b79ba80addc48ae2c9f00bb58e2898c820443f2b1a",
+        "examples/marmousi_data.py": "b5874ec7910de76367e479bf574c7e9ac8c997d9f8323a6dd79dfc70699707e2",
+        "examples/hpc4e_parallel.py": "d8709b5abac3a6585be28acfd70de60c7b37f793a978fabe4b6c624b93dd2937",
+        "examples/campaign_provenance.py": "2dd0fd1d2aafcae27a01de68410a277b667e12fd5e6974e424e257963b5a1f4f"
+      },
+      "independent_observer_sha256": "b8ba5bc43087f161fc15844faa40d158bf6f3d92bd1ee2ef817e707e752cabc5",
+      "acquisition_adapter_sha256": "ecdb347b23b9a1e5af7f4b15ceaa03ddcfe9f09e130dd06c9fa8a7ff99df8469",
+      "native_pressure_norm_replay": {
+        "degree": 3,
+        "replayed_pressure_l2": 267112.0067011487,
+        "native_pressure_l2": 267112.0067011446,
+        "native_replayed_relative_difference": 1.532107773982716e-14,
+        "order": 6,
+        "scope": "Native full-domain pressure norm replay; historical50by50mderivative square retained"
+      },
+      "retained_acquisition_agreement": {
+        "record": "classical-p3.json",
+        "sha256": "444065efcba8af8ba1eed0ecfba47112e1eb686bbb46c74474c6f99e1ef1b8c5",
+        "native_pressure_l2": 267112.0067013346,
+        "fresh_native_pressure_l2": 267112.0067011446,
+        "relative_native_pressure_norm_difference": 7.113198918773378e-13
+      }
+    },
+    {
+      "complex_dofs": 16787457,
+      "residual_history": [
+        3.332404001654036e-11
+      ],
+      "stored_original_residual": 3.332404001654036e-11,
+      "pressure_l2": 267115.79564434156,
+      "elapsed_seconds": 889.6588311195374,
+      "storage": {
+        "structural_nonzeros": 1577304068,
+        "nonzero_entries": 788799492
+      },
+      "native_versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "reference_project": "FEniCS DOLFINx/UFL",
+      "independent_application": "examples.marmousi_reference; original complex PDE expressed as a symmetric real indefinite CG saddle",
+      "runtime_provenance": {
+        "observed_before_execution_at_utc": "2026-10-10T18:48:01.415613+00:00",
+        "versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "ffcx": "0.9.0",
+          "numpy": "2.5.3",
+          "scipy": "1.17.1"
+        },
+        "scalar_type": "float64",
+        "loaded_cpp_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "loaded_libdolfinx_sha256": "30d4c7da44bf809e0457f5b0de59b6ff17be63ae17a56fc99fd1334b189dc2fb",
+        "runtime_packaging_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_packaging_hash_identifies": "conda-forge/fenics-dolfinx-feedstock recipe revision",
+        "upstream": {
+          "project": "FEniCS/dolfinx",
+          "tag": "v0.9.0",
+          "revision": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+          "release_url": "https://github.com/FEniCS/dolfinx/releases/tag/v0.9.0",
+          "revision_url": "https://github.com/FEniCS/dolfinx/commit/6443e3b27d29aec04ce83d8424b57c339e35f865",
+          "verification": "Release links the commit, its page defines version 0.9.0, and git ls-remote returns the same lightweight tag hash.",
+          "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+          "source_archive_verified_download_url": "https://codeload.github.com/FEniCS/dolfinx/tar.gz/refs/tags/v0.9.0",
+          "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+          "source_archive_observed_size_bytes": 778356,
+          "source_archive_digest_matches_packaged_recipe": true,
+          "documentation_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/"
+        },
+        "packaging": {
+          "project": "conda-forge/fenics-dolfinx-feedstock",
+          "revision": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+          "revision_url": "https://github.com/conda-forge/fenics-dolfinx-feedstock/commit/8067ef16087b9f364873e0e657dcda52fb989ce3",
+          "revision_url_verified": true,
+          "revision_description": "Rebuild for petsc 3.23, drop ppc",
+          "flow_run_id": "azure_20250422.2.1",
+          "recipe_url": "https://raw.githubusercontent.com/conda-forge/fenics-dolfinx-feedstock/8067ef16087b9f364873e0e657dcda52fb989ce3/recipe/recipe.yaml",
+          "recipe_sha256": "05ed0589f2e45679cc75a5c8cd5dd80f62e99ecbff0e5714dc1f625c530ac40f",
+          "recipe_remote_bytes_match_cached_package_recipe": true,
+          "package_about_metadata_sha256": "ca2b58b8ee502bd605e2e0e31c9cf924fa0e216e75b3c114c8683ed4c7defa87",
+          "applied_patches": [
+            {
+              "name": "unpin-cffi.patch",
+              "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4",
+              "scope": "Remove cffi<1.17 constraint in python/pyproject.toml; no C++ operator patch listed in the rendered recipe."
+            }
+          ]
+        },
+        "installed_conda_packages": {
+          "fenics-basix": {
+            "version": "0.9.0",
+            "build": "py313h867a91d_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-basix-0.9.0-py313h867a91d_2.conda",
+            "sha256": "90e53c993ae49ad125cf6c0d746380c906e126680f5a80ac2cb591c6dba50193",
+            "installed_metadata_sha256": "ad3c7e7a4781b66fe253f640b10ab27a76443fd6ebae9be54ca62257379bf93a"
+          },
+          "fenics-basix-nanobind-abi": {
+            "version": "0.2.1.13",
+            "build": "h6c05e69_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-basix-nanobind-abi-0.2.1.13-h6c05e69_2.conda",
+            "sha256": "a5c6129dc7e38d5fc6723d4143e50155a0c3d02ea2501567017b36cc3a01fb23",
+            "installed_metadata_sha256": "bc22869d5aa1153baaa8bace634a1cba84fff309c50168a8b3924e179d7f161b"
+          },
+          "fenics-dolfinx": {
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "installed_metadata_sha256": "d87f32e4a9d30c03aea063236346f56b8df5642397d50b20cecb17ca57c04a95"
+          },
+          "fenics-ffcx": {
+            "version": "0.9.0",
+            "build": "pyh2e48890_0",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ffcx-0.9.0-pyh2e48890_0.conda",
+            "sha256": "33b334558bfebafaa599294bc7d1c28b751abf8af1a04a454a861ee97b2187b4",
+            "installed_metadata_sha256": "58fc8d594e5b0f7d96557a55833d1e829819fc4ca3ae63dee5789edab0db0de7"
+          },
+          "fenics-libbasix": {
+            "version": "0.9.0",
+            "build": "h7cb7ce6_2",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libbasix-0.9.0-h7cb7ce6_2.conda",
+            "sha256": "f2265e51833b76dc85fc1f6b0dc6cd81a103bea88640951d7b73c6f63e6b162c",
+            "installed_metadata_sha256": "6e12c78c8f5250416394377b8d4c3331e4e9c8a9631e6bffd0aecd44a1d7d350"
+          },
+          "fenics-libdolfinx": {
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "installed_metadata_sha256": "2c3cc9ff73a01d1b73d4bb05363316d356067c2809793276ddfd9a9b3d69745f"
+          },
+          "fenics-ufcx": {
+            "version": "0.9.0",
+            "build": "hb7f7608_0",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ufcx-0.9.0-hb7f7608_0.conda",
+            "sha256": "b52f72ff1d371d7bf05e4b1fa42a9f1a88cc6c6f598e0b8921dc78e3fa91c348",
+            "installed_metadata_sha256": "dcb5c402e68a761e872a3f325ef7a363926ec372bef48b318a41f3245c62221f"
+          },
+          "fenics-ufl": {
+            "version": "2024.2.0",
+            "build": "pyhd8ed1ab_1",
+            "url": "https://conda.anaconda.org/conda-forge/noarch/fenics-ufl-2024.2.0-pyhd8ed1ab_1.conda",
+            "sha256": "25e9265973e29554ae2abfc0949a03ca3afe2d4a65c1e3ab2ba4d42d76727583",
+            "installed_metadata_sha256": "f13b73bdf4049141833afc62d80dc65ae165f038b9b5e5e36a43811d68516564"
+          }
+        },
+        "verified_attribution_record_sha256": "263e71c2e1308da79b9e8472f1cd5d99c37418557523d5f756ed8cfe3fcf2d5c",
+        "verification_limits": [
+          "No original package build workspace/log was inspected; ancestor Git discovery is an inference from CMake and the exact feedstock hash match.",
+          "Package URLs and archive SHA256 values come from installed Conda metadata and match pixi.lock. Native binary digests are current installed bytes, not a claim of bitwise reproducibility from upstream source.",
+          "The packaged source consists of upstream v0.9.0 plus the recorded packaging patch; it must not be described as an unmodified upstream Git checkout."
+        ]
+      },
+      "historical_article_application_identified": false,
+      "degree": 4,
+      "method": "DOLFINx/UFL conforming triangular CG",
+      "geometry": [
+        2048,
+        512
+      ],
+      "bounds": [
+        0,
+        10240,
+        0,
+        2560
+      ],
+      "boundary": "Top conforming Dirichlet zero; other sides outgoing first-order absorption zero",
+      "material": {
+        "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+        "doi": "10.1190/1.2172306",
+        "sources": {
+          "vp": {
+            "filename": "vp_marmousi-ii.segy",
+            "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+            "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+          },
+          "density": {
+            "filename": "density_marmousi-ii.segy",
+            "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+            "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+          }
+        },
+        "primary_shape": [
+          13601,
+          2801
+        ],
+        "primary_spacing_m": 1.25,
+        "crop_origin_m": [
+          3395.0,
+          515.0
+        ],
+        "cell_shape": [
+          2048,
+          512
+        ],
+        "cell_spacing_m": 5.0,
+        "sampling": "Primary nodes at material-cell centres; no interpolation",
+        "coordinate_order": [
+          "x",
+          "depth"
+        ],
+        "density_unit": "kg/m^3",
+        "velocity_unit": "m/s",
+        "bulk_modulus_unit": "Pa",
+        "historical_article_arrays_identified": false
+      },
+      "omega": 125.66370614359172,
+      "point_source": [
+        5000,
+        50,
+        1.0
+      ],
+      "mpi_ranks": 8,
+      "archives": [
+        {
+          "archive": "classical-p4-rank0.npz",
+          "sha256": "1cbcbc1e54fed63424a9edab53d0ed384b619d3dda746310cbdb13aed7e84e58",
+          "owned_complex_coefficients": 2098236
+        },
+        {
+          "archive": "classical-p4-rank1.npz",
+          "sha256": "535dd2ee12363b832508ac895bf0024f7fff5ef2a9803382a09b75fcbdf96174",
+          "owned_complex_coefficients": 2099064
+        },
+        {
+          "archive": "classical-p4-rank2.npz",
+          "sha256": "c1dda8a455563a73c9fea4b3af155775576379f665026096f6a707398c2f82a3",
+          "owned_complex_coefficients": 2098004
+        },
+        {
+          "archive": "classical-p4-rank3.npz",
+          "sha256": "590dd75a0a219b3b0f3671c51e4ff292acfead552179ecbc852f83f77f9123f9",
+          "owned_complex_coefficients": 2098105
+        },
+        {
+          "archive": "classical-p4-rank4.npz",
+          "sha256": "06ad721d38818c147e14e0e5e3c09cff73c83401521690b12963063fd5e9e290",
+          "owned_complex_coefficients": 2099173
+        },
+        {
+          "archive": "classical-p4-rank5.npz",
+          "sha256": "41ccb77afb73a3b8d080f15a14ec7cf6410f758f88f6ad530feec0666b7e6e60",
+          "owned_complex_coefficients": 2098024
+        },
+        {
+          "archive": "classical-p4-rank6.npz",
+          "sha256": "d04e0feaa033ef0bf951acd4e4f4a6df09c6893ea0a9d00735b87180628bcf73",
+          "owned_complex_coefficients": 2098393
+        },
+        {
+          "archive": "classical-p4-rank7.npz",
+          "sha256": "498de881b0e353e42050be80fad4183233fc99e9d28abe3e5d79ea74fac4836f",
+          "owned_complex_coefficients": 2098458
+        }
+      ],
+      "source_changed_during_run": false,
+      "field_coordinates": "Owned continuous equispaced Pk nodal values on SW-NE triangles",
+      "solver": "PETSc/MUMPS symmetric-indefinite LDLt; five Ruiz congruences",
+      "acquisition_record_sha256": "e489f41741d8e76087e1d2cfd060a15fd2efaedb37a577dbc5bf6e7d005ba361",
+      "source_manifest_sha256": "bb1324416683d483bdc0473712ab6a506f04df83c329eee6ffb2c80039d4d865",
+      "source_manifest_entries": 642,
+      "executed_source_sha256": {
+        "examples/marmousi_reference.py": "938f431ebbdc48cdfa5893b79ba80addc48ae2c9f00bb58e2898c820443f2b1a",
+        "examples/marmousi_data.py": "b5874ec7910de76367e479bf574c7e9ac8c997d9f8323a6dd79dfc70699707e2",
+        "examples/hpc4e_parallel.py": "d8709b5abac3a6585be28acfd70de60c7b37f793a978fabe4b6c624b93dd2937",
+        "examples/campaign_provenance.py": "2dd0fd1d2aafcae27a01de68410a277b667e12fd5e6974e424e257963b5a1f4f"
+      },
+      "independent_observer_sha256": "b8ba5bc43087f161fc15844faa40d158bf6f3d92bd1ee2ef817e707e752cabc5",
+      "acquisition_adapter_sha256": "ecdb347b23b9a1e5af7f4b15ceaa03ddcfe9f09e130dd06c9fa8a7ff99df8469",
+      "native_pressure_norm_replay": {
+        "degree": 4,
+        "replayed_pressure_l2": 267115.79564433993,
+        "native_pressure_l2": 267115.79564434156,
+        "native_replayed_relative_difference": 6.106226635438361e-15,
+        "order": 8,
+        "scope": "Native full-domain pressure norm replay; historical50by50mderivative square retained"
+      },
+      "retained_acquisition_agreement": {
+        "record": "classical-p4.json",
+        "sha256": "b16041e795e720fca24b339fc2dc66d236388c94595602913031b87d21521b3e",
+        "native_pressure_l2": 267115.7956501696,
+        "fresh_native_pressure_l2": 267115.79564434156,
+        "relative_native_pressure_norm_difference": 2.1818435946840964e-11
+      }
+    }
+  ],
+  "classical_plot_display": {
+    "material": {
+      "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+      "doi": "10.1190/1.2172306",
+      "sources": {
+        "vp": {
+          "filename": "vp_marmousi-ii.segy",
+          "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+          "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+        },
+        "density": {
+          "filename": "density_marmousi-ii.segy",
+          "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+          "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+        }
+      },
+      "primary_shape": [
+        13601,
+        2801
+      ],
+      "primary_spacing_m": 1.25,
+      "crop_origin_m": [
+        3395.0,
+        515.0
+      ],
+      "cell_shape": [
+        2048,
+        512
+      ],
+      "cell_spacing_m": 5.0,
+      "sampling": "Primary nodes at material-cell centres; no interpolation",
+      "coordinate_order": [
+        "x",
+        "depth"
+      ],
+      "density_unit": "kg/m^3",
+      "velocity_unit": "m/s",
+      "bulk_modulus_unit": "Pa",
+      "historical_article_arrays_identified": false
+    },
+    "reference_records": {
+      "classical-p3.json": "00f0fffded73b02cb8a48c9c23d30f909594184b6f5c7bc70d0df2479fb781a6",
+      "classical-p4.json": "e489f41741d8e76087e1d2cfd060a15fd2efaedb37a577dbc5bf6e7d005ba361"
+    },
+    "display_grid": "All native nodal pressure coordinates; differences on the P4 nodal grid",
+    "displayed_degrees": [
+      3,
+      4
+    ],
+    "sampling_norm_grid": [
+      513,
+      129
+    ],
+    "displayed_nodal_max_abs": [
+      1644.6006099302808,
+      1800.8211002920739
+    ],
+    "pressure_display": "Signed asinh transform, linear_width=1; physical-value color ticks",
+    "macro_overlay": "Declared H20/H80 comparison partitions, not additional numerical solves",
+    "source_sha256": "b64f472d2b004ce23d471ca9199cd0ebaf8045453b2c40667ffc829efe6d6062",
+    "dependency_sha256": {
+      "examples/marmousi_data.py": "b5874ec7910de76367e479bf574c7e9ac8c997d9f8323a6dd79dfc70699707e2",
+      "examples/marmousi_fields.py": "700dcd0a1f03f0b906eea6033e856349c28e54ac574cbde4639e4d40209fbdf5",
+      "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+    }
+  },
+  "plot_owners": {
+    "examples.plot_marmousi": "b64f472d2b004ce23d471ca9199cd0ebaf8045453b2c40667ffc829efe6d6062",
+    "examples.plot_marmousi_mhm": "aee707b116c5a7b8b15376394759c3c22ba9a71a0b815d4f333cc6215efc1918"
+  },
+  "retained_derivative_norm_contract": {
+    "gradient_cutout_m": [
+      4975.0,
+      5025.0,
+      25.0,
+      75.0
+    ],
+    "gradient_cutout_area_m2": 2500.0,
+    "scope": "Retained derivative-error tables and summary figures use the original 50 by 50 m square exclusion. Displayed pressure fields cover the entire crop. No replacement disk norm is inferred from these images."
+  },
+  "images_sha256": {
+    "classical-fields-H20.png": "dd17f817789789f2fee4fe301a6f20ecb58b4bb56771884c501e32e52b3fcd86",
+    "classical-profiles.png": "f114f142dacba19de9a5715774a5306d2e1996989309adcaa8b583842c5611d0",
+    "mhm-H20-ell1-fields.png": "d5283d711bd94ccd14ca139ef14b53b6837f18ae8059b458d88b5b87b1a2ed18",
+    "mhm-H20-ell1-profiles.png": "2ebe1598ec0527093194c6ef7e328c3cbcf7e18106be37f16155286853455fd5"
+  },
+  "distribution": "Complete MPI nodal arrays, local coefficient archives and private native-runtime observer sources are not shipped in documentation assets or release artifacts.",
+  "mhm_acquisition": {
+    "method": "MHM Helmholtz 2020; continuous local Q3 and polynomial physical-flux trace",
+    "doi": "10.1137/19M1255616",
+    "material": {
+      "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+      "doi": "10.1190/1.2172306",
+      "sources": {
+        "vp": {
+          "filename": "vp_marmousi-ii.segy",
+          "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+          "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+        },
+        "density": {
+          "filename": "density_marmousi-ii.segy",
+          "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+          "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+        }
+      },
+      "primary_shape": [
+        13601,
+        2801
+      ],
+      "primary_spacing_m": 1.25,
+      "crop_origin_m": [
+        3395.0,
+        515.0
+      ],
+      "cell_shape": [
+        2048,
+        512
+      ],
+      "cell_spacing_m": 5.0,
+      "sampling": "Primary nodes at material-cell centres; no interpolation",
+      "coordinate_order": [
+        "x",
+        "depth"
+      ],
+      "density_unit": "kg/m^3",
+      "velocity_unit": "m/s",
+      "bulk_modulus_unit": "Pa",
+      "historical_article_arrays_identified": false
+    },
+    "H_m": 20,
+    "macro_shape": [
+      512,
+      128
+    ],
+    "macro_cells": 65536,
+    "local_refinement": 8,
+    "local_degree": 3,
+    "trace_degree": 1,
+    "omega": 125.66370614359172,
+    "point_source": [
+      5000,
+      50,
+      1.0
+    ],
+    "point_source_allocation": [
+      {
+        "macro_cell": 1273,
+        "sources": [
+          [
+            5000.0,
+            50.0,
+            0.5
+          ]
+        ]
+      },
+      {
+        "macro_cell": 1274,
+        "sources": [
+          [
+            5000.0,
+            50.0,
+            0.5
+          ]
+        ]
+      }
+    ],
+    "point_source_convention": "Incident-angle allocation; total unit strength preserved",
+    "boundary": "Top weak Dirichlet zero; other sides outgoing first-order absorption zero",
+    "global_complex_dofs_total": 263424,
+    "global_complex_dofs_free": 261888,
+    "algebraic_residual": 1.6828302586993456e-14,
+    "macro_balance_max": 8.551323011285801e-15,
+    "requested_assembly_order": 8,
+    "assembly_order": 8,
+    "original_field_trace_residual": 3.103646031309843e-14,
+    "original_local_equation_residual_max": 9.030073417087397e-16,
+    "elapsed_seconds": 1157.2785398680717,
+    "workers": 16,
+    "archive": "mhm-H20-ell1.npz",
+    "archive_sha256": "1a0ddb3aea35a45e70d1f46694e8139e9635f1b4ec8e274c94ee2e7378c8409f",
+    "source_changed_during_run": false,
+    "sampling": "513 by129 nodes; four incident macro values, without averaging",
+    "historical_article_arrays_identified": false,
+    "execution_owner": "pymhm._legacy.models.waves.helmholtz.solve_helmholtz",
+    "acquisition_adapter_sha256": "0724d02818f734d7c9f7482f8fa263ea7d42d3b1ca5b60383875d4bc53549191",
+    "execution_scope": "Original tested Helmholtz factory; integer process tasks, fixed global mesh/material initialized once per worker; generic AcousticCell task route was not executed for this archive",
+    "acquisition_record_sha256": "d07e84c6e33694f9e45e9e4f8fa1bfa78cd25a828630a76875dd56c2417c76a4",
+    "source_manifest_sha256": "bb1324416683d483bdc0473712ab6a506f04df83c329eee6ffb2c80039d4d865",
+    "source_manifest_entries": 642,
+    "executed_source_sha256": {
+      "examples/marmousi_campaign.py": "ad92d6a4650dfb3adc3edc679b324f24dc4abc9f41e61fdbe60f382571e88905",
+      "examples/marmousi_data.py": "b5874ec7910de76367e479bf574c7e9ac8c997d9f8323a6dd79dfc70699707e2",
+      "examples/helmholtz_trace_family.py": "e5d9ea7391fee896dd229720438e003c74c661e445fcc69a0169fa32cc13fa91",
+      "src/pymhm/_legacy/models/waves/helmholtz.py": "99f11228cb6ba33ed81a97d299332dc71f1bd8426d492fea8f94dc7949ec534b",
+      "src/pymhm/core/system.py": "e55ac871772cf2157252a0bbb4df1ba2419b2512d7222f62ed4adabd1d535266",
+      "src/pymhm/core/contracts.py": "1fc676d07886c26e2ab47160878510ac40660b2a4cc52200a65e8406f35485df",
+      "src/pymhm/fem/scalar/quadrilateral.py": "cb0cbaa3e34d435c5238898c0e2cfe3f46bbb0d59cc7c1697df619f395d8415f"
+    },
+    "field_contract": {
+      "pressure_shape": [
+        65536,
+        625
+      ],
+      "pressure_dtype": "complex128",
+      "basis": "Canonical continuous local Q3 nodal tensor basis on the 8 by8 fine rectangles of each macro; 25 by25 coefficients, x varies fastest. Macro fields remain independent.",
+      "macro_geometry": {
+        "macro_points": {
+          "shape": [
+            66177,
+            2
+          ],
+          "dtype": "float64",
+          "sha256": "85e6d86a5d885be378c3700f0da65cf9a92cea5ceb98df662d54ce7da0e7b0c4"
+        },
+        "macro_cells": {
+          "shape": [
+            65536,
+            4
+          ],
+          "dtype": "int64",
+          "sha256": "66cc9d600b12ee1a02682e67f08246b169ada01e11adb775675bd0372dd70428"
+        }
+      },
+      "trace": {
+        "shape": [
+          263424
+        ],
+        "dtype": "complex128",
+        "sha256": "3c2875d91d82b95a80a03134a3eee11122269ede8d0491e648fb54ad73e3a00a"
+      },
+      "sample_points_shape": [
+        66177,
+        2
+      ],
+      "sample_pressure_shape": [
+        4,
+        66177
+      ],
+      "incident_sides": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "retained_acquisition_contract": {
+      "record": "mhm-H20-ell1.json",
+      "sha256": "3cc5a4e01b8002db2b5dea1bc605e12b45c01afac0f0f026b3a77c0783c3eab4",
+      "identical_configuration_keys": [
+        "material",
+        "H_m",
+        "macro_shape",
+        "local_refinement",
+        "local_degree",
+        "trace_degree",
+        "omega",
+        "point_source",
+        "point_source_allocation",
+        "boundary",
+        "assembly_order"
+      ]
+    }
+  },
+  "mhm_sampled_comparison": {
+    "candidate_record_sha256": "d07e84c6e33694f9e45e9e4f8fa1bfa78cd25a828630a76875dd56c2417c76a4",
+    "reference_record_sha256": "e489f41741d8e76087e1d2cfd060a15fd2efaedb37a577dbc5bf6e7d005ba361",
+    "sampled_pressure": [
+      {
+        "incident_side": [
+          -1,
+          -1
+        ],
+        "difference": 371.1558559893686,
+        "reference_norm": 13365.100483303866,
+        "relative_difference": 0.027770524916967815
+      },
+      {
+        "incident_side": [
+          -1,
+          1
+        ],
+        "difference": 358.47987880023004,
+        "reference_norm": 13365.100483303866,
+        "relative_difference": 0.026822086317125352
+      },
+      {
+        "incident_side": [
+          1,
+          -1
+        ],
+        "difference": 394.11362742954753,
+        "reference_norm": 13365.100483303866,
+        "relative_difference": 0.029488265196500957
+      },
+      {
+        "incident_side": [
+          1,
+          1
+        ],
+        "difference": 374.08231224496603,
+        "reference_norm": 13365.100483303866,
+        "relative_difference": 0.027989487449965846
+      }
+    ],
+    "retained_comparison_record_sha256": "89af97301b6a27feabc7e10927f66c14871d2561e5666e063588d6997d119b4c",
+    "retained_sample_agreement": [
+      {
+        "incident_side": [
+          -1,
+          -1
+        ],
+        "relative_difference_change": 1.011019740149166e-11
+      },
+      {
+        "incident_side": [
+          -1,
+          1
+        ],
+        "relative_difference_change": 9.750526774876533e-12
+      },
+      {
+        "incident_side": [
+          1,
+          -1
+        ],
+        "relative_difference_change": 5.458796609181249e-12
+      },
+      {
+        "incident_side": [
+          1,
+          1
+        ],
+        "relative_difference_change": 6.992094403468485e-12
+      }
+    ],
+    "scope": "Unweighted 513 by129 original nodes, preserving all four incident MHM values; actual samples replay bitwise from full fresh Q3 coefficients. This is not the integrated physical field norm."
+  },
+  "mhm_plot_display": {
+    "Re p": {
+      "native_nodal_range_mhm": [
+        -477.53473868996457,
+        1980.395288892325
+      ],
+      "native_nodal_range_reference": [
+        -474.37067307827965,
+        1765.747675402471
+      ],
+      "shared_symmetric_limit": 1980.395288892325
+    },
+    "Im p": {
+      "native_nodal_range_mhm": [
+        -370.481154224982,
+        370.01437708491204
+      ],
+      "native_nodal_range_reference": [
+        -368.43902698251316,
+        368.57159988071504
+      ],
+      "shared_symmetric_limit": 370.481154224982
+    },
+    "candidate_record": "mhm-H20-ell1.json",
+    "candidate_record_sha256": "d07e84c6e33694f9e45e9e4f8fa1bfa78cd25a828630a76875dd56c2417c76a4",
+    "reference_record": "classical-p4.json",
+    "reference_record_sha256": "e489f41741d8e76087e1d2cfd060a15fd2efaedb37a577dbc5bf6e7d005ba361",
+    "map_sampling": "Original material-cell centres; no incident-field averaging",
+    "color_scale": "Signed asinh, linear width 1; physical-value ticks; no clipping",
+    "profile_depth_m": 505.0,
+    "profile_intersections": "Exact one-sided macro endpoints; no joins across faces",
+    "source_sha256": {
+      "examples/plot_marmousi_mhm.py": "aee707b116c5a7b8b15376394759c3c22ba9a71a0b815d4f333cc6215efc1918",
+      "examples/plot_marmousi.py": "b64f472d2b004ce23d471ca9199cd0ebaf8045453b2c40667ffc829efe6d6062",
+      "examples/marmousi_campaign.py": "ad92d6a4650dfb3adc3edc679b324f24dc4abc9f41e61fdbe60f382571e88905",
+      "examples/marmousi_comparison.py": "ecaa582a125190bc3f71b8a20ec57d3c7b8014a7d36a34ef0590960281ee69ff",
+      "examples/marmousi_fields.py": "700dcd0a1f03f0b906eea6033e856349c28e54ac574cbde4639e4d40209fbdf5",
+      "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+    }
+  }
+}

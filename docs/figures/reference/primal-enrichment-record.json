@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "source_report": "examples/results/coarse-cosine/primal-report.json",
+  "source_report_sha256": "6953a8962f8425ecdc8e2420e90d9dc6edd172dd5a2e2e15470d9e55af5ff56e",
+  "rendering": "Original retained analytical norms for MSL/PyMHM primal pressure and raw flux; no missing MSL spatial fields are synthesized.",
+  "case_names": [
+    "coarse-cosine",
+    "cosine-p0-segmented",
+    "cosine-p1",
+    "cosine-p1-segmented"
+  ],
+  "native_solve_performed": false
+}

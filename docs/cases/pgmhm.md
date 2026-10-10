@@ -13,7 +13,7 @@ independently, subject to the compatibility conditions below. Materials may
 be scalar or symmetric positive-definite tensors; Dirichlet, mixed and
 compatible pure Neumann data are supported.
 
-The [SPE10 layer-one case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/pgmhm-spe10.md) specifies the permeability
+The [SPE10 layer-one case](pgmhm-spe10.md) specifies the permeability
 component identified in the original figure, the mixed boundary conditions,
 and separate local/trace and classical-reference resolution checks.
 

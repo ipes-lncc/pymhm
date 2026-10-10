@@ -30,7 +30,7 @@ Optional dyadic refinement identifies shared nodes by integer barycentric
 topology. Local fields are continuous Pk across these tetrahedra; the basis
 accepts arbitrary positive degree and the chosen formulation still requires
 adequate quadrature and compatible trace coupling. The additional
-[nonconvex campaign](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md) verifies five L-prism/cuboid resolutions
+[nonconvex campaign](star-polyhedra.md) verifies five L-prism/cuboid resolutions
 and a native UFL full-saddle comparison on two reentrant cells.
 
 ![Original polyhedral macrocells and polygonal faces](../figures/polyhedral-rad/geometry.png)
@@ -167,6 +167,9 @@ distinct macrocells are not averaged. Macro outlines are the intersections of
 the actual polyhedral faces with the slice. The maps illustrate fields; norms
 use volume integration. Coarse grids can display nonmonotonic scalar errors
 for this oscillatory solution, so the records retain every measured level.
+The [field replay record](../figures/polyhedral-rad/fields-replay.json)
+identifies the finest-resolution coefficients and their agreement with the
+original physical error measurements for all three macroelement families.
 
 ## Verification and reproduction
 

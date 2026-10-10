@@ -1,0 +1,16 @@
+{
+  "scope": "Plots of retained norm measurements; no field reconstruction or new simulation",
+  "electric_time": 11.315,
+  "magnetic_time": 11.31,
+  "source_records_sha256": {
+    "comparison.json": "d65aa835e9c6b3b69225b8df0c563fcc47845081ff32adb5d66a72e54f189050",
+    "refinement-controls.json": "27e7d7d0ef950fe066c266f9d1777eff2135092b1cfad1bfa6b637481bb94d9f"
+  },
+  "plot_owner_sha256": "5d873719135bd7288b144ac0c7915010ee0eb9034c8b266a6d593c75c4cb879c",
+  "figure_sha256": {
+    "recorded-component-errors.png": "0e7e6c3960c1e28a0a6f594ddf9b3a25c8bc8198d880aa24cce4d9b976016a60",
+    "recorded-component-errors.svg": "2f5ab2d5dd949e0dc73273ed0ace36e855d44ef0cbce7cd8760e0f5b6435f02c",
+    "recorded-refinement-controls.png": "f04be2ad4c554474a974bfc4c16f10aca996314cbc3ef4ae843c9e15a3ade1d9",
+    "recorded-refinement-controls.svg": "fc9408439a7ddc540c85cd393faea17e7f48eebae7ef0fd58553f805229b348f"
+  }
+}

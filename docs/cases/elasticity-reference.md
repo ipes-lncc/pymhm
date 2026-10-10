@@ -66,14 +66,14 @@ seminorm and the stress norm includes every tensor component.
 | 8 | 256 | 0.00491662 | 0.51565665 | 0.43585575 | 0.86668932 |
 | 16 | 1024 | 0.00122784 | 0.25546743 | 0.21368265 | 0.42634049 |
 
-![Five matched MSL and pyMHM GaLS mesh levels](../figures/elasticity-reference/convergence.svg)
+![Five matched MSL and pyMHM GaLS mesh levels](../figures/elasticity-reference/convergence.png)
 
 The finer levels approach second-order displacement convergence and
 first-order gradient, pressure and stress convergence for this fixed
 P1/P1 local choice. Agreement between implementations and accuracy relative
 to the exact solution are separate quantities.
 
-![Absolute differences between the reconstructed fields](../figures/elasticity-reference/field-differences.svg)
+![Absolute differences between the reconstructed fields](../figures/elasticity-reference/field-differences.png)
 
 The difference curves measure the numerical scale of agreement; their slopes
 are not discretization convergence rates. Both fields retain their computed
@@ -93,25 +93,17 @@ These two rows change the local mesh as well as the polynomial degree and
 use the same linear macro trace. They are not a fixed-mesh polynomial-rate
 study, and a monotone decrease in every norm is not implied.
 
-## Exact, reference and reconstructed fields
+## Spatial reconstructions
 
-The maps show the P3/P3 case with $n=4$. The top row uses a common scale for
-the analytical, MSL and pyMHM fields. The first two error panels also share
-a scale; the implementation difference has its own explicitly labelled
-scale. Every panel shows the actual macro boundaries. Polynomial fields are
-evaluated separately on each fine triangle, preserving one-sided values
-rather than averaging stresses across interfaces.
+The matched P3/P3 case uses $n=4$. Its original coefficient archives are needed
+to reproduce spatial displacement, pressure and stress maps; they are external
+inputs rather than assets included in this report. The figures above display
+the retained integrated errors and differences from all five matched mesh levels.
 
-![Displacement component with exact, MSL, pyMHM and error maps](../figures/elasticity-reference/u1.svg)
-
-![Herrmann pressure with exact, MSL, pyMHM and error maps](../figures/elasticity-reference/pressure.svg)
-
-![Cauchy stress component with exact, MSL, pyMHM and error maps](../figures/elasticity-reference/stress11.svg)
-
-The GaLS stress reconstructed from displacement and pressure is symmetric,
-but these plots and comparisons do not assert that it is globally H(div)
-conforming. The [mixed stress formulation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md) enforces a
-different set of continuity and equilibrium conditions.
+GaLS stress reconstructed from displacement and pressure is symmetric. The
+comparison does not assert that it is globally H(div) conforming. The
+[mixed stress formulation](mixed-elasticity.md) enforces a different set of
+continuity and equilibrium conditions.
 
 ## Provenance and retained data
 

@@ -31,7 +31,7 @@ $$
 The remaining two terms carry the convex-cell Poincaré factor
 \(\operatorname{diam}(K)/(\pi\sqrt{\alpha_K})\), where \(\alpha_K\) is a
 certified lower material eigenvalue. The underlying
-[estimator and reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md) retain their
+[estimator and reconstruction](reconstruction-moments.md) retain their
 boundary-representability, continuous-test equilibrium and integration
 requirements. Numerical quadrature is not interval arithmetic.
 
@@ -40,7 +40,7 @@ the literal equations (5.3)–(5.7), with an unweighted L2 flux defect and
 diameter/π in the divergence and oscillation terms. The default `"energy"`
 uses the material weights above. The conventions coincide for this unit-diffusion
 example; their heterogeneous meanings and coefficient scalings are
-[documented separately](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/weighted-estimator.md#published-and-energy-normalized-conventions).
+[documented separately](weighted-estimator.md#published-and-energy-normalized-conventions).
 Changing that option changes marking values, not the finite-element PDE.
 
 `mark_dorfler` selects the smallest number of cells whose squared indicators

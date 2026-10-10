@@ -198,7 +198,7 @@ This comparison evaluates physical errors directly. A \(P_4/P_2\) local/trace
 pair is not assigned the estimator theorem above, which requires \(P_5\) for
 \(\ell=2\) in three dimensions. This distinction preserves both the valid
 approximation experiment and the theorem's actual hypotheses.
-The [P5/P2 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) supplies the corresponding admissible
+The [P5/P2 study](tetra-pk.md) supplies the corresponding admissible
 degree pair, with five uniform macro resolutions and a separate RT2/RT3
 comparison on the same 162-macrocell geometry.
 
@@ -236,6 +236,10 @@ Profiles cross the section along \(y=0.413\) and \(x=0.317\). Every fine-cell
 segment retains its own endpoint values. Consequently jumps in pressure or
 tangential flux remain visible instead of being averaged across interfaces.
 Vertical dotted lines identify macroface intersections.
+The profiles compare RT2 and RT3 on the same P4/P2 solution with four subfaces
+per macroface. The [field replay record](../figures/reconstruction3d/fields-replay.json)
+identifies the acquired coefficients, executed bases and agreement with the
+physical errors in the original table.
 
 ![Exact and one-sided numerical pressure and flux profiles](../figures/reconstruction3d/adaptive-profiles.png)
 

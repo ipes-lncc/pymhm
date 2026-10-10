@@ -3,7 +3,7 @@
 `HDiv3DFamily` and `solve_darcy_hdiv3d` separate the normal polynomial degree
 from the complete interior divergence space. Adding zero-normal bubbles changes
 local approximation without adding macroface unknowns. Enriching a normal trace
-changes a different part of the discrete problem. The [well comparisons](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
+changes a different part of the discrete problem. The [well comparisons](mixed-well-geometries.md)
 include independent NeoPZ verification for their stated lower-order spaces.
 The higher orders below are checked against exact fields and native Basix operators.
 

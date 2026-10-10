@@ -9,7 +9,7 @@ These native pyMHM experiments compare against exact fields, using bounded
 forces as the first Lamé modulus grows. The analytical family agrees with the
 MSL GaLS elasticity case. The curves below are not an independent execution
 of MSL or a digitized reproduction of the article's figures.
-The separate [MSL GaLS field comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) reports
+The separate [MSL GaLS field comparison](elasticity-reference.md) reports
 matched runs of both implementations, including higher-order local spaces.
 
 ## Formulation and constraints
@@ -157,7 +157,6 @@ Rates use $\log(E_i/E_{i+1})/\log(s_{i+1}/s_i)$ because the segment counts
 are not all related by a factor of two. They describe this measured sequence,
 not a universal superconvergence claim.
 
-
 These observed errors assess the stated spaces and triangulations. They do
 not certify every heterogeneous material or mesh, and they do not reproduce
 the article's stabilization coefficients or all its configurations. Stress
@@ -173,6 +172,10 @@ pressure differences. Every panel shows the actual macrotriangulation.
 
 ![Exact, numerical and pointwise-error maps for displacement, pressure and stress](../figures/elasticity/fields.png)
 
+The [spatial-map record](../figures/elasticity/fields-replay.json) identifies the
+executed case and field digest separately from the original acquisition. Its
+displacement, pressure, gradient and stress norms agree with the retained
+configuration to within $4\times10^{-13}$ relatively.
 
 The profile follows $y=0.37$. Each macrocell contributes its own endpoint
 values; opposite traces are neither averaged nor smoothed. Maps sample each

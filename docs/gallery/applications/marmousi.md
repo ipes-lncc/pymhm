@@ -98,7 +98,7 @@ the MHM/P4 acoustic-flux difference on that domain is 3.0369%.
 These are differences from a refined numerical reference, not exact errors.
 The selected data are not identified with the historical coefficient arrays
 in the method article, so this application does not claim a literal
-reproduction of its table. The [full report](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/marmousi.md)
+reproduction of its table. The [full report](../../cases/marmousi.md)
 provides source URLs, checksums, norm definitions, original-equation checks
 and the acquisition/replay commands.
 

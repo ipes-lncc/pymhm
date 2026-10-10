@@ -1,0 +1,71 @@
+{
+  "scope": "Only missing Darcy spatial figures reacquired with the original discretizations. Historical norm records remain unchanged.",
+  "original_record_sha256": "ac6d80e773dc8e1430179c9305d86a799281de95103bf5b189daba714a778411",
+  "reacquired_measurements": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "matplotlib": "3.10.9",
+    "solver": "scipy",
+    "macro_resolution": 4,
+    "macro_triangles": 32,
+    "fine_triangles": 512,
+    "local_refinement": 4,
+    "trace_degree": 0,
+    "assembly_quadrature": 6,
+    "error_quadrature": 8,
+    "cosine": {
+      "primal": {
+        "pressure_l2": 0.024572742109140573,
+        "flux_l2": 0.49799593874921333
+      },
+      "mixed": {
+        "pressure_l2": 0.0403496472174813,
+        "flux_l2": 0.48574581529805866
+      }
+    },
+    "cosine_resolved": {
+      "local_refinement": 12,
+      "trace_segments": 6,
+      "fine_triangles": 4608,
+      "errors": {
+        "primal": {
+          "pressure_l2": 0.0004677458061639615,
+          "flux_l2": 0.0729710408132131,
+          "flux_relative_l2": 0.032848509325550924
+        },
+        "mixed": {
+          "pressure_l2": 0.01090875547529034,
+          "flux_l2": 0.04928893799615942,
+          "flux_relative_l2": 0.02218781754199913
+        }
+      }
+    },
+    "layered": {
+      "primal": {
+        "pressure_l2": 9.261974580394742e-16,
+        "flux_l2": 2.7729163618585996e-12
+      },
+      "mixed": {
+        "pressure_l2": 0.010416671874998708,
+        "flux_l2": 3.1252047321262126e-13
+      }
+    },
+    "conservation": {
+      "raw_macro_max": 0.13041092345404892,
+      "raw_fine_max": 0.03830589515202097,
+      "primal_skeleton_macro_max": 1.9984014443252818e-15,
+      "recovered_macro_max": 1.987993103469421e-15,
+      "recovered_fine_max": 2.740863092043355e-16,
+      "mixed_macro_max": 2.220446049250313e-16,
+      "mixed_fine_max": 1.5612511283791264e-16,
+      "recovered_flux_l2": 0.48581820618906757
+    },
+    "layered_p0_projection_l2": 0.010416671874998697
+  },
+  "comparison": {
+    "cosine_primal_pressure_absolute_change": 5.551115123125783e-17,
+    "cosine_mixed_flux_absolute_change": 5.551115123125783e-17,
+    "layered_affine_pressure_error": 9.261974580394742e-16,
+    "layered_affine_flux_error": 2.7729163618585996e-12
+  }
+}

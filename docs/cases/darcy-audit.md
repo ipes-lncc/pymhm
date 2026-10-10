@@ -16,7 +16,7 @@ The recorded reference runtime is [DOLFINx 0.9.0](https://docs.fenicsproject.org
 identified in `examples/results/darcy-audit.json`. The reference forms were
 assembled independently in UFL. These checks did not execute MSL, MFEM, or the
 software used for the 2019 article. Separate
-[MSL](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) and [NeoPZ](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) pages report those code comparisons.
+[MSL](reference-comparison.md) and [NeoPZ](neopz.md) pages report those code comparisons.
 
 ## Problem, norms and reproducibility
 
@@ -131,7 +131,7 @@ multiplier system on this mesh: the numerical rank check rejects the solve.
 The mixed RT0 trace remains admissible. The multiplier space must be compatible
 with the local trace response for the reduced system to have full rank.
 
-The [main Darcy gallery](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy.md#an-enriched-computation) compares `r=12,s=6`
+The [main Darcy gallery](darcy.md#an-enriched-computation) compares `r=12,s=6`
 with the coarse `r=4,s=1` configuration and labels their physical error norms.
 
 ## Independent assembly and physical-field checks
