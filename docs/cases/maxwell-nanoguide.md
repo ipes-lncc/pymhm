@@ -136,6 +136,12 @@ error. The temporal control also shows that the published MHM time step
 contributes to the total discrepancy. No time extrapolation or phase
 alignment is applied.
 
+This device's independent baseline is central DG. A separately refined
+conforming transient reference for the same heterogeneous operator and
+incident data remains an additional physical comparison. The conforming
+scalar-wave control in the [smooth TM tutorial](../tutorials/methods/maxwell.md)
+qualifies that analytical cavity problem.
+
 The numerical records retain field digests, integration partitions and
 componentwise norms:
 [field comparisons](../figures/maxwell-nanoguide/comparison.json),

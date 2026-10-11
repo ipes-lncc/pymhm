@@ -119,7 +119,7 @@ five-spot visualization.
 
 ### Primal P1 approximation
 
-Primal P1 pressure gives the expected asymptotic orders, but its gradient is
+Primal P1 pressure gives the measured refinement orders below, but its gradient is
 constant on each triangle. Its values differ systematically from the published
 curves, beyond the digitization tolerance.
 

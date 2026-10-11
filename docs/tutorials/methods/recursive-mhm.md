@@ -2,15 +2,15 @@
 
 [Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/reconstruction_and_indicators.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/reconstruction_and_indicators.ipynb)
 
-A local operator can itself be a `MultiscaleProblem`. This lesson uses a real
-two-level Darcy problem with analytical pressure
+A local operator can itself be a `MultiscaleProblem`. This lesson uses a
+Darcy hierarchy with outer and child macro partitions and analytical pressure
 $p=\sin(2\pi x)\sin(2\pi y)$, $K=I$, homogeneous Dirichlet data, and the
 independently differentiated source $f=8\pi^2p$. It compares every reconstructed
 leaf against the same flattened MHM discretization before evaluating spatial
 convergence. The [algebraic hierarchy notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
 remains useful for inspecting individual matrix blocks.
 
-## 1. Define two physical macro scales and the leaf mesh
+## 1. Define the outer and child macro partitions and the leaf mesh
 
 Each outer macrotriangle contains four child macrotriangles. Each child has
 four fine triangles for the P3 local pressure. Child normal traces are P1;
@@ -39,7 +39,7 @@ P3 pressure and P1 traces satisfy the two-dimensional primal MHM degree
 condition. The physical constant mode and volume moment remain explicit.
 The source is not discarded when the child operator is condensed.
 
-## 3. Declare another global problem as this scale's local provider
+## 3. Declare the child global problem as the outer local provider
 
 ```python
 def recursive_provider(local: LocalContext):
@@ -83,7 +83,9 @@ exact `boundary_dofs` and `trace_map` deliberately.
 ## 5. Compare the identical flattened discretization
 
 The notebook joins the actual child meshes, including their executed diagonals,
-then assembles a separately declared one-level MHM problem on that mesh.
+then assembles a separately declared nonrecursive MHM problem on that mesh.
+Its finite local solves still constitute a two-level MHM discretization in
+the terminology of the elliptic analysis.
 No change is made to leaf degree, local mesh ratio, source, boundary values or
 trace spaces. The coefficient difference tests associative condensation;
 it is separate from the physical error against the analytical solution.
@@ -105,12 +107,20 @@ against the exact Darcy flux; RT2 recovery is a separate postprocessing step.
 ## 6. Demonstrate the inherited asymptotic rate
 
 The outer sequence is $n=2,4,8,16$, so child macro diameters are
-$H_c=\sqrt{2}/(2n)$. The flattened P3/P1 MHM error estimate predicts physical
-Darcy-flux order $H_c^2$ for the smooth solution. Exact recursive condensation
-inherits this discretization's rate; it is not a distinct universal theorem
-for an arbitrary hierarchy whose interface approximation changes.
+$H_c=\sqrt{2}/(2n)$. For the flattened finite-local P3/P1 method,
+[Barrenechea et al. (2026), Theorem 3.1](https://doi.org/10.1137/24M1673073)
+bounds the broken energy error by contributions of order $h^3+H_\Gamma^2$.
+It requires compatible shape-regular simplicial partitions,
+$p\in H^4(K)$ and $A\nabla p\in H^2(K)^2\cap H(\mathrm{div};\Omega)$.
+The identity material, smooth sine solution and uniformly refined meshes
+here satisfy these conditions. Here $h=H_c/2$ and $H_\Gamma=H_c$;
+the energy error is exactly the raw Darcy-flux $L^2$ error because $A=I$.
+The estimate therefore predicts order $H_c^2$ for this finite-local family.
+Exact recursive condensation inherits the same discretization and its
+measured rate. This is not a separate universal theorem for a hierarchy
+whose interface approximation changes.
 
-![Physical two-level convergence, successive rates and the normalized error plateau](../../assets/tutorials/methods/recovery-recursive-convergence.png)
+![Recursive and flattened discretization: physical convergence, successive rates and the normalized error plateau](../../assets/tutorials/methods/recovery-recursive-convergence.png)
 
 [PDF](../../assets/tutorials/methods/recovery-recursive-convergence.pdf) · [SVG](../../assets/tutorials/methods/recovery-recursive-convergence.svg)
 
@@ -133,7 +143,19 @@ macro edges, and preserves independent fine-cell centroid samples. The flux
 panels show the RT2 recovery of this same leaf solution; their vector error
 is distinct from the raw-flux error in the convergence table.
 
+## Reproduce this tutorial
+
+The notebook linked at the top defines the forms and runs the recovery,
+indicator, adaptive and recursive studies. Install the native notebook backend
+as described in the [installation guide](../../installation.md), then open it
+from the source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/reconstruction_and_indicators.ipynb
+```
+
 ## References
 
 - Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
 - Christopher Harder, Diego Paredes and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

@@ -26,7 +26,15 @@ def mixed_elasticity_operators(
     family: BDMFamily = _DEFAULT_FAMILY,
     compliance: Any = None,
 ) -> tuple[Any, Any, Any, FloatArray]:
-    """Assemble compliance, divergence, asymmetry and body-force moments."""
+    """Assemble compliance, divergence, asymmetry and body-force moments.
+
+    Stress rows are BDM, displacement and scalar weak rotation are DG of
+    degree one lower. The asymmetry is sigma_xy-sigma_yx; its multiplier is
+    (partial_y u_x-partial_x u_y)/2. The caller applies the force sign for
+    -div(sigma)=f and couples rigid displacement with its rotation value.
+    Devloo et al. (2021), DOI:10.1051/m2an/2021013, Eqs. (2.2)--(2.4),
+    analyze this two-dimensional weak-symmetry construction.
+    """
     bary, weights = triangle_quadrature(order)
     values, divergence = family.basis(mesh, bary)
     scalar_basis = reference_basis(family.polynomial_degree - 1, bary)[0]

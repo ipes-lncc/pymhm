@@ -407,7 +407,12 @@ def reconstruct_darcy_moments(
 
     Require m<=k so continuous P_m tests belong to the primal space. This
     identity alone is weaker than the paper's optimal-estimate hypothesis
-    k>=ell+2 in two dimensions, where ell is the skeleton degree.
+    k>=ell+2 in two dimensions, where ell is the skeleton degree. Theorem
+    4.7 additionally assumes diffusion polynomial on every fine triangle,
+    piecewise H^(k+1) pressure and A grad(p) in piecewise H^(ell+1)
+    intersected with H(div), with
+    compatible shape-regular partitions. These approximation hypotheses
+    are not inferred from a material callback or algebraic conservation.
 
     CartesianCellField interfaces use exact geometric cuts and one-sided pixel
     values from the incident triangle. For other callbacks, K is evaluated at

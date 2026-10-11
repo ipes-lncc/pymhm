@@ -69,13 +69,14 @@ For a local space with boundary coupling $B_K$, the complex local operator is
 
 $$
 \begin{aligned}
-a_K(u,v)={}&(\rho^{-1}\nabla u,\nabla\overline v)_K
--\omega^2(\kappa^{-1}u,\overline v)_K\\
-&-i\omega\langle(\kappa\rho)^{-1/2}u,\overline v\rangle_{\partial K\cap\Gamma_A}.
+a_K(u,v)={}&(\rho^{-1}\nabla u,\nabla v)_K
+-\omega^2(\kappa^{-1}u,v)_K\\
+&-i\omega\langle(\kappa\rho)^{-1/2}u,v\rangle_{\partial K\cap\Gamma_A}.
 \end{aligned}
 $$
 
-The skeletal unknown represents $q\cdot n$ on nonabsorbing faces. Its orientation
+All volume and face inner products conjugate the test argument. The skeletal
+unknown represents $q\cdot n$ on nonabsorbing faces. Its orientation
 changes on the two sides of an interior macroface. The local reconstruction and
 assembled problem are
 
@@ -102,10 +103,17 @@ Local resonances and incompatible trace spaces are rejected by the shared rank
 and original-equation residual checks. These checks do not establish wave
 accuracy. The analysis also requires nonresonant local problems, sufficient
 local approximation and a frequency-dependent global resolution condition.
-For convex interior macrocells, the condition $\omega H_K/c_K<\pi$ is a
-sufficient local condition in the constant-material setting, with
-$c_K=\sqrt{\kappa/\rho}$ and $H_K$ the diameter. It is not a universal accuracy
-criterion or a necessary condition for an individual discrete inverse.
+Theorem 3.3 permits positive heterogeneous coefficients in convex interior
+macrocells, using $c_{\min,K}=\sqrt{\operatorname{ess\,inf}_K\kappa/
+\operatorname{ess\,sup}_K\rho}$ and
+$\omega H_K/c_{\min,K}\le\sqrt{1-\delta}\pi$ for $0<\delta<1$.
+Boundary cells and nonconvex mapped cells require additional conditions.
+The polynomial one-level rate theorem (5.4) also assumes global uniqueness,
+piecewise smooth coefficients and solution, a compatible regular macro mesh,
+and sufficiently small $\omega H$ and $C_s(\omega)(\omega H)^{\ell+1}$.
+It omits local finite element error. These are sufficient hypotheses, not
+necessary conditions for an individual discrete inverse or universal
+accuracy criteria.
 
 Scalar callbacks, Cartesian cellwise materials and isotropic `PlanarMaterial`
 inputs are supported. Explicit material interfaces split volume and boundary
@@ -115,7 +123,7 @@ uncut fine element cannot represent an arbitrary material-induced derivative
 jump. An anisotropic tensor cannot be passed as a scalar acoustic density.
 
 `helmholtz_skeleton(..., oscillatory=True)` implements the real span of the
-exponential trace functions in Section 5. Its orthonormal coordinate matrices
+exponential trace functions in Section 6. Its orthonormal coordinate matrices
 are deterministic and saved with the experiment fields. Polynomial and
 oscillatory traces have the same number of coefficients in each comparison.
 

@@ -114,6 +114,16 @@ The local equation for zero-normal tests makes the functional independent
 of the selected lifting. Together with macrocell balance, fixed natural
 fluxes and a global gauge when needed, it determines the hybrid solution.
 
+This is the discrete Neumann decomposition of
+[Durán et al. (2019), equations (26)–(29)](https://doi.org/10.1016/j.cma.2019.05.013).
+Their Theorem 1 identifies it with the global mixed method (30)–(31)
+whose H(div) normal traces are restricted to the selected skeleton.
+The stability analysis additionally requires bounded commuting
+projections (41)–(47), a zero-normal divergence lifting of the local
+mean-zero pressure space, aligned shape-regular partitions and
+representable skeletal normals. Divergence equality or a finite rank
+check alone does not establish a uniform inf-sup constant.
+
 The normal traces on the macro boundary are constrained to the selected skeletal
 space, while internal flux degrees of freedom can be refined or enriched. A
 mean-zero pressure complement and a coarse pressure constant separate local and
@@ -138,15 +148,45 @@ statement is valid for the resulting field.
 
 ## Degrees, rates and geometry
 
-For the smooth original family, skeletal degree $\ell$ targets broken
-energy/physical-flux order $\ell+1$. Pressure $L^2$ can gain one order
-when the dual problem is regular. These are two-level statements: the
-conforming local finite element error must be made smaller independently.
-The original construction and analysis are
-[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)
-and [Araya et al. (2013)](https://doi.org/10.1137/120888223).
-An algebraic kernel/trace rank check does not establish the uniform
-lifting condition required by those estimates.
+Theorem 4.1 of [Araya et al. (2013)](https://doi.org/10.1137/120888223)
+analyzes the **one-level** method: polynomial degree $\ell$ on macrofaces
+with exact local responses. For $p\in H^{s+1}(\Omega)$,
+$1\le s\le\ell+1$, it bounds the energy and physical-flux errors by
+$H^s$ with the stated coefficient and stability constants. Taking
+$s=\ell+1$ gives the smooth-problem order $\ell+1$; the pressure $L^2$
+order gains one when the dual regularity assumptions hold. This theorem
+does not assert uniform constants for arbitrary coefficient contrasts.
+
+Computations with conforming local finite elements are **two-level**
+realizations. Their local approximation error is a separate term and
+must not dominate a study of skeleton error. Local and global stability
+are needed in addition to sufficient polynomial approximation; see
+[Harder and Valentin (2016), Lemmas 3–4](https://doi.org/10.1007/978-3-319-41640-3_13).
+An algebraic kernel/trace rank check alone does not establish the
+mesh-uniform lifting condition. The original
+[JCP construction](https://doi.org/10.1016/j.jcp.2013.03.019) reports
+numerical convergence; the cited SIAM paper supplies the one-level
+analysis.
+
+For the **two-level polygonal method**, [Barrenechea et al. (2020)](https://doi.org/10.1007/s00211-020-01103-5)
+analyze continuous local $P_{k+1}$ fields with discontinuous subedge
+degree $\ell=k$ or $k+1$, in two dimensions. Their virtual triangulation
+must be shape regular and fit the skeletal partition. The construction
+requires at least one red refinement for $\ell=k$; for $\ell=k+1$ it
+requires two when $k=0,1$ and one when $k\ge2$. Nonconvex macrocells
+satisfy the bounded star-shaped-cover and Poincaré conditions (A0).
+Theorem 3 separates local and skeletal errors as
+$h^{k+1}\lvert p\rvert_{H^{k+2}(\mathcal P_H)}$
+and $h_\Gamma^{\ell+1}\lvert\mathsf K\nabla p\rvert_{H^{\ell+1}(\mathcal P_H)}$.
+For convex domain and macrocells, local
+$\mathsf K\in W^{1,\infty}(K)^{2\times2}$ and the $H^2$ dual-solution
+bounds (81) and (86) are the additional regularity hypotheses used in
+Theorem 5. Its pressure $L^2$ terms are $h^{k+2}$ and
+$h_\Gamma^{\ell+2}$. With a convex domain and the global dual bound,
+but nonconvex macrocells satisfying (A0), Theorem 6 instead has
+$H(h^{k+1}+h_\Gamma^{\ell+1})$ and requires macro refinement for that
+extra factor. These are separate estimates; a fixed nonconvex macro mesh
+does not acquire the convex-cell pressure estimate automatically.
 
 Mixed locals must satisfy $\operatorname{div}V_h=Q_h$. The triangular RT$_r$
 pair uses discontinuous $P_r$ pressure; BDM$_r$ uses $P_{r-1}$. Rectangular
@@ -174,8 +214,16 @@ interpolation within each macroface. The macro topology can remain fixed;
 local approximation and the face approximation error are different terms.
 Periodic homogenization robustness in
 [Paredes, Valentin and Versieux (2017)](https://doi.org/10.1090/mcom/3108)
-requires periodic coefficients and the stated scale/regularity relations;
-it is not a contrast-independent theorem for arbitrary materials.
+analyzes the **one-level** method with exact local responses. Theorems 8
+and 11 give broken $H^1$ and pressure $L^2$ factors
+$H+\varepsilon^\delta$ and $H(H+\varepsilon^\delta)$, respectively,
+with the homogenized-solution and periodic-corrector regularity in those
+theorems. They require a macrocell interior scale larger than
+$c\varepsilon$ and the homogenized source-lift bound (70). Uniformity in
+$\varepsilon$ is distinct from independence of coefficient contrast.
+Finite local meshes introduce an additional approximation error; the
+theorems do not certify arbitrary Q1/P0 discretizations or arbitrary
+nonperiodic materials.
 
 [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016)
 allow the macro mesh to cross material regions. Every skeletal subface must
@@ -192,8 +240,9 @@ See the [unfitted tutorial](../tutorials/methods/unfitted.md).
 The [recovery and adaptivity theory](recovery.md) distinguishes RT0
 minimum-energy equilibration from moment-based H(div) reconstruction,
 conforming potential recovery and complete field-specific estimators.
-The degree condition $k\ge\ell+d$, source/trace compatibility and the
-estimator's independent subface tests belong to the stated theorem;
+The degree condition $k\ge\ell+d$, polynomial diffusion on each fine
+simplex, the stated solution regularity, source/trace compatibility and
+the estimator's independent subface tests belong to the stated theorem;
 existence of a numerical reconstruction alone does not establish its bound.
 
 ## References
@@ -201,6 +250,10 @@ existence of a numerical reconstruction alone does not establish its bound.
 - Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
 
 - Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations, 401–433. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+
+- Gabriel R. Barrenechea, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2020). *The multiscale hybrid mixed method in general polygonal meshes*, Numerische Mathematik 145(1), 197–237. [DOI: 10.1007/s00211-020-01103-5](https://doi.org/10.1007/s00211-020-01103-5).
 
 - Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2017). *On the robustness of multiscale hybrid-mixed methods*, Mathematics of Computation 86(304), 525–548. [DOI: 10.1090/mcom/3108](https://doi.org/10.1090/mcom/3108).
 

@@ -55,8 +55,8 @@ the two traces remain distinct.
 
 The multiplier here is the Robin flux
 \((-0.2\nabla u+\boldsymbol\beta u/2)\cdot n\), rather than the full physical
-flux \((-0.2\nabla u+\boldsymbol\beta u)\cdot n\). See the
-[RAD formulation](../theory.md) for the boundary convention.
+flux \((-0.2\nabla u+\boldsymbol\beta u)\cdot n\). The boundary convention follows
+[Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
 
 ## Heat decay with an exact eigenmode
 

@@ -10,7 +10,8 @@ q=-K\nabla p,\qquad \nabla\cdot q=f
 $$
 
 on the unit square, with analytical pressure prescribed on its entire boundary.
-The [theory](../theory.md) explains the trace sign and local elimination;
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)
+give the original primal formulation;
 [verification](../verification.md) reports additional refinement levels.
 
 Both local formulations and the flux reconstruction on this page are executed

@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>stokes-brinkman convergence</dc:title>
-    <dc:description>stokes-brinkman; all 5 measured levels; fixed final-four diagnostic window. Stabilized P3/P3 USFEM locals; vector P1 traces; viscosity one, zero drag. Smooth polynomial crisscross-mesh family; nu=1, drag=0, P1 vector trace; one local triangle; H=1/n is the actual triangle diameter. Analytical physical field errors. Record examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json; SHA256 a2248fb906e8957977d57a746645b154acd63153edb0cc40ca7be46f354e8c68. Araya, Harder, Poza and Valentin (2017): smooth velocity/pressure estimates. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>stokes-brinkman; all 5 measured levels; fixed final-four diagnostic window. Stabilized P3/P3 USFEM locals; vector P1 traces; viscosity one, zero drag. Smooth polynomial crisscross-mesh family; nu=1, drag=0, P1 vector trace; one local triangle; H=1/n is the actual triangle diameter. Analytical physical field errors. Record examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json; SHA256 a2248fb906e8957977d57a746645b154acd63153edb0cc40ca7be46f354e8c68. Araya et al. (2017): observed smooth velocity L2 order three; Araya et al. (2025), Theorem 4.2: broken V × Q product-norm bound under stability, lifting and regularity hypotheses. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

@@ -90,7 +90,8 @@ different approximation spaces; both are stated explicitly.
 ## Results and reproducibility
 
 An independent DOLFINx/UFL conforming reference is refined from $P_1$ to
-$P_4$ on the material mesh. Its last global pressure L2 increment is
+$P_4$ on the fixed 5 m material mesh. This is a polynomial-degree refinement
+control; a sequence of finer conforming meshes is not included. Its last global pressure L2 increment is
 0.0786%; the MHM/P4 pressure difference is 2.6935%. Derivative comparisons
 exclude the fixed $50\times50$ m square containing the singular source;
 the MHM/P4 acoustic-flux difference on that domain is 3.0369%.

@@ -31,6 +31,15 @@ The API checks the spatial dimension explicitly. Canonical RT moment
 construction itself has a weaker algebraic requirement; its existence alone
 does not establish the hypotheses of this error estimate.
 
+Theorem 4.7's approximation bound also assumes diffusion polynomial on
+each fine tetrahedron and the stated piecewise pressure/conormal
+regularity. Identity diffusion and both analytical solutions below satisfy
+these conditions. Raw-divergence rates require the additional source
+regularity and quasi-uniform size relation; they do not follow solely
+from the degree inequality. Reliability and efficiency have separate
+hypotheses, stated in
+[Barrenechea et al. (2026), Theorem 5.2](https://doi.org/10.1137/24M1673073).
+
 The theorem's skeletal space has independent polynomial tests on each
 subtriangle. The local efficiency argument uses a constant test supported on
 one such subface to obtain its zero mean pressure jump. A continuous macroface

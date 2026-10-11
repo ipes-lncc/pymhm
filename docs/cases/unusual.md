@@ -1,7 +1,7 @@
 # Scalar MHM with UNUSUAL local stabilization
 
 PyMHM implements the scalar MHM-UNUSUAL formulation of
-[Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270),
+[Martins, Pacazuca and Valentin (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270),
 Eqs. (14)–(19), for two-dimensional reaction–diffusion. The numerical evidence
 here includes independent DOLFINx/UFL operators, an executed comparison with
 **MHMUN-RAD_Parallel / FreeFem++**, and analytical tests over five spatial
@@ -40,6 +40,8 @@ a_{\rm UN}(u,v)
 \end{aligned}
 $$
 
+The local equation is $a_{\rm UN}(u_K,v)+\langle\lambda_K,v\rangle_{\partial K}=\ell_{\rm UN}(v)$. The global equation matches scalar moments,
+$\sum_K\langle\mu_K,u_K\rangle_{\partial K}=\langle\mu,g\rangle_{\Gamma_D}$, with prescribed natural coefficients omitted from free tests.
 The boundary functional retains the standard MHM sign and orientation. The
 stabilization is **negative and symmetric**, and acts on the complete strong
 residual. Scalar SUPG is a different formulation: with zero advection, its
@@ -96,7 +98,11 @@ The spatial families used here satisfy the degree/refinement configurations in
 Theorem 1: P1/P0 with one red local refinement, P2/P1 with one red refinement,
 and P2/P0 or P3/P1 with an unrefined local triangle for the native comparison.
 Increasing the local degree alone does not remove error from a fixed macro
-trace space.
+trace space. Theorem 1, estimate (21), also contains a fine-cell Péclet-dependent
+factor multiplying the local interpolation contribution. It is not a uniform
+coefficient-independent estimate of only skeletal and fine-mesh powers.
+Figure 1 reports smooth H1 and scalar L2 orders separately; the theorem does
+not state an additional scalar L2 estimate.
 
 ## Using variable materials
 
@@ -281,8 +287,9 @@ The implementation covers triangular two-dimensional meshes, arbitrary scalar
 local polynomial degrees, compatible macroface degrees/subdivisions, mixed
 boundary data, and the coefficient contracts stated above. It does not identify
 this method with Oseen/Stokes USFEM, scalar SUPG, or an advection extension.
-The SPE10 experiment in §4.2 is not numerically reproduced on this page;
-its historical local mesh, degree and reference-field data are not established
+The SPE10 experiment in §4.2 is not numerically reproduced on this page.
+The paper specifies P1 locals, P0 traces and eight segments per macroface;
+its historical local connectivity and reference-field data are not established
 by the comparisons reported here.
 
 ## Reproducing the package's analytical evidence
@@ -303,4 +310,4 @@ replays those archives. Numerical records are available as
 
 ## References
 
-- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
+- Larissa Martins, Juan F. Pacazuca, and Frédéric Valentin (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).

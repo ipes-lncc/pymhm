@@ -216,7 +216,14 @@ def solve_mshho(
     source/flux and fix the volume mean through ``mean_pressure``.
     This finite-dimensional realization uses the same local variational
     spaces as primal MHM, allowing exact discrete equivalence checks for
-    polynomial/projected sources. Raw gradients need not be H(div) conforming.
+    polynomial/projected sources. Theorem 5.1 concerns ideal local PDE solves;
+    finite-space agreement requires matched spaces and represented source loads.
+    The ideal projected-source flux is H(div) conforming (Lemma 4.2), whereas
+    the reconstructed-source flux need not be (Remark 5.3). Finite local raw
+    gradients require their own conformity check. Theorem 6.3 gives an energy
+    estimate with piecewise H^(m+1) source and H^(ell+1) A grad(p), regular
+    matching macrocell submeshes and material-dependent constants; it supplies
+    no pressure L2 rate by itself.
     ``local_refinement_precision='extended'`` retains reconstruction, represented
     Galerkin operators and moment-coordinate digits through defect corrections.
     Factors remain binary64 and the original residual criterion stays 1e-10;

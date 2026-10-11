@@ -7,6 +7,11 @@ keeping a small global system.
 
 ![Lamé modulus, displacement and stress in the heterogeneous solid](../../assets/tutorials/multiscale_elasticity/figure_20_0.png)
 
+The upper-left panel shows the prescribed material coefficient $\lambda=\mu$.
+The other panels show computed displacement, Cauchy stress and the displacement
+difference from the refined numerical reference. Every panel overlays the
+actual macro mesh.
+
 ## Physical problem
 
 On $\Omega=(0,1)^2$, there is no body force and displacement is prescribed

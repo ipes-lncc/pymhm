@@ -1,6 +1,6 @@
 # PyMHM implementation, verification and validation roadmap
 
-Updated **October 10, 2026**. This is the project's canonical roadmap.
+Updated **October 11, 2026**. This is the project's canonical roadmap.
 The [scientific scope](#scientific-scope-and-acceptance-criteria) and
 [literature acceptance matrix](#acceptance-by-literature-target) identify
 implemented capabilities and remaining evidence. Detailed results belong on the
@@ -39,53 +39,20 @@ owners. The fully explicit route remains available. See the
 Implemented geometry, physics and backend scopes appear in the table below.
 The [Gallery](docs/gallery/index.md) retains numerical results and the
 [performance reports](docs/performance.md) identify measured workloads, hardware
-and accuracy. The current source includes the contextual interface and portable
-native-form assembly; package metadata is synchronized at version 1.3.0.
+and accuracy. The package metadata is synchronized at version 1.3.1.
 
-Local qualification includes **6,517 passing tests**, line coverage of
-**99.80%** and branch coverage of **99.24%**, together with lint, formatting,
-type checking, native FEM, MPI and two-GPU integrations. The installed wheel
-passes its eight portable execution and PARDISO checks outside the checkout.
-The standalone wheel-ownership test requires that isolated installation;
-its skip in the checkout suite is not a missing dependency. The
-[API qualification record](benchmarks/results/api-binding-20261006/README.md)
-identifies the earlier numerical controls and their scope. Verification applies
-to the executed cases; it does not establish stability or resolution in other
-regimes. The documentation is organized into Home, Getting Started, Theoretical
-Background, Guides, Tutorials, Gallery, Development, API and Bibliography.
-Seventeen formulation tutorials and four recovery/adaptation/hierarchy lessons
-pair the equations with their implementation. Attributed refinement evidence
-distinguishes smooth spatial approximation, temporal integration, independent
-trace refinement and differences to qualified numerical references. Physical
-conservation, recovery errors, estimator effectivity and adaptive error against
-work accompany the applicable convergence estimates.
-The [theory](docs/theory.md) and individual tutorials distinguish spatial rates,
-temporal rates, trace refinement and observations without a theorem claim.
-The twenty-one formulation refinement series retain every measured level,
-successive orders and target-normalized errors. Smooth Stokes qualification
-includes both Taylor–Hood and stabilized local spaces; difficult Brinkman layers
-remain a separate resolution study. Matched conforming references include the
-homogeneous anisotropic primal-elasticity family. The recovery lessons verify
-RT moment errors, projected divergence, distinct fine-cell RT0 conservation,
-adaptive error against work and equivalence of physical recursive condensation.
-Historical scaling measurements retain their original source revisions.
-All 114 downloadable notebooks have checksum-pinned support archives. Existing
-tutorial receipts record complete executions of 25 notebooks at their identified
-source checksums. The CPU-kernel performance notebook defines and executes its
-own 2D/3D workflow. Numerical execution receipts and download archive integrity
-are verified separately; they do not certify complete execution of the entire
-notebook catalogue. Public
-API pages render every canonical module directly from its source docstrings.
-Original documentation figures use CC BY 4.0 with attribution to IPES Research
-Group; third-party assets retain their own terms. Mathematical rendering and
-figure layout are inspected in native Chrome as well as through `docs-check`.
-Result reports are rendered within the documentation site. The publication gate
-checks local routes, section anchors, figures and downloads, and requires copied
-documentation assets to be tracked in Git. Links to report sources on GitHub do
-not substitute for published report pages.
-Native Windows and macOS qualification of this changed revision remains a CI
-acceptance gate.
-Private `_legacy` implementations support comparisons, not the primary API.
+The method tutorials pair variational equations with executable declarations.
+Their numerical records distinguish proven estimates, observed orders,
+reference differences and refinement increments. Existing executions retain
+their original source, spaces, physical data and basis identities; editorial
+changes do not create a new numerical acquisition.
+
+The portable distribution contains the library and typing/release metadata.
+Notebook helpers, datasets and external reference sources are separate.
+Publication gates validate rendered mathematics, links, figures and downloads;
+qualification of numerical operators also requires the relevant native tests
+and independent physical controls. CI supplies native Windows/macOS checks.
+See [Development](docs/development/index.md) for the required local quality gates.
 
 ## Scientific scope and acceptance criteria
 
@@ -130,6 +97,7 @@ and backend details.
 
 | Milestone | Priority | Deliverable | Dependency |
 | --- | --- | --- | --- |
+| R0 — Scientific review | P0 | Peer-reviewed definitions, formulations and theorem scope | Original publications and review by method experts |
 | R1 — Brinkman | P0 | 2D/3D regime and space matrix with demonstrated accuracy limits | Existing variational operators and independent references |
 | R2 — General performance | P1 | Scaling and cost at matched accuracy beyond current benchmarks | Physical controls and profiling of the complete execution |
 | R3 — Scientific acceptance | P1 | Progressive completion of literature targets and resolution controls | Identified inputs and refined references for each case |
@@ -138,11 +106,30 @@ and backend details.
 | R6 — External providers | P2 | Interchangeable providers using the local contracts | R4 contracts and physical controls |
 | R7 — Distribution | P2 | Release with demonstrated scientific and platform scope | Required gates and evidence for advertised capabilities |
 
-The contextual API is implemented; R4 now lists its remaining extensions. R1 remains
-the highest-priority scientific qualification. Work through R3 in bounded
-family-specific deliveries; R5 may proceed independently when it does not change
-the source of an active acquisition. Performance acquisitions require exclusive
-hardware; concurrent tests or campaigns must not contaminate timing.
+The contextual API is implemented; R4 lists its remaining extensions.
+Scientific review precedes new public capability or rate claims. Work through
+R1 and R3 in bounded family-specific deliveries. Performance acquisitions
+require exclusive hardware; concurrent tests must not contaminate timing.
+
+## R0 — Peer review of scientific definitions and scope
+
+- [ ] Restore detailed theoretical documentation page by page only after IPES
+  method experts approve its definitions, local/global formulations, literature
+  attribution and numerical claims. The published Methods catalogue contains
+  concise construction labels and primary references; detailed theoretical
+  sources are excluded from the generated site and search index during review.
+- [ ] Obtain review by IPES method experts of the introduction, each local/global
+  formulation, physical multiplier conventions, stated conservation scale and
+  convergence hypotheses, including one-level/two-level distinctions, regularity,
+  dimensions, degrees and local/trace mesh compatibility.
+- [ ] Resolve outstanding matched-case reference discrepancies and unavailable
+  historical inputs in R3 before claiming literal literature reproduction.
+- [ ] Require scientific review of new method pages and application captions,
+  including a clear distinction between material coefficients and solution fields.
+
+**Acceptance:** expert review agrees with the original method definitions and
+with the scientific scope of each advertised construction. Numerical residuals
+and algebraic equivalence do not replace the relevant approximation hypotheses.
 
 ## R1 — Qualify Stokes–Brinkman in 2D/3D
 
@@ -160,7 +147,8 @@ and [SPE10](docs/cases/spe10.md).
   as distinct discretizations.
 - [ ] Check local degrees/meshes, kernels, traces, pressure gauge, stabilization
   and source. Declare gradient versus symmetric-strain operators and the theorem's
-  resistance/inverse-inequality conventions: L13 and L16 use different parameters.
+  resistance/inverse-inequality conventions: the 2017 construction and
+  2025 analysis use different parameters.
 - [ ] Distinguish pseudo-traction, the multiplier and physical stress. Verify
   zero resistance, homogeneous/nonhomogeneous boundaries and compatibility.
 - [ ] Refine macro mesh, local mesh and trace space independently, using at least
@@ -258,7 +246,7 @@ versioned repository and release artifacts.
 | L06: MHM–MsHHO connection | [Elliptic macro and skeletal refinement](docs/cases/mshho.md) | Analytical comparisons with declared source spaces and complete independent assembly; field differences meet their declared criterion | Complete convergence under the equivalence hypotheses. At contrast 10⁶, cross-insertion into the other rounded operator gives about `5.19e-9`, above its `1e-10` criterion; joint certification remains unresolved. |
 | L07: face-based robustness | Periodic medium and SPE10 layer 36 with continuous face interpolation | [Darcy flux](docs/cases/spe10-flux.md), Q1/C0-P1 MHM and Q3/MSL/NeoPZ references | Resolve local/face/material and classical-reference increments, preserving layer, units, orientation and the published 66-square macro partition. Q3/RT0 energy control is `1.80e-6` against `1e-7`; this is separate from solver residual acceptance. |
 | L08: unfitted preprint | [Two-layer interface](docs/cases/unfitted.md) | Analytical series and independent UFL systems | Identify preprint-specific inputs and hypotheses separately from final L10; their regularity endpoints differ. |
-| L09: H(div) recovery and adaptivity | [Adaptive SPE10](docs/cases/spe10-adaptive.md) | Published P2/r2/P0 spaces, RT2/Oswald recovery, full independent initial/final UFL systems and refined RT2 references | Reduce reference sensitivity and qualify historical BAMG connectivity/marking. Centralize `k >= ell + d` for estimates and `ell <= m <= k` for reconstruction; test admissible boundaries and immediately excluded cases in each dimension. |
+| L09: H(div) recovery and adaptivity | [Adaptive SPE10](docs/cases/spe10-adaptive.md) | Published P2/r2/P0 spaces, RT2/Oswald recovery, full independent initial/final UFL systems and refined RT2 references | Reduce reference sensitivity and qualify historical BAMG connectivity/marking. Resolve the published cosine-estimator effectivity comparison and qualify its exact mesh/projection inputs. Retain polynomial diffusion on each fine simplex and the estimator regularity hypotheses; algebraic reconstruction alone does not supply the bound. |
 | L10: unfitted flux approximation | [Smooth h/p sweeps and two-layer contrast](docs/cases/unfitted.md) | Analytical norms, native assemblies, P8 r32→r64 endpoints for ell0/ell1 and twelve complete independent UFL S0/S2 contrast systems | Resolve local error for higher admissible traces. P8/r16–P3/s32 has an exact multiplier kernel that solver or quadrature changes cannot remove. Historical Figure-7 S2 inputs remain unspecified despite same-discretization agreement for declared cases. |
 | L11: advective/reactive MHM | [Mixed walls and random Darcy–transport](docs/cases/transient-transport.md) | Analytical and coefficient controls | Acquire the full §5.4 realization with 512 macros through T=7, coupled trajectory and independent space/time/quadrature refinements. Distinguish volume Darcy flux from numerical normal transfer. The literal mixed-wall curve remains quantitatively different; its epsilon=1 control is separate. |
 | L12: generalized RAD | [Polygonal/polyhedral diffusion and reaction layers](docs/cases/polygons.md) | Conditioning, boundary and layer controls | Complete matched conditioning/layer/star-polyhedron studies and independent fields, preserving full residuals, coefficient derivatives and boundary conventions. |
@@ -274,8 +262,8 @@ versioned repository and release artifacts.
 | Additional MH²M | [Oscillatory medium](docs/cases/mh2m-heterogeneous.md) | Crisscross/diagonal cases and refined independent CG3 fields | Complete overlay quadrature and baseline refinement under face/source hypotheses. Historical curve differences remain; do not fit material, source or method parameters to them. |
 | Additional PGMHM | [Inclusions](docs/cases/pgmhm.md) and [SPE10](docs/cases/pgmhm-spe10.md) | Analytical/native equations and independently refined classical fields | Complete matched whole-case comparisons with published enrichment and heterogeneous stabilization, resolving material interfaces and reactive lengths. |
 | Additional Unusual (MHM-USFEM) | [Reaction–diffusion](docs/cases/unusual.md) and [SPE10 layers](docs/cases/unusual-spe10.md) | Analytical/native fields and recorded FreeFem comparisons | Acquire the complete external comparison and qualify material, reaction-length and trace resolution. Distinguish published spaces from enriched controls. |
-| Additional Helmholtz | [Angular/stability studies](docs/cases/helmholtz.md) and [Marmousi](docs/cases/marmousi.md) | Plane/Hankel fields, native saddle systems and classical material-crop P1–P4 references | Complete angular/stability sequences and the 15-case Marmousi family, including phase-wise memory/storage, admissible resonances and reference refinement on the same physical crop. Retain historical input limits; 2D point-source derivative norms use a fixed physical cutout, without claiming finite global H1 norm. |
-| Additional Maxwell | [Nanoguide](docs/cases/maxwell-nanoguide.md) | Analytical dynamics, native operators, independent central-DG Q2 through 1024², matched staggered-time fields, CPU/GPU equivalence and space/time/material controls | Quantify reference and MHM temporal/spatial sensitivity over the trajectory, preserving staggering, CFL and balance. Identify historical incident phase, amplitude and turn-on before literal image reproduction. |
+| Additional Helmholtz | [Angular/stability studies](docs/cases/helmholtz.md) and [Marmousi](docs/cases/marmousi.md) | Plane/Hankel fields, native saddle systems and classical material-crop P1–P4 references | Complete angular/stability sequences and the 15-case Marmousi family, including phase-wise memory/storage and admissible resonances. Qualify a conforming reference on several finer spatial meshes of the same physical crop; polynomial enrichment on one fixed material mesh is a separate control. Retain historical input limits; 2D point-source derivative norms use a fixed physical cutout, without claiming finite global H1 norm. |
+| Additional Maxwell | [Nanoguide](docs/cases/maxwell-nanoguide.md) | Analytical dynamics, native operators, independent central-DG Q2 through 1024², matched staggered-time fields, CPU/GPU equivalence and space/time/material controls | Qualify a conforming classical device reference on several sufficiently fine meshes, alongside the existing independent central-DG control. Quantify reference and MHM temporal/spatial sensitivity over the trajectory, preserving staggering, CFL and balance. Identify historical incident phase, amplitude and turn-on before literal image reproduction. |
 | Additional elastodynamics | [Equation (53) and three layers](docs/cases/elastodynamics.md) | Analytical Newmark trajectories, complete independent 341-macro original equations and 301-state common-basis coordinate comparisons | Evaluate both executed field bases separately; common coordinates do not establish field agreement. Verify a conforming reference on several finer meshes and complete space/time/quadrature controls. Historical heterogeneous 2017 inputs remain unresolved. |
 
 **Acceptance:** close each target's specific condition, or identify the unresolved

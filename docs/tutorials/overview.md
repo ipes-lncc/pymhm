@@ -6,16 +6,23 @@ mathematical formulation. PyMHM derives the associated numbering and geometric
 coordinate maps, eliminates local unknowns and assembles shared interface
 contributions in a deterministic order.
 
-This tutorial writes a complete two-dimensional problem with UFL. It uses
-ordinary functions for both equations, without a named physical-model
-constructor. The [introductory course](notebooks.md) develops the same steps
-for heterogeneous Darcy, elasticity, MsHHO, MH²M, reaction–diffusion and
-Stokes–Brinkman, including fields, classical references and convergence studies.
+This tutorial writes a complete two-dimensional problem with UFL and ordinary
+functions for both equations. The [method lessons](methods/index.md) develop
+this workflow for each formulation, including fields, classical references and
+convergence studies. The [notebook catalogue](notebooks.md) also includes
+applications and focused API examples.
 
 The local/global decomposition follows
 [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).
-The analytical problem here checks the selected discretization; it is not a
-reproduction of a published application.
+The analytical problem here checks the selected discretization.
+
+For the elliptic MHM used here, local Neumann responses have zero mean;
+their physical pressure means are determined globally. The skeleton
+unknown represents normal Darcy flux. Its global equations couple pressure
+moments across faces and balance the source in every macroelement. This
+global flux/pressure-mean pairing gives the original method its mixed
+character even though the local finite elements are primal. The formulation
+is given by [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
 
 ## Install and select the backend
 
@@ -135,9 +142,20 @@ local/global maps once. The provider needs neither face DOF indices nor
 native/portable permutations.
 
 The Neumann volume operator has a constant kernel. Its explicit `kernel` and
-physical integral `moments` select the local complement. We retain one
-pressure-mean coordinate per macroelement. PyMHM checks these declared data;
-it does not infer kernels or establish inf-sup stability from field names.
+physical integral `moments` select the local mean-zero complement. Thus the
+local response combines $T_K\lambda$ and $\widehat T_Kf$, while reconstruction
+also adds the globally determined mean $c_K$. Testing the original local
+equation with the constant mode supplies its global compatibility equation:
+
+$$
+\int_{\partial K}\lambda_K\,ds=\int_Kf\,dx=-6\lvert K\rvert.
+$$
+
+We retain one pressure-mean coordinate per macroelement. PyMHM assembles
+this compatibility equation from the declared local kernel; the callback
+below supplies the remaining pressure-coupling data. It checks the declared
+algebraic data and does not infer kernels or establish inf-sup stability
+from field names.
 
 ## 3. Declare the global equation and boundary data
 
@@ -272,7 +290,7 @@ that workflow. A solver or learned response provider can use the same
   $\alpha\int_\Sigma\lambda\mu$ can be written as
   `builder=lambda lam, mu, dx: Equation(alpha * lam * mu * dx, 0 * mu * dx)`.
   That term changes the formulation; the package does not add it implicitly.
-- **Several scales:** a local provider can bind a child problem using the same
+- **Recursive local–global problems:** a local provider can bind a child problem using the same
   abstractions and return `local.nested(child_problem)`. Automatic restrictions
   currently require compatible bound planar normal spaces. Arbitrary
   restrictions remain explicit, and the documented recursive/MPI and child

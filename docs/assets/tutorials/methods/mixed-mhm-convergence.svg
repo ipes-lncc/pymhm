@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>mixed-mhm convergence</dc:title>
-    <dc:description>mixed-mhm; all 6 measured levels; final four diagnostic levels. RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions. Record examples/results/tutorial-methods/mixed-mhm-current.json; SHA256 e4af57e118ab0b582f8dd6ba0189bff67ff17dda4ae030037577d18188034380. Durán, Devloo, Gomes and Valentin (2019), theorem 4, equations (53)–(55): smooth compatible un-enriched RT1/P1 spaces. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>mixed-mhm; all 6 measured levels; final four diagnostic levels. RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions. Record examples/results/tutorial-methods/mixed-mhm-current.json; SHA256 e4af57e118ab0b582f8dd6ba0189bff67ff17dda4ae030037577d18188034380. Durán, Devloo, Gomes and Valentin (2019), Theorem 4, equations (53)–(55): smooth compatible un-enriched RT1/P1 spaces on aligned shape-regular partitions with bounded commuting projections; pressure L2 estimates also require dual regularity. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

@@ -27,6 +27,9 @@ C_Ku_K+D_K\lambda_K&=g_K.
 \end{aligned}
 $$
 
+Here $u_K$ and $\lambda_K$ are coefficient vectors in the declared local and
+trace bases; the physical fields are their basis expansions. Material
+coefficients enter the operator and are separate from these solution vectors.
 Rows are test coordinates, columns are trial coordinates. `B` and `C` are
 independent mathematical pairings; their signs are not inferred by transposition.
 Convert your external tool's numbering, units and basis into one declared

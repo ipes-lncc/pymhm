@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>mhm-usfem convergence</dc:title>
-    <dc:description>mhm-usfem; all 5 measured levels; final four diagnostic levels. P1/r2 locals; P0 trace; epsilon=sigma=1; negative residual pairing. Record examples/results/unusual/analytical.json; SHA256 e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61. Santiago, Valentin and Martins (2025), theorem 1: admissible smooth reaction-diffusion energy; scalar order two observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>mhm-usfem; all 5 measured levels; final four diagnostic levels. P1/r2 locals; P0 trace; epsilon=sigma=1; negative residual pairing. Record examples/results/unusual/analytical.json; SHA256 e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61. Martins, Pacazuca and Valentin (2025), Theorem 1: admissible reaction-diffusion energy bound with local Peclet factor; Figure 1 smooth numerical orders. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

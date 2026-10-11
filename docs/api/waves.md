@@ -73,6 +73,10 @@ moments; they are not pointwise constraints on every DG boundary value.
 unchanged equations. Energy uses the explicit staggered cross term. Its
 positivity depends on the chosen time increment and spatial spectrum; a small
 stage residual alone does not establish wave accuracy.
+The paper's Lemma 4 gives a CFL-dependent energy identity. Its Section 6.2
+reports numerical spatial and time rates; it supplies no discrete error
+theorem. Tangential moment and energy checks also do not establish discrete
+electric or magnetic Gauss-law preservation.
 
 ## Newmark displacement and velocity
 

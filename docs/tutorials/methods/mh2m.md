@@ -1,12 +1,12 @@
 # MH²M: pressure, conormal and shared trace
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb) · [Theory and degree conditions](../../theory/alternatives.md)
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb)
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
 The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
 
-The **Multiscale-Hybrid-Hybrid Method** uses three fields: local pressure, local boundary conormal and a shared global pressure trace. We declare all three equations explicitly and let `LocalEquations` and `MultiscaleProblem` eliminate the local fields.
+The **three-field Multiscale Method (MH²M)** uses local pressure, local boundary conormal and a shared global pressure trace. We declare all three equations explicitly and let `LocalEquations` and `MultiscaleProblem` eliminate the local fields.
 
 Our two-dimensional P1/P0/P1 family follows [de Barros, Madureira and Valentin (2026, version 3)](https://arxiv.org/abs/2404.16978v3), equations (7), (28)–(29) and section 6.2. The oscillatory material and meshes below define an original introductory case, not a reproduction of the article's heterogeneous figures.
 
@@ -37,8 +37,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/f861940e8a825f406a1b107671806ccfd2a6f10c38d32425f4b153a88e0d1ad1/mh2m_multiscale-companion.zip"
-COMPANION_SHA256 = "f861940e8a825f406a1b107671806ccfd2a6f10c38d32425f4b153a88e0d1ad1"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/35d2e7fcf53362a350d2f63714e035ebaac3c9388aeef7d0605955acc0154ea9/mh2m_multiscale-companion.zip"
+COMPANION_SHA256 = "35d2e7fcf53362a350d2f63714e035ebaac3c9388aeef7d0605955acc0154ea9"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -90,7 +90,7 @@ from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mh2m_multiscale-ce2f83522ad1
 ```
 
-### 1. The physical problem and the conormal sign
+## 1. The physical problem and the conormal sign
 
 Use the same scalar Darcy problem as the MsHHO introduction:
 
@@ -159,7 +159,7 @@ plt.show()
 [![Figure 1 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_4_0.png)](../../assets/tutorials/mh2m_multiscale/figure_4_0.png)
 
 
-### 2. Choose compatible spaces before assembling operators
+## 2. Choose compatible spaces before assembling operators
 
 Use $k=0$ in the two-dimensional family of section 6.2:
 
@@ -210,7 +210,7 @@ print(
 {'global_pressure_trace_coordinates': 193, 'local_conormal_unknowns_per_macrocell': 24, 'local_P1_nodes_per_macrocell': 153}
 ```
 
-### 3. Write the three variational equations
+## 3. Write the three variational equations
 
 For each macrocell $K$,
 
@@ -369,7 +369,7 @@ def local_three_field_equations(local: LocalContext) -> LocalEquations:
 
 ```
 
-### 4. Declare the shared trace equation and recover pressure
+## 4. Declare the shared trace equation and recover pressure
 
 The stiffness $A_K$ alone has a constant kernel. For the compatible spaces above, the complete local saddle is invertible: boundary pairings fix the constant and trace moments. We neither invent a kernel for that saddle nor pin an arbitrary pressure node.
 
@@ -411,7 +411,7 @@ print({"global_pressure_trace_free": global_free_unknowns, "global_residual": so
 {'global_pressure_trace_free': 129, 'global_residual': 1.1041680519794778e-16}
 ```
 
-### 5. Check injectivity, trace moments and macro conservation
+## 5. Check injectivity, trace moments and macro conservation
 
 The constant test $v=1$ gives
 
@@ -492,7 +492,7 @@ print(diagnostics)
 {'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 4.336808689942018e-19, 'macro_conservation_max': 1.0443035325380379e-15, 'original_local_relative_residual': 7.692601965273089e-14}
 ```
 
-### 6. A classical primal Galerkin baseline, with its own refinement check
+## 6. A classical primal Galerkin baseline, with its own refinement check
 
 On a fine **globally conforming** mesh, the baseline solves the same operator, material, source and boundary conditions:
 
@@ -582,7 +582,7 @@ assert reference_refinement[-1]["flux_relative"] < reference_refinement[0]["flux
 [![Figure 2 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_18_1.png)](../../assets/tutorials/mh2m_multiscale/figure_18_1.png)
 
 
-### 7. Compare pressure and physical flux on a common fine partition
+## 7. Compare pressure and physical flux on a common fine partition
 
 The reference mesh resolves every local mesh interface in this nested, uniformly refined case. Integrate on its triangles and use its field norms as denominators:
 
@@ -637,15 +637,6 @@ plt.show()
 
 
 [![Figure 3 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_20_1.png)](../../assets/tutorials/mh2m_multiscale/figure_20_1.png)
-
-
-### 8. Interpret and archive the experiment
-
-Only the shared pressure trace is solved globally (129 free coordinates). Conormal refinement changes local operators without directly adding global unknowns. Fine coefficient resolution still requires local assembly and factorization work.
-
-Read multiscale differences together with the classical reference-refinement indicator. We do not assign homogeneous-problem macro convergence orders to this oscillatory material study. Such a study must vary $H$, $H_\Gamma$, $H_\Lambda$ and $h$ under the relevant compatibility and regularity hypotheses.
-
-If changing a face partition, preserve M1/M2 or justify a different compatible family. Refining only $\Lambda$ does not necessarily improve a coarse $\Gamma$ approximation. Save complete fields and executed boundary/pressure pairing matrices with their basis digests; never reinterpret archived coefficients using a different trace basis.
 
 
 ## Optional: use a prepared operator for this weak form
@@ -726,42 +717,32 @@ print(
 ./build/docs-restructure/final-workspaces/provenance-final-mh2m_multiscale-ce2f83522ad1/build/introduction/mh2m_multiscale
 ```
 
-## 9. Verify a compatible smooth three-field family
+## 8. Verify a compatible smooth three-field family
 
-The heterogeneous teaching problem above is distinct from the smooth rate qualification. On the unit square with identity permeability, use the independently differentiated polynomial data
-
-
+The oscillatory material study above is distinct from this smooth convergence control. Use the polynomial data of section 8.1 in [de Barros, Madureira and Valentin (2026, version 3)](https://arxiv.org/abs/2404.16978v3) on the unit square:
 
 $$
 \begin{aligned}
-p(x,y)&=x(x-1)y(y-1),\
-f(x,y)&=-2\bigl[x(x-1)+y(y-1)\bigr].
+p(x,y)&=x(x-1)y(y-1),& K&=I,\\
+f(x,y)&=-2x(x-1)-2y(y-1),& p&=0\quad\text{on }\partial\Omega.
 \end{aligned}
 $$
 
+Keep the three-field equations written above. Choose continuous $\Gamma=P_2$ on one macroface segment, $\Lambda=P_1$ on two segments and local P2 pressure with four edge subdivisions. Each pressure segment contains two conormal segments (M2), and each conormal segment contains two local edges (M1). These ratios remain fixed through $n=2,4,8,16,32$.
 
+Theorem 19 gives the second-order energy target under the two-dimensional M1/M2 Fortin conditions, regular aligned partitions and the stated pressure, source-lift and volume-flux regularity. Third-order pressure is observed separately. The paper's coarser section-8.1 P2/P1/P2 experiment, with one Lambda segment and two local subdivisions, does not satisfy M2 and is discussed in Remark 16; it is not substituted for this compatible family. A small residual alone does not justify transferring the estimate to that coarser configuration or to a different material or domain.
 
-Exterior pressure is zero. The three-field declarations remain the equations written above. Choose continuous Gamma P2 on one macroface segment, Lambda P1 on **two segments**, and local P2 pressure with **four subdivisions**. Two Lambda segments per Gamma segment and two fine edges per Lambda segment satisfy M2 and M1 with fixed ratio two. The macro sequence is $n=2,4,8,16,32$.
-
-The compatible estimate of [de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3) gives second-order broken gradient for this smooth family. Third-order pressure is observed. The paper's section-8.1 experimental P2/P1/P2 family with one Lambda segment and two local subdivisions is discussed under Remark 16; it is a different discretization, and is not substituted for the M1/M2-compatible family below.
-
-Each current acquisition checks the original local equations, Lambda pressure pairing and free Gamma equations, and integrates the physical fields independently at quadrature orders 10 and 12.
+The local pressure equation, pressure/conormal pairing and free Gamma balance are checked in their original coefficient coordinates, separately from physical-error integration.
 
 ### Recompute every measured order
 
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
-
-
+For successive physical errors $E_{i-1},E_i$ at the actual macro diameters, compute
 
 $$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(H_{i-1}/H_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell reads the attributed numerical record, displays every measured level and recomputes its orders. It does not execute a PDE acquisition. The fitted terminal slope uses the final four levels and their three intervals. For each declared target $q$, the amplitude ratio is the maximum divided by the minimum of $E/H^q$ over those same levels. A value near one indicates stabilization of the compensated error; an observed L2 order is kept separate from a proved energy estimate.
 
 ```python
 import json
@@ -784,7 +765,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mh2m', spaces='Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2', rate_provenance='de Barros, Madureira and Valentin (2026): M1/M2-compatible smooth family; gradient order two; pressure order three observed', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mh2m', spaces='Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2', rate_provenance='de Barros, Madureira and Valentin (2026), version 3, Theorem 19: energy order two under the two-dimensional M1/M2 Fortin conditions, regular aligned partitions and the stated pressure/source-lift/volume-flux regularity; pressure order three observed separately.', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -793,15 +774,13 @@ plt.show()
 
 ```
 
-
-Refinement size | pressure L2 | Order | broken gradient L2 | Order
---- | --- | --- | --- | ---
-0.707107 | 1.484152e-03 | — | 2.405119e-02 | —
-0.353553 | 1.907832e-04 | 2.960 | 6.968576e-03 | 1.787
-0.176777 | 2.404196e-05 | 2.988 | 1.828945e-03 | 1.930
-0.0883883 | 3.020023e-06 | 2.993 | 4.639316e-04 | 1.979
-0.0441942 | 3.782056e-07 | 2.997 | 1.164489e-04 | 1.994
-
+| Refinement size | pressure L2 | Order | broken gradient L2 | Order |
+| --- | --- | --- | --- | --- |
+| 0.707107 | 1.484152e-03 | — | 2.405119e-02 | — |
+| 0.353553 | 1.907832e-04 | 2.960 | 6.968576e-03 | 1.787 |
+| 0.176777 | 2.404196e-05 | 2.988 | 1.828945e-03 | 1.930 |
+| 0.0883883 | 3.020023e-06 | 2.993 | 4.639316e-04 | 1.979 |
+| 0.0441942 | 3.782056e-07 | 2.997 | 1.164489e-04 | 1.994 |
 
 ```text
 {'record': 'examples/results/tutorial-methods/mh2m-compatible-current.json', 'sha256': '5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556'}
@@ -809,95 +788,9 @@ pressure L2 {'last_three_orders': [2.988, 2.993, 2.997], 'fitted_order': 2.993, 
 broken gradient L2 {'last_three_orders': [1.93, 1.979, 1.994], 'fitted_order': 1.969, 'target': 2.0, 'normalized_amplitude_ratio': 1.0694762344273008}
 ```
 
-
-
-[![Figure 4 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_27_2.png)](../../assets/tutorials/mh2m_multiscale/figure_27_2.png)
-
-
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
-
-## References
-
-- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
-
-## Reproduce this tutorial
-
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb), then open it:
-
-```bash
-python -m pip install 'pymhm[notebooks,visualization]'
-jupyter lab mh2m_multiscale.ipynb
-```
-
-The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
-
-For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
-
-```bash
-python -m scripts.run_notebooks /path/to/mh2m_multiscale.ipynb --timeout 7200
-```
-
-The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
-
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
-
-## Verify convergence with admissible three-field spaces
-
-The analytical convergence control uses the polynomial data from section 8.1
-of [de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3):
-
-$$
-\begin{aligned}
-p(x,y)&=x(x-1)y(y-1),&
-K&=I,\\
-f(x,y)&=-2x(x-1)-2y(y-1),&
-p|_{\partial\Omega}&=0.
-\end{aligned}
-$$
-
-The current study uses $\Gamma=P_2$ on each macroedge,
-$\Lambda=P_1$ on two segments of that edge and local P2 pressure with four
-edge subdivisions. Therefore each pressure segment contains two conormal
-segments (M2), and each conormal segment contains two local edges (M1).
-These ratios stay fixed at all levels $n=2,4,8,16,32$. The smooth gradient
-target is order two; the measured pressure order is stated separately.
-
-The paper's section 8.1 also studies a coarser $P_2/P_1/P_2$ configuration
-that does not satisfy M2 and is discussed in Remark 16. That historical
-experimental curve remains an attributed result, but the principal convergence
-figure here uses the compatible current sequence. A small residual alone
-would not justify transferring the M1/M2 error estimate to the coarser family.
-The local nodal equation, pressure/conormal pairing and global balance are
-checked in their original coordinates, independently of the error quadrature.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| pressure L2 | observed | 2.988 / 2.993 / 2.997 | 2.993 | — |
-| broken gradient L2 | 2 | 1.930 / 1.979 / 1.994 | 1.969 | 1.069 |
-
 ![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/mh2m-convergence.png)
 
 Download the figure as [SVG](../../assets/tutorials/methods/mh2m-convergence.svg) or [PDF](../../assets/tutorials/methods/mh2m-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | pressure L2 | Order | broken gradient L2 | Order |
-| ---: | ---: | ---: | ---: | ---: |
-| 0.707107 | 1.484152e-03 | — | 2.405119e-02 | — |
-| 0.353553 | 1.907832e-04 | 2.960 | 6.968576e-03 | 1.787 |
-| 0.176777 | 2.404196e-05 | 2.988 | 1.828945e-03 | 1.930 |
-| 0.0883883 | 3.020023e-06 | 2.993 | 4.639316e-04 | 1.979 |
-| 0.0441942 | 3.782056e-07 | 2.997 | 1.164489e-04 | 1.994 |
 
 The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `6.672e-14`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities. Its source closure is unchanged during execution. The norm-only record contains no persisted coefficient vector.
 
@@ -914,8 +807,29 @@ The r4/r8 comparison retains Gamma P2 on one segment and Lambda P1 on two segmen
 
 The full physical-error norms agree at quadrature orders 10 and 12, with maximum relative change `1.199e-14`. For the two-grid sensitivity, the change in the integrated field difference divided by the coarse analytical error is `4.422e-15`. This scale assesses the local contribution to that physical error and remains meaningful when the two fields differ only at roundoff. The raw differences at both quadrature orders and their unscaled relative changes remain in the [local-control record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/scalar-local-controls-current.json) (SHA256 `8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350`). Original equations and reconstruction constraints retain their separate unchanged checks.
 
-de Barros, Madureira and Valentin (2026): M1/M2-compatible smooth family; gradient order two; pressure order three observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/mh2m-compatible-current.json) has SHA256 `5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
+The smooth convergence figure uses the [attributed numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/mh2m-compatible-current.json) (SHA256 `5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556`). The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares the method sequences.
 
-## References for this method
+## Reproduce this tutorial
+
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb), then open it:
+
+```bash
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab mh2m_multiscale.ipynb
+```
+
+The first cell downloads a SHA256-verified companion containing inspectable support files. Downloading does not execute them. Native UFL forms require the compatible backend described in the [installation guide](../../installation.md).
+
+For batch execution, extract the same companion, change to its workspace and run:
+
+```bash
+python -m scripts.run_notebooks /path/to/mh2m_multiscale.ipynb --timeout 7200
+```
+
+The runner uses the active interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger field archives have [documented downloads](../../data.md).
+
+Figures and outputs of sections 1–7 retain notebook SHA256 `471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953` in the [publication manifest](notebook-manifest.json). The smooth convergence figure and tables use the separate numerical records cited in section 8. Running the current source produces a receipt for its actual notebook, support files and environment.
+
+## References
 
 - Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).

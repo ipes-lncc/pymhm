@@ -77,7 +77,8 @@ The first level uses \(-[u_h]/2\) on internal macrofaces and \(g-u_h\)
 on the exterior. Its denominator is the original macroface length, including
 when the trace is subdivided. An interior macroface appears twice in the sum
 of macrocell boundaries. The second level contains momentum residuals,
-divergence, and pseudotraction mismatches on local faces. The pseudotraction is
+divergence, and pseudotraction mismatches on local faces. The residual uses the
+sign-reversed pseudotraction
 \(\nu\nabla u\,n-pn-u(\beta\cdot n)/2\).
 For Oseen,
 

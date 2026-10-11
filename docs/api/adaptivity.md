@@ -6,6 +6,14 @@ Darcy and transport controllers accept `solve_step` to assemble each state
 from user-defined equations. The callable receives the current mesh and
 skeleton with the problem's keyword options; it returns the physical solution
 required by the chosen estimator. The default formulation remains available.
+The reconstruction's algebraic moment conditions, estimator reliability and
+optimal approximation estimates have separate hypotheses. In particular,
+the recovery paper's optimal flux estimate assumes polynomial diffusion on
+each fine simplex and its stated pressure/flux regularity; exact integration
+of a material cut does not establish that fine-simplex material condition.
+See [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) and the
+[material-weighted estimator](../cases/weighted-estimator.md) for the applicable
+norms, geometry, boundary representation and equilibrium conditions.
 See the [variational guide](../variational.md#formulations-composed-from-the-same-api)
 for composition with mathematical definition factories.
 

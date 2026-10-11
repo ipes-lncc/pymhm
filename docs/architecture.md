@@ -276,8 +276,8 @@ responses when reaction or Brinkman drag approaches zero. The operator is not
 perturbed: the complementary solves include `A @ Z`, reconstruction uses
 `E=Z-R @ A @ Z`, and the global system retains the equations tested against `Z`.
 Here `R` denotes the constrained local solve. `kernel` and `coarse_basis` are
-mutually exclusive. See the [elimination equations](theory/foundations.md#retaining-nearly-null-local-modes)
-for the nonsymmetric blocks and reconstruction of integral constraints.
+mutually exclusive. The [condensation API](api/hybrid.md#pymhm.core.condensation)
+documents the nonsymmetric blocks and reconstruction of integral constraints.
 
 A constrained factorization solves all source and trace right-hand sides together.
 `LocalResponse` stores the lifts. `HybridSystem` assembles sparse contributions,
@@ -303,9 +303,10 @@ condition. Singular systems are errors; no diagonal shift or least-squares solve
 is used to conceal them.
 
 `PolygonMesh` retains original macroedges while triangulating local domains,
-including simple nonconvex polygons. `PolyhedralMesh` represents convex cells
-with planar polygonal faces: shared face triangulations and cell-center cones
-define local tetrahedra, while `PolygonalSkeleton3D` keeps one P0 or P1 space
+including simple nonconvex polygons. `PolyhedralMesh` represents convex and
+certified star-shaped nonconvex cells with planar polygonal faces. Shared
+face triangulations and cones from a certified interior point define local
+tetrahedra, while `PolygonalSkeleton3D` keeps one P0 or P1 space
 on each **original** face. Triangulating a quadrilateral face therefore does
 not introduce independent multipliers on its two triangles. The
 [polyhedral RAD cases](cases/polyhedral-rad.md) exercise cubes and two prism
@@ -357,10 +358,9 @@ order.
 At literally declared interpolation nodes, nodal values equal their Kronecker
 rows. This applies the interpolation functional without a proximity threshold;
 nearby points and derivatives use the executed native tables. Tetrahedral face
-values use the exact topological support of the nodal trace. Scalar diffusion
-contractions use a wider native real type where available. Platforms with
-binary64 `longdouble` use compensated quadrature accumulation with bounded
-workspace; boundary moments also use compensated summation. Matrix entries,
+values use the exact topological support of the nodal trace. Compiled scalar
+diffusion kernels compensate Cartesian contractions and quadrature sums in
+binary64. Boundary moments also use compensated summation. Matrix entries,
 quadrature, coefficients and physical operators retain their declared conventions.
 
 RT and BDM tabulations use native elements, transformed into the declared

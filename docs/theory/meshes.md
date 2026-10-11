@@ -69,6 +69,18 @@ give formulation-specific regularity and shape assumptions. Supporting a
 cell type in a mesh class does not establish those analytical hypotheses
 for every form assembled on that class.
 
+In the two-dimensional diffusion analysis of
+[Barrenechea et al. (2020), §1.2](https://doi.org/10.1007/s00211-020-01103-5),
+the skeletal partition must admit a shape-regular virtual triangulation
+whose boundary edges coincide with its segments. The local mesh is a
+specified regular refinement of that triangulation. Nonconvex cells
+additionally require the uniformly bounded star-shaped cover and
+Poincaré condition (A0). The number of required refinements depends on
+the local and skeletal degrees. The [elliptic theory](elliptic.md#degrees-rates-and-geometry)
+states these choices and distinguishes convex from nonconvex pressure
+estimates. A general polygon mesh accepted by the implementation is not
+automatically a mesh family covered by this theorem.
+
 ## Polynomial and mapped spaces
 
 Basix supplies reference finite element definitions, basis tabulation and

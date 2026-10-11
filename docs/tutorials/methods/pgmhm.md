@@ -1,6 +1,6 @@
 # Residual Petrov–Galerkin MHM
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/pgmhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/pgmhm_workflow.ipynb) · [Theory and degree conditions](../../theory/alternatives.md)
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/pgmhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/pgmhm_workflow.ipynb)
 
 We declare the primal local equations, add a user-written global residual form, and lift its boundary residual through the same local solver owner. The physical pressure is $p=\sin(2\pi x)\sin(2\pi y)$, with identity diffusion and independently derived source $8\pi^2p$. Exterior pressure is zero.
 
@@ -294,27 +294,57 @@ plt.show()
 
 ## 6. Reach the smooth enriched-flux regime
 
-The smooth unit-square sequence uses the same declared residual-jump equations and enrichment, with $p=\sin(2\pi x)\sin(2\pi y)$, independently derived $f=8\pi^2p$, identity permeability and homogeneous exterior pressure. Its spaces are P3 local pressure on one triangle, P1 traces and $\alpha=0.1$, on all macro resolutions $n=2,4,8,16,32,64$.
+Keep the declared residual-jump equations and enrichment, but refine the smooth
+unit-square problem
 
-The energy estimates in section 5 of [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) separate $h^k$ and $H^{\ell+1}$, with $\ell\geq1$ and $k\geq\ell+d$. Here $\ell=1$, $k=3$, $d=2$; the second-order term governs the enriched physical flux. Pressure order three is observed. The reconstructed vector field is the enriched volume gradient, and does not become a globally H(div)-conforming flux merely because macro balance holds.
+$$
+p=\sin(2\pi x)\sin(2\pi y),\qquad f=8\pi^2p,
+$$
 
-The acquisition checks the original enriched local nodal equations, the global jump equation and the separate macro balance. Independent order-10 and order-12 quadratures control the full pressure and physical vector-flux errors. Read all six levels below, including their coarse behavior.
+with identity permeability and homogeneous exterior pressure. Use P3 local
+pressure on one triangle, P1 traces, $\alpha=0.1$, and all macro resolutions
+$n=2,4,8,16,32,64$. The local diameter is $h=H$ throughout this family.
 
-### Recompute every measured order
+The energy estimates in section 5 of
+[Fernando, Martins, Pereira and Valentin (2023)](https://doi.org/10.1007/s40314-023-02304-y)
+retain both local and skeleton discretization contributions:
 
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+$$
+\begin{aligned}
+\lVert p-\widetilde p_{Hh}\rVert_V
+&\le C\bigl(
+ h^k\lvert p\rvert_{H^{k+1}(\mathcal T_H)}\\
+ &\qquad +H^{\ell+1}\lvert K\nabla p\rvert_{H^{\ell+1}(\mathcal T_H)}
+\bigr).
+\end{aligned}
+$$
 
+The analysis requires $\ell\ge1$, $k\ge\ell+d$, the stated regularity and
+sufficiently small stabilization for uniform stability. The degrees here
+satisfy this condition in two dimensions. The paper does not supply a universal
+numerical threshold that makes $\alpha=0.1$ admissible on arbitrary meshes.
+The second-order term is the energy target; pressure order three is observed
+separately for this numerical family.
 
+The plotted vector field is $-K\nabla\widetilde p_{Hh}$ after enrichment.
+Macro balance does not make this raw volume flux globally H(div)-conforming.
+The acquisition checks the enriched local nodal equations, global jump equation
+and macro balance separately. Independent order-10 and order-12 quadratures
+control the full pressure and physical vector-flux errors.
+
+### Recompute orders from the numerical record
+
+For successive physical errors at the actual refinement sizes, compute
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell below reads the attributed record and recomputes the complete table,
+consecutive orders, final-four-level fitted slope and plot. It does not choose
+a PDE or rerun the acquisition. For a justified target $q$, the maximum/minimum
+of $E/h^q$ over the final four levels measures stabilization of its amplitude.
+Pressure orders reported as observations are kept separate from theorem targets.
 
 ```python
 import json
@@ -337,7 +367,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='pgmhm', spaces='P3/r1 locals; P1 trace; residual enrichment; alpha=0.1', rate_provenance='Fernando et al. (2023), section 5 energy estimates: ell>=1, k>=ell+d; pressure order three observed', refinement='macro diameter', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='pgmhm', spaces='P3/r1 locals; P1 trace; residual enrichment; alpha=0.1', rate_provenance='Fernando et al. (2023), section 5: the energy estimate requires ell>=1, k>=ell+d, the stated regularity and sufficiently small alpha for uniform stability; energy order two and pressure order three are measured for the declared finite P3/P1 family with alpha=0.1.', refinement='macro diameter', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -365,83 +395,18 @@ enriched Darcy flux L2 {'last_three_orders': [2.078, 2.019, 2.003], 'fitted_orde
 
 
 
-[![Figure 3 — pgmhm variational workflow](../../assets/tutorials/methods/pgmhm-field-02.png)](../../assets/tutorials/methods/pgmhm-field-02.png)
+![Physical errors, successive orders and normalized amplitudes](../../assets/tutorials/methods/pgmhm-convergence.png)
+
+[SVG](../../assets/tutorials/methods/pgmhm-convergence.svg) · [PDF](../../assets/tutorials/methods/pgmhm-convergence.pdf)
 
 
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+All coarse and fine measurements are retained; shading covers the final four
+levels. The publication figure is generated from the same attributed record
+read by the notebook, separately from its embedded field plots. See
+[convergence plot conventions](index.md#convergence-plots)
+for the target curves, interval orders and normalized amplitudes.
 
-## Reproduce this workflow
-
-Open or download the notebook linked above. Its first cell acquires a checksum-verified companion containing inspectable support files and the individual convergence record. It then runs every numbered variational assembly and solve step. The final section reads the attributed refinement measurements and recomputes their orders; it does not rerun their full PDE acquisition.
-
-Install the notebook and visualization extras, and use the [installation guide](../../installation.md) for any native UFL/DOLFINx requirements. From this source checkout, open the step-by-step workflow in its locked environment:
-
-```bash
-pixi run --locked -e introduction jupyter lab notebooks/darcy/pgmhm_workflow.ipynb
-```
-
-The displayed outputs come from all 9 executed code cells in the locked `introduction` environment, with no skipped cells or error outputs. The source SHA256 is `2e8020c6eb7a34a85b6451a6b70504f146ba6f82f655ff38837f23b8706259d1`; the executed notebook SHA256 is `04f9bd204bda2f1a92a89863bc579a26ffc00c61403a0109f9c533ef91faa538`. The field, classical-reference and convergence plots are embedded outputs of that same execution.
-
-## Resolve the terminal energy regime
-
-The convergence study keeps the same sinusoidal problem and explicitly
-declared jump/enrichment forms as the tutorial. Fix $\ell=1$, $k=3$,
-single-triangle local meshes and $\alpha=0.1$; refine the macro mesh through
-$n=2,4,8,16,32,64$. The degree condition $k\ge\ell+d$ holds in two dimensions,
-and $\ell\ge1$. The theorem requires sufficiently small stabilization, without
-supplying a universal admissible numerical threshold.
-
-The energy estimates in section 5 of
-[Fernando, Martins, Pereira and Valentin (2023)](https://doi.org/10.1007/s40314-023-02304-y)
-retain both local and skeletal approximation terms:
-
-$$
-\lVert p-\widetilde p_{Hh}\rVert_V
-\le C\bigl(
- h^k\lvert p\rvert_{H^{k+1}(\mathcal T_H)}
- +H^{\ell+1}\lvert K\nabla p\rvert_{H^{\ell+1}(\mathcal T_H)}
-\bigr).
-$$
-
-For $h=H$, the third-order local contribution decreases faster than the
-second-order skeletal term. The new $n=64$ level makes the final three
-physical-flux intervals visible together. The plotted observable is
-$-K\nabla\widetilde p_{Hh}$ after the explicitly defined enrichment;
-its macro balance is checked separately. The raw gradient is not claimed
-to be a globally H(div)-conforming flux. The measured third-order pressure
-is distinguished from the proved second-order energy target.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **P3/r1 locals; P1 trace; residual enrichment; alpha=0.1** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| enriched pressure L2 | observed | 3.001 / 2.988 / 2.992 | 2.993 | — |
-| enriched Darcy flux L2 | 2 | 2.078 / 2.019 / 2.003 | 2.032 | 1.072 |
-
-![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/pgmhm-convergence.png)
-
-Download the figure as [SVG](../../assets/tutorials/methods/pgmhm-convergence.svg) or [PDF](../../assets/tutorials/methods/pgmhm-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | enriched pressure L2 | Order | enriched Darcy flux L2 | Order |
-| ---: | ---: | ---: | ---: | ---: |
-| 0.707107 | 1.264513e-01 | — | 2.069721e+00 | — |
-| 0.353553 | 7.844525e-03 | 4.011 | 2.700667e-01 | 2.938 |
-| 0.176777 | 9.037788e-04 | 3.118 | 5.761044e-02 | 2.229 |
-| 0.0883883 | 1.128686e-04 | 3.001 | 1.364393e-02 | 2.078 |
-| 0.0441942 | 1.422729e-05 | 2.988 | 3.366902e-03 | 2.019 |
-| 0.0220971 | 1.788673e-06 | 2.992 | 8.397340e-04 | 2.003 |
-
-The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `6.487e-10`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities. Its source closure is unchanged during execution. The norm-only record contains no persisted coefficient vector.
+The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `6.487e-10`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities.
 
 ### Local Galerkin sensitivity at fixed macro resolution
 
@@ -456,8 +421,19 @@ At this coarse macro resolution, local refinement changes the enriched fields su
 
 The full physical-error norms agree at quadrature orders 10 and 12, with maximum relative change `1.066e-14`. For the two-grid sensitivity, the change in the integrated field difference divided by the coarse analytical error is `3.479e-15`. This scale assesses the local contribution to that physical error and remains meaningful when the two fields differ only at roundoff. The raw differences at both quadrature orders and their unscaled relative changes remain in the [local-control record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/scalar-local-controls-current.json) (SHA256 `8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350`). Original equations and reconstruction constraints retain their separate unchanged checks.
 
-Fernando et al. (2023), section 5 energy estimates: ell>=1, k>=ell+d; pressure order three observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/pgmhm-current.json) has SHA256 `c863231e79d60fe867fb492c7869396b5cb74eed001564d49fef634454ace47f` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
+## Reproduce this tutorial
 
-## References for this method
+Open the notebook linked at the top. Its checksum-verified companion supplies
+inspectable support files and the [refinement record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/pgmhm-current.json).
+The notebook executes the variational workflow; its convergence cell reads the
+record and recomputes the table and plot, without rerunning the full acquisition.
+Use the [installation guide](../../installation.md) for notebook, plotting and
+native-backend requirements. From a source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/pgmhm_workflow.ipynb
+```
+
+## References
 
 - Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).

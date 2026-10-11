@@ -15,12 +15,30 @@ hide:
   <img class="pymhm-signature pymhm-signature--dark" src="assets/branding/pymhm-logo-dark.svg" width="938" height="444" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
 </div>
 
-`pymhm` is a research Python package for Multiscale Hybrid Mixed finite element
-methods. User-defined local and global equations declare their independent
-variational blocks, trace pairings and retained modes. `assemble` and `solve`
-reuse the shared elimination and reconstruction operations. A local operator
-can itself be another multiscale problem. Local discretization, skeleton
-approximation and linear solvers are separate choices.
+`pymhm` is a Python package for Multiscale Hybrid Mixed (MHM) finite element
+methods and related hybrid formulations. It lets you write the local and
+global variational equations, choose their approximation spaces, and then
+assemble, solve and reconstruct the physical fields.
+
+## What is MHM?
+
+Multiscale Hybrid Mixed (MHM) methods are derived from hybrid variational
+formulations on a coarse partition of the domain into **macroelements**.
+A decomposition of the space of element-wise fields gives an equivalent
+global–local formulation: independent local problems and a coupled global
+problem for interface multipliers and the field components in the local
+operator kernels, when present. See
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) and [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13) for further details.
+
+In PyMHM, implementing a method means choosing the macro, skeleton and
+local approximation spaces, writing its **local and global variational
+equations**, and supplying a local solver. The package handles shared
+interface numbering and geometric orientation, assembles the contributions,
+and reconstructs the fields after the global solve. Local discretizations,
+solvers and execution settings are separate choices. The
+[Methods](methods.md) catalogue identifies the available constructions and
+their primary references; the
+[Tutorials](tutorials/overview.md) translate them into code step by step.
 
 <div class="pymhm-start-grid">
   <a href="installation/">
@@ -52,138 +70,67 @@ formulations and interchangeable local providers. Use the
 [Gallery](gallery/index.md) for applications with problem data, variational
 formulations, implementations and computed fields.
 
-The [overview](tutorials/overview.md) introduces UFL from its weak form.
-The portable coefficient interface follows the same mesh-first workflow;
-mesh/space binding owns shared numbering and orientation maps:
+Follow **meshes → spaces → local equations → global equations → assembly
+→ solution → physical fields and errors**. The [API overview](tutorials/overview.md)
+implements this workflow with UFL. [Mesh binding](variational.md) connects
+the local and global approximation spaces; a
+[custom interface](guides/custom-interface.md) provides explicit control
+of interface bases and maps when needed.
 
-```python
-import numpy as np
-from pymhm import (
-    CartesianMacroMesh, Equation, FaceSpace, LocalContext, LocalEquations,
-    MeshHierarchy, SkeletonSpace, assemble, bind_interface, bind_problem, solve,
-)
-
-macro = CartesianMacroMesh(1, 1)
-hierarchy = MeshHierarchy(macro, (macro.submesh(0, 2),))
-skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(0) for _ in macro.faces))
-interface = bind_interface(skeleton, convention="value")
-
-def local(context: LocalContext) -> LocalEquations:
-    """Declare independent volume and interface equations."""
-    return context.equations(
-        a=[[2.0]], L=[1.0], b=np.ones((1, 4)), c=-np.ones((4, 1)),
-        d=np.eye(4),
-    )
-
-problem = bind_problem(hierarchy, interface, local, global_equation=Equation(0, 0))
-system = assemble(problem)
-solution = solve(system)
-print(solution.trace, solution.fields)  # every coordinate is 1/6
-```
-
-This small algebraic example declares $2u+\sum_F\lambda_F=1$ and
-$-u+\lambda_F=0$ on each face. The binding owns the shared numbering and geometric
-maps; the user supplies both equations. The
-[variational guide](variational.md) describes UFL forms, retained modes,
-physical constraints and recursive problems, and states the supported limits.
-For complete control, see the [custom-space guide](guides/custom-interface.md),
-which declares a nonorthogonal basis and its independent trial/test maps.
-
-The [vector UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
-declares a coercive two-component reaction-diffusion operator; it is separate
-from the mixed Brinkman formulations. The
-[three-level hierarchy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
-checks recursive coefficients against an independently written full system.
+Local discretization, skeleton approximation and linear solvers are
+separate choices. A provider can use another simulation library, or a
+local operator can itself be another multiscale problem. The
+[provider guide](guides/providers.md) explains how to connect these solvers.
 
 ## Available Methods
 
-Choose the variational method and its admissible approximation spaces independently
-of the linear solver and execution backend. **When publishing results obtained
-with PyMHM, cite the original publications of every method, reconstruction or
-estimator used**, together with the PyMHM version. The [Theoretical Background](theory.md) states degree, geometry and regularity
-conditions; each linked tutorial follows the mathematical formulation in code.
+The package includes MHM formulations and related multiscale constructions.
+Consult [Methods](methods.md) for the catalogue and the cited publications
+for their mathematical definitions and assumptions. **Cite the publications
+for every method and strategy used, together with the PyMHM version.**
 
-| Method | Global/local construction | Original publication |
-| --- | --- | --- |
-| [Primal MHM](tutorials/methods/primal-mhm.md) | Normal-flux skeleton; conforming scalar local fields | [Harder et al. (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
-| [Mixed H(div) MHM](tutorials/methods/mixed-mhm.md) | Restricted normal traces; RT/BDM local flux and pressure | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
-| [Robin MH](tutorials/methods/robin-mh.md) | Coercive Robin locals and a face multiplier system | [Barrenechea et al. (2024)](https://doi.org/10.1137/22M1542556) |
-| [MH²M](tutorials/methods/mh2m.md) | Independent continuous pressure and broken conormal traces | [de Barros et al. (2026, v3)](https://arxiv.org/abs/2404.16978v3) |
-| [MsHHO](tutorials/methods/mshho.md) | Cell/face pressure moments and constrained energy reconstruction | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [MHM connection (2022)](https://doi.org/10.1051/m2an/2021082) |
-| [Petrov–Galerkin MHM](tutorials/methods/pgmhm.md) | Face residual enrichment and independent global test equations | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
-| [MHM-USFEM (MHM-UNUSUAL)](tutorials/methods/mhm-usfem.md) | Residual-stabilized reaction–diffusion local problems | [Santiago et al. (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
-| [Stokes–Brinkman MHM](tutorials/methods/stokes-brinkman.md) | Taylor–Hood or consistent USFEM velocity/pressure locals | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
-| [Oseen MHM](tutorials/methods/oseen.md) | Prescribed convection, mixed locals and Robin pseudotraction | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
-| [Primal elasticity MHM](tutorials/methods/primal-elasticity.md) | Displacement locals, traction skeleton and rigid modes | [Harder et al. (2016)](https://doi.org/10.1051/m2an/2015046) |
-| [GaLS elasticity MHM](tutorials/methods/gals-elasticity.md) | Displacement–pressure locals for nearly incompressible materials | [Gomes et al. (2024, v1)](https://arxiv.org/abs/2403.16890v1) |
-| [Mixed stress elasticity MHM](tutorials/methods/mixed-elasticity.md) | H(div) stress, displacement and weak-symmetry rotation | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
-| [Conservative transport MHM](tutorials/methods/transient-transport.md) | Galerkin/SUPG RAD and backward-Euler transient extension | [Harder et al. (2015)](https://doi.org/10.1137/130938499) |
-| [Elastodynamic MHM](tutorials/methods/elastodynamics.md) | Local Newmark dynamics and slabwise traction coupling | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
-| [Helmholtz MHM](tutorials/methods/helmholtz.md) | Complex local wave operators and polynomial/oscillatory traces | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
-| [Maxwell MHM](tutorials/methods/maxwell.md) | Tangential coupling, central-DG locals and leapfrog dynamics | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
-| [Unfitted/face-refined MHM](tutorials/methods/unfitted.md) | Material-fitted subfaces on an unfitted macro mesh | [Chaumont-Frelet et al. (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+| Formulation | Reference |
+| --- | --- |
+| Primal MHM | [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
+| Mixed H(div) MHM | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
+| Petrov–Galerkin MHM | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
+| Scalar RAD MHM | [Harder et al. (2015)](https://doi.org/10.1137/130938499); [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089) |
+| Stokes–Brinkman MHM | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
+| Oseen MHM | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
+| Primal elasticity MHM | [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) |
+| GaLS elasticity MHM | [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) |
+| Mixed elasticity MHM | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
+| Elastodynamic MHM | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
+| Helmholtz MHM | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
+| Maxwell MHM | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
+| Robin Multiscale Hybrid method (MH) | [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) |
+| Three-field Multiscale Method (MH²M) | [de Barros, Madureira and Valentin (2026, preprint v3)](https://arxiv.org/abs/2404.16978v3) |
+| Multiscale Hybrid High-Order method (MsHHO) | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082) |
 
-Recovery and adaptive strategies complement those discretizations:
+Complementary strategies:
 
-| Strategy | Purpose | Original analysis |
-| --- | --- | --- |
-| [Flux and potential recovery](tutorials/methods/flux-recovery.md) | RT0 equilibration, moment H(div) reconstruction and conforming potentials | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
-| [Error indicators](tutorials/methods/error-indicators.md) | Field-specific residual and reconstructed-energy diagnostics | [Araya et al. (2013)](https://doi.org/10.1137/120888223) |
-| [Adaptive approximation](tutorials/methods/adaptivity.md) | Independent macro, face, degree and local controls | [Araya et al. (2021)](https://doi.org/10.1093/imanum/drz053) |
-| [Recursive MHM](tutorials/methods/recursive-mhm.md) | A multiscale local operator with its own global/local hierarchy | [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13) |
+| Strategy | Reference |
+| --- | --- |
+| MHM-USFEM: stabilized reaction–diffusion local problems | [Martins, Pacazuca and Valentin (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
+| Independent skeletal refinement | [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415) |
+| Unfitted macro meshes with material-fitted skeletal partitions | [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+| Flux reconstruction and associated estimators | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
+| Residual estimators and adaptive refinement | [Araya et al. (2013)](https://doi.org/10.1137/120888223); [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053) |
 
-The table identifies implemented families, not every theorem or historical
-experiment in their papers. The [Gallery](gallery/index.md) records verified
-spaces and remaining limitations. RT0 equilibration and moment reconstruction
-are distinct operators; a generic indicator does not inherit the reliability
-proof of a complete published estimator.
+[Transient scalar integration](api/transport.md) and
+[nested local/global providers](guides/providers.md) are also available
+as software capabilities.
 
 ## Executable formulations
 
-The following predefined physical formulations have numerical records for
-their stated discretizations. They are separate from the ability to
-declare a new variational problem; their case evidence does not qualify
-arbitrary user-supplied forms.
+Write local and global equations through the shared variational API, then
+assemble, solve and evaluate the resulting fields. The [feature overview](tutorials/overview.md)
+introduces that workflow; the [API](api.md) documents the available scalar,
+vector and mixed operators and their accepted inputs.
 
-| Problem | Local approximation | Skeleton / normalization |
-| --- | --- | --- |
-| Darcy | Primal Pk, triangular RT0–RT2/BDM2 and enriched rectangular RT | Scalar normal flux; physical local means; pure Neumann gauge |
-| Three-dimensional primal Darcy | Conforming local tetrahedral Pk | Continuous or discontinuous polynomials within independently partitioned triangular macrofaces |
-| Three-dimensional mixed Darcy | Tetrahedral 18/P1 and 32/P2 families, prismatic 27/W11 and mapped hexahedral RT | Oriented Piola normal traces; physical cell moments and production balances |
-| Cartesian Darcy | Conforming local Qk on rectangular grids | Continuous or discontinuous face traces; geometric material-pixel integration |
-| Stokes–Brinkman | Pk/P(k−1) Taylor–Hood or Pk/Pk USFEM | Vector pseudotraction; tensor resistance; global pressure mean for full velocity data |
-| Oseen with variable advection | Taylor–Hood or consistent equal-order stabilization | Robin pseudotraction, prescribed convection derivatives and global pressure mean |
-| Nearly incompressible elasticity | GaLS Pk/Pk or Taylor–Hood | Three rigid modes; negative Cauchy traction; physical compressibility constraint |
-| Weakly symmetric elasticity | Row-wise BDM/RT stress with independent interior enrichment | Restricted interior tractions; force, moment and weak-symmetry equations |
-| Primal tensor elasticity | Two- and three-dimensional Pk with physical rigid modes | Negative Cauchy traction and displacement moments; no general locking-free claim |
-| Three-dimensional weakly symmetric elasticity | Row-wise BDMk stress, discontinuous displacement and rotation | AFW spaces with k≥2, six rigid modes and the incompressible limit |
-| Elastodynamics | Two- and three-dimensional Pk with Newmark time integration | Slabwise traction, local subcycling and heterogeneous inertia |
-| Conservative scalar RAD | Pk Galerkin or SUPG with variable coefficients | Robin multiplier with half the advective flux |
-| Heat equation | Pk and backward Euler | Flux skeleton, prescribed scalar boundary values |
-| Equilibrated Darcy flux | Constrained minimum-energy RT0 reconstruction | Fine-cell balances and preserved macro fluxes |
-| MsHHO | Cell and face pressure moments with constrained local energy reconstruction | Condensed face-pressure moment system; conditional field equivalence with MHM |
-| Adaptive methods | RT moment recovery, potential estimators and equation-specific residual indicators | Independent macro, face and local controls with stated marking rules |
-
-Built-in geometries include triangles, rectangular cells, simple planar polygons,
-tetrahedra, affine prisms, star-shaped polyhedra with planar faces and trilinearly
-mapped hexahedra.
-Nonconvex polyhedra require a certified positive-volume kernel and a conforming
-tetrahedral decomposition, as described in the [polyhedral case](cases/star-polyhedra.md).
-The [scope matrix](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) identifies the formulations available on each
-geometry; they are not interchangeable backends for every equation.
-Face partitions and polynomial degrees are independent of local refinement.
-Planar edge bases can be discontinuous
-Legendre polynomials or continuous nodal polynomials within each macroface.
-Triangular macrofaces likewise support discontinuous Bernstein polynomials or
-continuous piecewise polynomials, with independent degrees and continuity
-choices per face.
-Normal-trace restrictions and local refinement must satisfy each formulation's
-compatibility conditions.
-
-[Scientific scope](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) maps the literature to the implemented paths and
-remaining mathematical requirements. The [Bibliography](literature.md) identifies the original formulations, analyses,
-reconstruction strategies and supporting numerical methods; a citation is not
-a claim of complete paper reproduction.
+[Mesh generation and exchange](meshing.md), [local providers](guides/providers.md)
+and [solver selection](solvers.md) are configured separately. Choose the geometry
+and approximation spaces supported by the formulation you intend to implement.
 
 ## Reproducible examples
 

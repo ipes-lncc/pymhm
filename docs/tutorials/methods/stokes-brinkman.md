@@ -5,7 +5,7 @@ a vector pseudotraction trace, and impose one physical pressure gauge after
 assembly. This tutorial compares stable Taylor–Hood local Galerkin with the
 residual-stabilized equal-order MHM-USFEM variant.
 
-[Executable boundary-layer notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) · [Theory and degree conditions](../../theory/flow.md)
+[Executable boundary-layer notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb)
 
 The notebook runs in `introduction`; it declares its exact data, local and
 reference UFL forms, global equation, physical norms and plotting workflow in
@@ -155,6 +155,9 @@ c = local.trace_pairings(lambda phi, ds: -ufl.inner(phi, u)*ds, axis="rows")
 
 Thus local equations have $A_Kw_K+B_K\lambda=F_K$ and the global equation has
 $-\sum_K B_K^{\mathsf T}w_K=-\langle\mu,u_*\rangle_{\partial\Omega}$.
+Here $w_K$ and $\lambda$ are coefficient vectors in the executed local and
+skeletal bases; their reconstructed velocity, pressure and multiplier are
+physical fields.
 The exterior functional prescribes velocity moments, not traction.
 
 The notebook keeps the portable coefficient layout used by its scientific
@@ -216,41 +219,7 @@ in the [canonical boundary-layer case](../../cases/introduction-layers.md#incomp
 They approach the reported orders as the layer resolves, with their
 pre-asymptotic slopes stated explicitly.
 
-### Stabilized equal-order local problems
-
-For a clean final rate check, the separate smooth Stokes family uses viscosity
-one, zero resistance, stabilized P3/P3 local fields and vector P1 traces on a
-crisscross macro mesh. Its pressure mean and translational local kernels are
-part of that source configuration. The smooth-data estimates require regular macroelements, admissible local lifting spaces,
-resolved local approximation and the stated pressure gauge. The final four
-levels are $H=1/4,1/8,1/16,1/32$; the table shows all three intervals, rather
-than choosing only the final favorable slope. The normalized amplitude
-$E/H^q$ is approximately constant in this window.
-[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
-[Araya et al. (2025)](https://doi.org/10.1137/24M1649368) state the local
-stability, regularity and lifting hypotheses.
-
-| Physical observable | Reference order | Last three orders | Maximum/minimum of $E/H^q$ |
-| --- | ---: | --- | ---: |
-| velocity $L^2$ | 3 | 3.0644, 2.9914, 2.9741 | 1.0457 |
-| pressure $L^2$ | 2 | 2.0771, 2.0881, 2.0532 | 1.1635 |
-
-![Smooth stabilized Stokes velocity and pressure convergence and measured orders](../../assets/tutorials/methods/stokes-brinkman-convergence.svg)
-
-This USFEM study is a smooth asymptotic control, with separately declared data
-and spaces; it does not imply those rates for an unresolved boundary layer.
-
-### Refined Taylor–Hood local Galerkin problems
-
-The Galerkin variant has a separate refinement study. On each diagonal
-macrotriangle, divide each edge into four parts and use continuous P2 velocity
-and continuous P1 pressure on the resulting 16 fine triangles. The vector P1
-multiplier remains unsplit on each macroface. In the pure Stokes problem,
-retain both velocity translations in the global formulation and impose the
-physical pressure integral once over the whole domain. These are the same
-kernel and gauge conventions used in the notebook's variational construction.
-
-Both smooth studies use the analytical fields
+Both smooth studies below use the analytical fields
 
 $$
 \begin{aligned}
@@ -265,10 +234,51 @@ They have viscosity one, zero resistance and homogeneous exterior velocity.
 The positive prefactor of $\psi$ reverses the velocity in the polynomial example
 of [Araya et al. (2017), Section 3.1.1](https://doi.org/10.1016/j.cma.2017.05.027),
 while retaining its pressure. These are analytical qualifications of the
-formulations, rather than reproductions of that paper's figure. Section 2.2
-admits stable local Galerkin pairs, subject to the trace-lifting condition (48).
-The sufficient degree condition for single-element equal-order USFEM spaces
-does not describe these refined Taylor–Hood spaces.
+formulations, rather than reproductions of that paper's figure; these studies
+do not establish the same rates for an unresolved boundary layer.
+
+### Stabilized equal-order local problems
+
+The stabilized family uses P3/P3 local fields and vector P1 traces on a
+crisscross macro mesh. Its pressure mean and translational local kernels are
+part of that source configuration. The smooth-data estimates require regular macroelements, admissible local lifting spaces,
+resolved local approximation and the stated pressure gauge. The final four
+levels are $H=1/4,1/8,1/16,1/32$; the table shows all three intervals, rather
+than choosing only the final favorable slope. The normalized amplitude
+$E/H^q$ is approximately constant in this window.
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
+[Araya et al. (2025)](https://doi.org/10.1137/24M1649368) state the local
+stability, regularity and lifting hypotheses.
+The 2025 Theorem 4.2 estimates the broken velocity–pressure product norm,
+including the velocity gradient and pressure. The additional velocity $L^2$
+order three is observed in the 2017 experiments and the present smooth study;
+it is not a separate conclusion of that theorem.
+
+| Physical observable | Reference order | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| velocity $L^2$ | 3 | 3.0644, 2.9914, 2.9741 | 1.0457 |
+| pressure $L^2$ | 2 | 2.0771, 2.0881, 2.0532 | 1.1635 |
+
+![Smooth stabilized Stokes velocity and pressure convergence and measured orders](../../assets/tutorials/methods/stokes-brinkman-convergence.svg)
+
+### Refined Taylor–Hood local Galerkin problems
+
+The Galerkin variant has a separate refinement study. On each diagonal
+macrotriangle, divide each edge into four parts and use continuous P2 velocity
+and continuous P1 pressure on the resulting 16 fine triangles. The vector P1
+multiplier remains unsplit on each macroface. In the pure Stokes problem,
+retain both velocity translations in the global formulation and impose the
+physical pressure integral once over the whole domain. These are the same
+kernel and gauge conventions used in the notebook's variational construction.
+
+Section 2.2 of Araya et al. (2017) admits stable local Galerkin pairs, subject
+to the trace-lifting condition (48).
+The 2025 Theorem 4.3 gives a sufficient Taylor–Hood condition $k-\ell\ge2$
+in addition to Assumption (M). This P2/P1-local, P1-trace comparison has
+$k-\ell=1$ and is outside that stated degree condition. Its concrete local
+operator and trace lifting are checked below; those checks do not establish
+the theorem for this broader family. The velocity $L^2$ order three is
+additional measured accuracy.
 
 ![Smooth Taylor–Hood MHM and independently assembled conforming fields](../../assets/tutorials/methods/stokes-taylor-hood-fields.svg)
 
@@ -280,7 +290,7 @@ Every panel shows the actual macro mesh. The convergence study retains all
 seven macro-grid resolutions $n=1,2,4,8,16,32,64$ and uses the actual triangle
 diameter $H=\sqrt{2}/n$. Its final four levels give the following tail.
 
-| Physical observable | Smooth-data order | Last three orders | Maximum/minimum of $E/H^q$ |
+| Physical observable | Observed reference order | Last three orders | Maximum/minimum of $E/H^q$ |
 | --- | ---: | --- | ---: |
 | velocity $L^2$ | 3 | 2.9006, 2.9491, 2.9740 | 1.1300 |
 | pressure $L^2$ | 2 | 2.0392, 2.0125, 2.0043 | 1.0396 |

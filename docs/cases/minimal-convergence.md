@@ -275,7 +275,7 @@ A fine numerical reference retains nonzero refinement error; it is not an exact 
 
 Two accepted resolutions have completed pressure and Darcy-flux norms; F4 did not close within its resource limit.
 
-Only two of three requested levels are accepted; no three-level convergence rate is asserted. Fixed polygonal geometry, measured physical fine-cell diameters; this is not the historical curved mesh. The initial joint phase and the separate F4 phase each stopped at the 60-second bound.
+Two refinement levels are available, so no three-level convergence rate is asserted. The fixed polygonal geometry and measured physical fine-cell diameters differ from the historical curved mesh. The F4 acquisition has a 60-second resource bound.
 
 ![Mixed Darcy well, two accepted levels](../figures/minimal-convergence/darcy-mixedwell/convergence.png)
 
@@ -288,7 +288,7 @@ Only two of three requested levels are accepted; no three-level convergence rate
 
 Exact pressure errors 5.306e-3 to 3.291e-4 and gradient errors 0.5076 to 0.06821.
 
-Three initial levels do not establish asymptotic rates or the full angular/stability studies Cartesian local Q4 spaces are the declared analytical variant; every published mesh has not been identified
+Three initial levels do not establish asymptotic rates or the full angular/stability studies. Cartesian local Q4 spaces are the declared analytical variant; the historical meshes remain unidentified.
 
 ![Helmholtz plane wave](../figures/minimal-convergence/wave-helmholtz/convergence.png)
 
@@ -301,7 +301,7 @@ Three initial levels do not establish asymptotic rates or the full angular/stabi
 
 Separate displacement, velocity and stress errors decrease over all three initial levels.
 
-Five time steps give an initial spatial study; the original .5s horizon and asymptotic rates remain outside this acquisition Temporal error is included in each analytical field error
+Five time steps give an initial spatial study; the original 0.5 s horizon and asymptotic rates remain outside this acquisition. Temporal error is included in each analytical field error.
 
 ![Equation (53) analytical elastic wave](../figures/minimal-convergence/wave-elastic-wave/convergence.png)
 
@@ -314,7 +314,7 @@ Five time steps give an initial spatial study; the original .5s horizon and asym
 
 Electric increments decrease 1.485 to 0.2692 and magnetic increments 1.998 to 0.2964 against n 64.
 
-n64 is a numerical comparison level, not an exact or resolved reference The shortened horizon includes the beginning of device interaction; the full11.31 observation remains outside this study Historical source phase/turn-on conventions remain unidentified No MHM/native whole-trajectory agreement is claimed by this DG-only study
+The n=64 field is a numerical comparison level, not an exact or resolved reference. The shortened horizon includes the beginning of device interaction; the full 11.31 observation remains outside this study. Historical source phase and turn-on conventions remain unidentified. This DG-only study does not establish MHM/native whole-trajectory agreement.
 
 ![Maxwell nanoguide: independent DG study](../figures/minimal-convergence/wave-nanoguide/convergence.png)
 
@@ -327,7 +327,7 @@ n64 is a numerical comparison level, not an exact or resolved reference The shor
 
 Displacement increments decrease 5.490e-8 to 1.101e-8 and velocity increments 5.695e-6 to 1.155e-6.
 
-Spatial refinement of h8 is unresolved; temporal increments do not certify spatial accuracy dt.001 is a numerical comparison level, not an exact temporal solution This conforming temporal study does not replace a complete MHM/refined-reference physical comparison Selected mesh, horizons and Ormsby data do not identify the historical author's inputs
+Spatial refinement of the h=8 mesh is unresolved; temporal increments do not certify spatial accuracy. The dt=0.001 field is a numerical comparison level, not an exact temporal solution. This conforming temporal study does not replace a complete MHM/refined-reference physical comparison. The selected mesh, horizons and Ormsby data do not identify the historical author's inputs.
 
 ![Three layers: conforming temporal study](../figures/minimal-convergence/wave-three-layer/convergence.png)
 
@@ -340,7 +340,7 @@ Spatial refinement of h8 is unresolved; temporal increments do not certify spati
 
 Pressure increments decrease 9795 to 959.7 against the H 20 numerical comparison level.
 
-The crop changes lateral/bottom boundary locations; the full selected paper domain remains outside this pilot Fine spacing is fixed at2.5m; the study measures macro trace restriction and does not establish continuum spatial convergence The finest MHM field is a numerical comparison level; it is not an exact or resolved reference Primary SEG data are identified; the historical article arrays remain unidentified
+The crop changes the lateral and bottom boundary locations; the full selected paper domain remains outside this pilot. Fine spacing is fixed at 2.5 m; the study measures macro trace restriction and does not establish continuum spatial convergence. The finest MHM field is a numerical comparison level, not an exact or resolved reference. Primary SEG data are identified; the historical article arrays remain unidentified.
 
 ![Marmousi: explicit 160x 80 m crop pilot](../figures/minimal-convergence/wave-marmousi/convergence.png)
 

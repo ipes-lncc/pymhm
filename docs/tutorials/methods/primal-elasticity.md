@@ -2,7 +2,7 @@
 
 Follow **meshes → local equations → global equations → assemble → solve → physical fields**. We prescribe horizontal extension of a square containing a smooth oscillatory elastic material. The fine conforming reference is refined independently; it is not an exact solution.
 
-[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) · [Theory and degree conditions](../../theory/elasticity.md)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb)
 
 ## 1. Define material, loading and scales
 
@@ -188,7 +188,7 @@ The notebook evaluates the named displacement fields in their executed native ba
 
 ## 6. Verify the smooth asymptotic rate
 
-The heterogeneous example illustrates material resolution. Its rates cannot be inferred from a smooth constant-material theorem. The separate smooth manufactured study below uses P3 displacement, P1 vector traction and one local triangle per macrocell; it targets displacement order three and stress order two. The load is derived from the analytical displacement independently of assembly.
+The heterogeneous example illustrates material resolution. Its rates cannot be inferred from a smooth constant-material theorem. The separate smooth manufactured study below keeps P3 displacement, P1 vector physical traction and one local triangle per macrocell, with a fixed homogeneous anisotropic positive-definite Kelvin tensor. It targets displacement order three and stress order two. The load is derived from the analytical displacement independently of assembly.
 
 ![Physical errors and successive observed rates](../../assets/tutorials/methods/primal-elasticity-convergence.png)
 
@@ -204,9 +204,7 @@ retain the actual non-dyadic macro diameters, so each consecutive order uses
 the exact logarithmic mesh ratio. Both target-normalized amplitudes flatten
 over the same three intervals; earlier coarse levels remain in the figure.
 
-Spaces remain P3 local displacement on one triangle and P1 vector physical
-traction, with the same fixed homogeneous anisotropic positive-definite
-Kelvin tensor. The degree choice uses the admissible odd trace degree from
+The degree choice uses the admissible odd trace degree from
 [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
 Full exterior displacement removes global rigid ambiguities; every local
 translation and rotation moment is retained. This smooth estimate assumes
@@ -235,9 +233,8 @@ independent physical norms, rather than using an algebraic residual as an error.
 
 ## 7. Refine a classical reference for the same smooth problem
 
-The heterogeneous extension reference in Step 5 and the homogeneous rate study
-in Step 6 solve different physical problems. For the rate study, an additional
-independently assembled conforming P3 reference uses the **same** unit square,
+For the smooth rate study in Step 6, an independently assembled conforming P3
+reference uses the **same** unit square,
 anisotropic tensor, manufactured displacement and zero exterior data. In the
 orthonormal Kelvin convention, its material and exact displacement are
 

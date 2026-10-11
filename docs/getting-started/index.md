@@ -36,8 +36,9 @@ explicit contracts available when you supply another representation.
 
 ## 3. Choose a method through its formulation
 
-Use [Theoretical Background](../theory.md) to compare assumptions and spaces,
-then select a [method tutorial](../tutorials/index.md). Each tutorial connects
+Use [Methods](../methods.md) to identify a construction and its primary
+references, then select a [method tutorial](../tutorials/index.md). Each
+tutorial connects
 the variational equations to the corresponding code and identifies the norms
 used in its convergence study. Start with primal MHM before studying mixed
 local spaces or independent cell/face constructions.

@@ -1,10 +1,118 @@
 # Introduction
 
-PyMHM separates a variational formulation from its local numerical solver.
-A method is specified by its volume equations, skeleton spaces, retained
-physical modes and global coupling equations. The common
-[hybrid construction](theory/foundations.md) makes these choices explicit;
-changing a linear solver backend does not change the method.
+Multiscale Hybrid Mixed (MHM) methods are derived by hybridizing a PDE on
+a partition of the domain and decomposing its solution into local
+responses and globally coupled variables. The original elliptic method
+is introduced in [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)
+and analyzed in [Araya et al. (2013)](https://doi.org/10.1137/120888223).
+The local problems retain the original coefficient field; they do not
+replace it by a cell average or an effective material coefficient.
+
+PyMHM separates this variational construction from the numerical solver
+used for its local problems. A method is specified by its volume
+equations, skeleton spaces, retained physical modes and global coupling
+equations. The common [hybrid construction](theory/foundations.md)
+expresses those choices; changing a linear solver backend leaves the
+variational method unchanged, up to its algebraic solve error.
+
+## The original elliptic construction
+
+Let $\Omega$ be partitioned into macroelements $K$, and consider
+
+$$
+q=-\mathsf K\nabla p,\qquad \nabla\cdot q=f,
+\qquad p=p_D\text{ on }\Gamma_D,
+\qquad q\cdot n=q_N\text{ on }\Gamma_N,
+$$
+
+where $\mathsf K$ is a symmetric, uniformly positive definite diffusion
+tensor. Here $\mathsf K$ is **problem data**, whereas $p$ and $q$ are
+**solution fields**. The hybrid pressure space is broken $H^1$: each
+restriction $p_K$ belongs to $H^1(K)$ before neighboring restrictions are
+coupled. The multiplier $\lambda_K$ represents outward normal physical
+flux. One orientation per interior face gives opposite outward signs for
+its two incident macroelements.
+
+The hybrid equations are
+
+$$
+\begin{aligned}
+(\mathsf K\nabla p_K,\nabla v)_K
+ +\langle\lambda_K,v\rangle_{\partial K}
+ &=(f,v)_K, &&v\in H^1(K),\\
+\sum_K\langle\mu_K,p_K\rangle_{\partial K}
+ &=\langle\mu,p_D\rangle_{\Gamma_D}.
+\end{aligned}
+$$
+
+The multiplier is fixed to $q_N$ on $\Gamma_N$, and its tests $\mu$
+vanish there. At the continuous level, the second equation restores
+pressure continuity and its Dirichlet trace. After skeleton
+discretization, it imposes these conditions in the selected moments.
+
+Constants form the kernel of each local Neumann operator. Write
+$p_K=c_K+T_K\lambda+\widehat T_Kf$, where $c_K$ is its mean and both
+responses have zero mean. The local problems are
+
+$$
+\begin{aligned}
+(\mathsf K\nabla T_K\lambda,\nabla v)_K
+ &=-\langle\lambda_K,v\rangle_{\partial K},\\
+(\mathsf K\nabla\widehat T_Kf,\nabla v)_K
+ &=(f,v)_K,
+\end{aligned}
+\qquad v\in H^1(K),\quad\int_Kv=0.
+$$
+
+The **global problem** determines $\lambda$ and every $c_K$ from the
+pressure-coupling equation above and
+
+$$
+\int_{\partial K}\lambda_K\,ds=\int_Kf\,dx,
+\qquad K\in\mathcal P_H.
+$$
+
+This last equation is the constant test omitted from the local
+mean-zero problems. It supplies macroelement mass balance. An individual
+interface response can have nonzero net boundary flux; its local
+compatibility correction cancels when the globally balanced responses
+are combined. The cell means are physical unknowns, not arbitrary local
+gauges. A globally pure Neumann problem additionally needs compatible
+data and one global pressure normalization.
+
+This decomposition is the source of the multiscale basis: each
+interface basis function is lifted through the local differential
+operator with its actual material field. **Hybrid** describes the
+skeleton coupling; **mixed** describes the global flux/pressure-mean
+system. The original construction uses primal local solves and is
+distinct from the mixed H(div) local formulation of
+[Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
+
+## One-level and two-level methods
+
+A one-level elliptic MHM discretizes the skeleton and retains exact local
+PDE responses. A two-level MHM also approximates those responses in local
+finite element spaces. The one-level estimates of
+[Araya et al. (2013), Theorem 4.1](https://doi.org/10.1137/120888223)
+therefore do not by themselves establish a rate for an arbitrary local
+discretization. The subspace analysis of
+[Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13)
+separates skeleton and local approximation errors and requires the
+corresponding stability conditions.
+
+With exact local responses, the reconstructed elliptic flux has the
+H(div) conformity and divergence stated by the original formulation.
+With primal finite element locals, $-\mathsf K\nabla p_h$ is generally a
+broken raw flux. Macroelement balance of the multiplier does not make
+that raw flux conservative on every fine cell. A mixed local solve or a
+separate flux reconstruction has its own conformity and conservation
+conditions; the [elliptic](theory/elliptic.md) and
+[recovery](theory/recovery.md) pages identify them.
+
+The method permits independent local computations for a fixed skeleton
+space. Its stability, accuracy and computational advantage depend on
+the stated spaces, coefficient assumptions, local approximation and
+global solve; none follows from domain decomposition alone.
 
 ## What is local, and what is global?
 
@@ -72,7 +180,7 @@ mesh-uniform stability.
 | GaLS elasticity | Equal-order locals need the strain inverse bound and compatible traction refinement. The two-dimensional $\ell=1$ choices are $(k,r)=(1,4),(2,2),(3,1)$. |
 | Mixed stress elasticity | Rigid displacement and rotation belong to the coupled kernel. The tetrahedral AFW realization uses BDM$_k$/P$_{k-1}$/P$_{k-1}$ with $k\ge2$. |
 | Flow | Stable Taylor–Hood or consistent equal-order USFEM locals, compatible vector traces and a physical global pressure normalization when required. |
-| Moment-based flux estimator | $k\ge\ell+d$, $\ell\le m\le k$ for RT$_m$ reconstruction; discontinuous subface tests are part of the stated estimator theorem. |
+| Moment-based flux estimator | $k\ge\ell+d$, $\ell\le m\le k$ for RT$_m$ reconstruction, with diffusion polynomial on each fine simplex; discontinuous subface tests and the additional regularity hypotheses belong to the stated estimator theorem. |
 
 The method pages give original citations and geometry restrictions behind
 these rules. In particular, a condition with $d=2$ cannot be reused for a
@@ -88,15 +196,16 @@ the refinement variable, field norm and measured final interval rates.
 
 | Method or family | Smooth-problem target | Hypotheses and interpretation |
 | --- | --- | --- |
-| Primal MHM, MH and PGMHM | Typically energy/physical flux $\ell+1$, pressure $\ell+2$ | Pressure gains need dual regularity; local errors must not dominate. PGMHM divergence is a separate norm. |
-| MsHHO with cell degree $m=\ell$ | Energy $\ell+1$, pressure $\ell+2$ | Pressure gains need dual regularity and resolved local problems. Independent cell degrees and $m=-1$ have separate [degree and injectivity conditions](theory/alternatives.md). |
+| Original primal MHM | One-level energy/physical flux: $\ell+1$; pressure: $\ell+2$ with dual regularity | Theorem 4.1 assumes exact local responses, sufficient solution regularity and uniform stability; two-level computations also have local approximation error. |
+| Robin MH and PGMHM | Method-specific energy estimates and observed field rates | The Robin norm, stabilization and PGMHM divergence norm differ. Use the separate [alternative-formulation bounds](theory/alternatives.md), rather than assigning one common rate to both. |
+| MsHHO with cell degree $m=\ell$ | Energy: $\ell+1$ in the stated one-level analysis | Theorem 6.3 is an energy estimate. Tutorial pressure rates are observations; independent cell degrees and $m=-1$ have separate [degree and injectivity conditions](theory/alternatives.md). |
 | MH²M: $\Gamma=P_{r+1}$, $\Lambda=P_r$, $V_h=P_{r+1}$ | Energy $r+1$ | Theorem 19 controls pressure/conormal trace and volume energy with independent mesh sizes. |
 | Fitted faces on an unfitted macro mesh | Broken-gradient $\ell+3/2$ in the smooth face-refinement study | Fixed macro partition, physical-region regularity, fitted subfaces and accurate locals. |
-| Flow | Velocity energy and pressure follow the mixed/stabilized order; velocity $L^2$ can gain one order | State both local and skeletal families; arbitrary pairs have no universal viscosity-independent rate. |
+| Stokes–Brinkman | The 2025 bound controls broken velocity $H^1$ and pressure $L^2$ | Theorem 4.2 requires the stated degree, mesh and regularity hypotheses; an additional velocity $L^2$ order is not supplied by this theorem. Oseen tutorial orders are numerical observations. |
 | Weak-symmetry BDM$_k$ elasticity | Stress, displacement and rotation $L^2$ order $k$ for the AFW family | Sufficient regularity and trace accuracy; symmetry is a moment condition. |
 | Linear-trace elastodynamic study | Displacement/velocity $L^2$: 3; broken $H^1$: 2; stress broken $H(\mathrm{div})$: 1 | The published smooth spatial family; Newmark time order is 2 separately. |
-| Helmholtz trace degree $\ell$ | Pressure $\ell+2$, broken gradient $\ell+1$ | Fixed frequency in the resolved nonresonant regime with accurate locals. |
-| Maxwell TM trace degree $\ell=1,2$ | Combined $L^2$: $\ell+1$; broken curl: $\ell$; time: 2 | Published smooth cavity data; retain staggered field times and CFL restrictions. |
+| Helmholtz polynomial traces of degree $\ell$ | One-level pressure: $\ell+2$; broken gradient: $\ell+1$ | Theorem 5.4 uses its two-dimensional regularity assumptions, coefficient-aligned macro mesh and frequency-dependent resolution conditions. Oscillatory-trace slopes are numerical observations. |
+| Maxwell TM traces of degree $\ell=1,2$ | Published numerical observations: combined $L^2$, $\ell+1$; broken curl, $\ell$; time, 2 | Sections 6.1–6.2 of the original paper; these are not proved error estimates. Lemma 4 supplies a discrete-energy statement under its CFL condition. |
 | Backward-Euler transport/diffusion | Time: 1 | Refine time until spatial and reference errors are smaller. |
 
 A measured slope qualifies the stated sequence. It does not qualify every
@@ -118,7 +227,7 @@ that every formulation uses that geometry.
 - Alternative global formulations: [Barrenechea et al. (2024), MH](https://doi.org/10.1137/22M1542556), [de Barros et al. (2026, v3), MH²M](https://arxiv.org/abs/2404.16978v3), [Chaumont-Frelet et al. (2022), MsHHO](https://doi.org/10.1051/m2an/2021082), and [Fernando et al. (2023), PGMHM](https://doi.org/10.1007/s40314-023-02304-y).
 - Flow: [Araya et al. (2017), Stokes–Brinkman](https://doi.org/10.1016/j.cma.2017.05.027), [Araya et al. (2025), a priori analysis](https://doi.org/10.1137/24M1649368), and [Araya et al. (2021), Oseen](https://doi.org/10.1007/s10444-020-09833-8).
 - Elasticity: [Harder et al. (2016), primal](https://doi.org/10.1051/m2an/2015046), [Devloo et al. (2021), mixed stress](https://doi.org/10.1051/m2an/2021013), [Arnold et al. (2007), AFW spaces](https://doi.org/10.1090/S0025-5718-07-01998-9), and [Gomes et al. (2024, v1), GaLS](https://arxiv.org/abs/2403.16890v1).
-- Transport and stabilized locals: [Harder et al. (2015)](https://doi.org/10.1137/130938499), [Araya et al. (2024), generalized RAD](https://doi.org/10.1016/j.cma.2024.117089), and [Santiago et al. (CILAMCE 2025), MHM-USFEM](https://doi.org/10.55592/cilamce2025.v5i.14270).
+- Transport and stabilized locals: [Harder et al. (2015)](https://doi.org/10.1137/130938499), [Araya et al. (2024), generalized RAD](https://doi.org/10.1016/j.cma.2024.117089), and [Martins et al. (CILAMCE 2025), MHM-USFEM](https://doi.org/10.55592/cilamce2025.v5i.14270).
 - Dynamics and waves: [Gomes et al. (2017), elastodynamics](https://doi.org/10.20906/CPS/CILAMCE2017-0399), [Chaumont-Frelet and Valentin (2020), Helmholtz](https://doi.org/10.1137/19M1255616), and [Lanteri et al. (2018), Maxwell](https://doi.org/10.1137/16M110037X).
 - Unfitted faces and recovery: [Chaumont-Frelet et al. (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) and [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 - Recursive hybrid structure: [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).

@@ -1,6 +1,20 @@
 # Primal MHM
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) · [Theory and degree conditions](../../theory/elliptic.md)
+The original MHM is hybrid because it couples broken local pressure fields
+through a skeleton multiplier. Its global problem is mixed: the unknowns
+are normal Darcy-flux coefficients and one pressure mean per macroelement.
+The local finite element method here is primal. Local Neumann responses
+contain the full permeability field; no homogenized permeability is
+substituted. See [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+This tutorial uses **two-level MHM**. The first level discretizes the
+skeletal normal flux and retains one pressure mean per macroelement.
+The second level approximates the local Neumann responses in fine-mesh
+$Q_2$ spaces. With exact local responses, the skeletal discretization
+defines the one-level method; see
+[Araya et al. (2013)](https://doi.org/10.1137/120888223).
+
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_multiscale_convergence.ipynb)
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
@@ -33,8 +47,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/34fcc4d6005bbda56e46c37c1b157984d9dfba84c5ed349e6a7c101b485b8d21/darcy_multiscale_convergence-companion.zip"
-COMPANION_SHA256 = "34fcc4d6005bbda56e46c37c1b157984d9dfba84c5ed349e6a7c101b485b8d21"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/3473ec3bc17a7c7dc8fdf16c6b2dd1057bdbbd6ddbddc6e6cf4b2c9b83b2f027/darcy_multiscale_convergence-companion.zip"
+COMPANION_SHA256 = "3473ec3bc17a7c7dc8fdf16c6b2dd1057bdbbd6ddbddc6e6cf4b2c9b83b2f027"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -81,7 +95,7 @@ from pymhm.fem.scalar.operators import boundary_data
 ```
 
 ```text
-Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_multiscale_convergence-f44b601aa93c
+Workspace: .
 ```
 
 ## 1. Physical problem and an independently derived source
@@ -179,9 +193,15 @@ class OscillatoryDarcyData:
 
 ```
 
-## 2. Choose the three approximation scales
+## 2. Choose the macro mesh, local meshes and trace space
 
-`macro` defines the global element size. `local_refinement` chooses how each macroelement resolves the material, while the trace degree and segments choose the interface approximation. The convergence study varies these choices separately.
+Choose the discretization of the global and local problems:
+
+- **Macro mesh:** `macro` partitions the unit square into macroelements. Here $H$ denotes the side length of each square.
+- **Local meshes and spaces:** `local_refinement=r` divides each macroelement into $r\times r$ fine squares, with side length $h=H/r$. `local_degree=k` sets the local pressure space $Q_k$.
+- **Global trace space:** the trace degree $\ell$ and `trace_segments` select the normal-flux approximation on each macroface. Segmentation refines this global space.
+
+These choices configure the two-level discretization. The coefficient period $\varepsilon=1/8$ is a physical parameter of the permeability and remains fixed throughout the refinement study.
 
 
 
@@ -191,6 +211,8 @@ exact = lambda points: (data.pressure(points), data.gradient(points))
 macro = CartesianMacroMesh(4, 4)
 # H=1/4; h_local=H/r=1/64; degree k=2; trace degree ell=1.
 local_degree, local_refinement, trace_segments = 2, 16, 2
+# The oscillatory, nonpolynomial material requires independently qualified integration.
+assembly_order = 26  # Gauss points per axis; UFL quadrature degree 51.
 skeleton = SkeletonSpace(
     macro, tuple(FaceSpace.uniform(1, trace_segments, continuous=True) for _ in macro.faces)
 )
@@ -233,6 +255,25 @@ $$
 | Weak pressure continuity | `local.trace_pairings(lambda phi, ds: -phi*p*ds, axis="rows")` |
 | Macroface coordinates | `bind_interface(skeleton, convention="normal")` supplies local/global maps |
 
+The local Neumann kernel is constant. The pressure decomposition is
+
+$$
+p_T=c_T+T_T\lambda+\widehat T_Tf,
+\qquad\int_TT_T\lambda=\int_T\widehat T_Tf=0.
+$$
+
+The source response and each interface response are solved on the
+mean-zero complement. The constant $c_T$ is a global physical unknown.
+The retained compatibility equation supplies the missing constant test,
+
+$$
+\int_{\partial T}s_{TF}\lambda\,ds=\int_Tf\,dx.
+$$
+
+Together with the pressure-coupling moments, this is the original MHM
+global problem. It is not imposed by setting all local pressure means
+to zero.
+
 Interior faces have zero pressure-jump moments; Dirichlet faces have prescribed pressure moments. With the declared sign $C=-B^T$, the additional global right-hand side is
 
 
@@ -244,7 +285,15 @@ $$
 
 
 
-`Equation(0, ...)` stores this additional global term. One constant mode per macroelement gives the compatibility equation imposing **macro conservation**. The plotted raw flux $-K\nabla p_h$ is not an $H(\mathrm{div})$ reconstruction and is not guaranteed to conserve on every fine cell.
+`Equation(0, ...)` stores this additional global term. One constant mode per macroelement gives the compatibility equation imposing **macro conservation**. The Darcy flux is evaluated as $q_h=-K\nabla p_h$.
+
+All local solves use 26 Gauss points per coordinate direction, declared in UFL
+as `quadrature_degree=51`. This integrates the oscillatory coefficient and
+manufactured source on the coarsest local mesh as well as the finer meshes.
+Assembly quadrature is an independent numerical choice: increasing it changes
+neither the local polynomial degree nor the skeleton space. Field errors use a
+separate, fixed integration grid, so changes in the discretization choices
+can be compared consistently.
 
 The provider below declares the executable UFL weak forms and each coupling sign. `local.native_space` owns the native geometry and coefficient convention, while `local.trace_pairings` binds both interface forms independently. The provider supplies no face DOF indices or nodal permutation. The generic `assemble` operation owns elimination, assembly and reconstruction; no PDE-specific problem constructor is used.
 
@@ -328,7 +377,7 @@ Before reconstructing fields, define how the x-fastest Qk coefficients represent
 
 
 ```python
-provider = DarcyLocalProvider(macro, skeleton, data, local_degree, local_refinement, 7)
+provider = DarcyLocalProvider(macro, skeleton, data, local_degree, local_refinement, assembly_order)
 boundary, fixed = boundary_data(skeleton, data.pressure, order=7)
 hierarchy = MeshHierarchy(
     macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
@@ -362,7 +411,7 @@ print("First macrocell pressure at its center:", pressure_fields[0].evaluate(fir
 ```
 
 ```text
-{'global_unknowns': 136, 'largest_local_unknowns': 1089, 'original_equations_relative_residual': 1.068655151817424e-16}
+{'global_unknowns': 136, 'largest_local_unknowns': 1089, 'original_equations_relative_residual': 1.1110151320839327e-16}
 First macrocell pressure at its center: [0.14646015]
 ```
 
@@ -392,7 +441,7 @@ assert load_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_load))))
 ```
 
 ```text
-{'UFL_vs_ready_operator_max': 2.842170943040401e-14, 'UFL_vs_ready_source_max': 8.326672684688674e-17}
+{'UFL_vs_ready_operator_max': 7.105427357601002e-14, 'UFL_vs_ready_source_max': 2.1510571102112408e-16}
 ```
 
 ## 5. Classical primal Galerkin on independently refined global meshes
@@ -429,7 +478,7 @@ for n in (32, 64, 128):
     domain, space, mapping = native_scalar_space(fine, 2)
     p, v = ufl.TrialFunction(space), ufl.TestFunction(space)
     K, f = ufl_coefficient_source(domain, data)
-    dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 13})
+    dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 2 * assembly_order - 1})
     a_cg = compile_form(ufl.inner(K * ufl.grad(p), ufl.grad(v)) * dx)
     load_cg = compile_form(f * v * dx)
     _, nodes = qk_space(fine, 2)
@@ -452,28 +501,28 @@ reference_rows
 ```text
 [{'n': 32,
   'unknowns': 4225,
-  'pressure_L2': 1.6318965471072642e-05,
-  'flux_L2': 0.0014999740470356766,
-  'flux_energy': 0.0009521702553866294,
-  'pressure_relative': 3.2637930942145284e-05,
-  'flux_relative': 0.0003056354275708311,
-  'energy_relative': 0.00033401766442094175},
+  'pressure_L2': 1.6311682549303613e-05,
+  'flux_L2': 0.001500019626951807,
+  'flux_energy': 0.0009521702517930258,
+  'pressure_relative': 3.2623365098607226e-05,
+  'flux_relative': 0.0003056447149562913,
+  'energy_relative': 0.0003340176631603194},
  {'n': 64,
   'unknowns': 16641,
-  'pressure_L2': 1.2191024764276339e-06,
-  'flux_L2': 0.0004247613394424418,
-  'flux_energy': 0.0002514193228832236,
-  'pressure_relative': 2.4382049528552678e-06,
-  'flux_relative': 8.654957320935687e-05,
-  'energy_relative': 8.819693174058399e-05},
+  'pressure_L2': 1.2191023086918222e-06,
+  'flux_L2': 0.00042476133764538903,
+  'flux_energy': 0.0002514193228832227,
+  'pressure_relative': 2.4382046173836444e-06,
+  'flux_relative': 8.654957284318855e-05,
+  'energy_relative': 8.819693174058369e-05},
  {'n': 128,
   'unknowns': 66049,
-  'pressure_L2': 9.400677112227076e-08,
-  'flux_L2': 0.00010915481614597537,
-  'flux_energy': 6.370482539257987e-05,
-  'pressure_relative': 1.8801354224454152e-07,
-  'flux_relative': 2.224143742361506e-05,
-  'energy_relative': 2.2347407797708685e-05}]
+  'pressure_L2': 9.40083804181791e-08,
+  'flux_L2': 0.00010915481610239898,
+  'flux_energy': 6.37048253925932e-05,
+  'pressure_relative': 1.880167608363582e-07,
+  'flux_relative': 2.2241437414735915e-05,
+  'energy_relative': 2.2347407797713358e-05}]
 ```
 
 
@@ -500,12 +549,12 @@ assert reference_rows[-1]["pressure_L2"] < reference_rows[0]["pressure_L2"]
 ```
 
 ```text
-Successive reference differences: [{'pressure_L2': 1.5234803545787962e-05, 'flux_L2': 0.0014259004433549434, 'flux_energy': 0.0009183771099355073, 'pressure_relative': 3.0469539470096415e-05, 'flux_relative': 0.0002905424940205197, 'energy_relative': 0.0003221631601870045}, {'pressure_L2': 1.1518268950028591e-06, 'flux_L2': 0.00041098995715294415, 'flux_energy': 0.00024321466063586947, 'pressure_relative': 2.303653459930783e-06, 'flux_relative': 8.374351625547069e-05, 'energy_relative': 8.531876779310019e-05}]
+Successive reference differences: [{'pressure_L2': 1.5227554215844082e-05, 'flux_L2': 0.0014259460346024602, 'flux_energy': 0.0009183771081969466, 'pressure_relative': 3.045504084239697e-05, 'flux_relative': 0.0002905517837260761, 'energy_relative': 0.000322163159577337}, {'pressure_L2': 1.1518248263488742e-06, 'flux_L2': 0.0004109899554135434, 'flux_energy': 0.0002432146605356715, 'pressure_relative': 2.30364932261365e-06, 'flux_relative': 8.374351590097702e-05, 'energy_relative': 8.531876775781793e-05}]
 ```
 
 ```text
-MHM versus fine CG: {'pressure_L2': 0.00021110534459098504, 'flux_L2': 0.019092751630456182, 'flux_energy': 0.012636675043133412, 'pressure_relative': 0.0004222106286862625, 'flux_relative': 0.0038903484834588446, 'energy_relative': 0.004432897017240737}
-MHM versus exact solution: {'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}
+MHM versus fine CG: {'pressure_L2': 0.00021110534460575797, 'flux_L2': 0.019092751630456706, 'flux_energy': 0.012636675043150416, 'pressure_relative': 0.00042221062871402036, 'flux_relative': 0.0038903484834555825, 'energy_relative': 0.0044328970172397815}
+MHM versus exact solution: {'pressure_L2': 0.00021110587827486888, 'flux_L2': 0.01909305299115884, 'flux_energy': 0.01263683572847488, 'pressure_relative': 0.00042221175654973776, 'flux_relative': 0.0038904095881644074, 'energy_relative': 0.004432953383932771}
 ```
 
 ## 6. Plot the coefficient, pressure and physical flux
@@ -554,33 +603,41 @@ plt.show()
 
 
 
-[![Figure 1 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)
+[![Figure 1 — Multiscale Darcy: a two-level primal MHM workflow](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)
 
 
 
 
-[![Figure 2 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)
+[![Figure 2 — Multiscale Darcy: a two-level primal MHM workflow](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)
 
 
 ## 7. Separate macro size, local size and macroface resolution
 
-There are three independent controls: macro size $H$, local size $h=H/r$, and the trace space (degree $\ell$ and segmentation). Simultaneous refinement can hide which control limits the accuracy. Keep $k=2$ and $\ell=1$ and run:
+Configure the macro partition, local meshes and skeleton space separately to study their effects on the error. Keep $k=2$ and $\ell=1$ and run:
 
 1. $H=1/2,1/4,1/8$ with fixed $h=1/64$ and two segments per face;
 2. $h=1/8,1/16,1/32,1/64$ with fixed $H=1/4$ and two segments per face;
 3. one, two and four segments per face with fixed $H=1/4$ and $h=1/64$.
 
-The driver below repeats the same visible local/global declarations. Successive observed rates use $\log(e_i/e_{i+1})/\log(s_i/s_{i+1})$, where $s$ is $H$, $h$, or segment length. A plateau indicates another limiting scale; these measurements are not universal rate claims.
+Each configuration uses the same qualified assembly quadrature (26 Gauss
+points per axis), including the coarsest local mesh. The error integration
+remains fixed independently of these refinements.
+
+With $s$ segments per macroface, each segment has length $H/s$. In the first experiment, changing $H$ therefore also changes the physical trace-segment length, even though the segment count stays fixed. In the second experiment, the macro mesh and trace space stay fixed; in the third, both volume meshes stay fixed.
+
+The driver below repeats the same visible local/global declarations. Successive observed rates use $\log(e_i/e_{i+1})/\log(\eta_i/\eta_{i+1})$, where $\eta$ is $H$, $h$, or segment length. A plateau can reflect an error contribution from a discretization choice held fixed. Section 8 studies the asymptotic rates for its stated smooth problem and approximation spaces.
 
 
 ```python
-def run_discretization(n: int, refinement: int, segments: int) -> dict:
+def run_discretization(
+    n: int, refinement: int, segments: int, *, quadrature_order: int = assembly_order
+) -> dict:
     """Repeat the declared local/global equations for one explicit resolution."""
     grid = CartesianMacroMesh(n, n)
     trace = SkeletonSpace(
         grid, tuple(FaceSpace.uniform(1, segments, continuous=True) for _ in grid.faces)
     )
-    local = DarcyLocalProvider(grid, trace, data, 2, refinement, 7)
+    local = DarcyLocalProvider(grid, trace, data, 2, refinement, quadrature_order)
     boundary, fixed = boundary_data(trace, data.pressure, order=7)
     hierarchy = MeshHierarchy(
         grid, tuple(grid.submesh(cell, refinement) for cell in range(len(grid.cells)))
@@ -600,6 +657,7 @@ def run_discretization(n: int, refinement: int, segments: int) -> dict:
         "H": 1 / n,
         "h": 1 / (n * refinement),
         "segments": segments,
+        "assembly_gauss_points_per_axis": quadrature_order,
         "trace_segment_length": 1 / (n * segments),
         "global_unknowns": assembled.matrix.shape[0],
         "residual": resolved.raw_residual,
@@ -633,80 +691,63 @@ for name, rows, variable in (
 ```
 
 ```text
-H [{'H': 0.5, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.25, 'global_unknowns': 40, 'residual': 1.749128621307829e-16, 'pressure_L2': 0.0038440419910070298, 'flux_L2': 0.07258266496359879, 'flux_energy': 0.07565780837943056, 'pressure_relative': 0.0076880839820140595, 'flux_relative': 0.014789478447457602, 'energy_relative': 0.026540468269346668}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}, {'H': 0.125, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.0625, 'global_unknowns': 496, 'residual': 9.738926168654487e-17, 'pressure_L2': 3.13681029287548e-05, 'flux_L2': 0.004601788846461332, 'flux_energy': 0.003121177398685673, 'pressure_relative': 6.27362058575096e-05, 'flux_relative': 0.0009376626912035086, 'energy_relative': 0.0010948970302890838}]
+H [{'H': 0.5, 'h': 0.015625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.25, 'global_unknowns': 40, 'residual': 3.6872751243354284e-16, 'pressure_L2': 0.0038440419909965243, 'flux_L2': 0.07258266496358691, 'flux_energy': 0.07565780837939495, 'pressure_relative': 0.007688083981993049, 'flux_relative': 0.01478947844745518, 'energy_relative': 0.026540468269334178}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.1110151320839327e-16, 'pressure_L2': 0.00021110587827486888, 'flux_L2': 0.01909305299115884, 'flux_energy': 0.01263683572847488, 'pressure_relative': 0.00042221175654973776, 'flux_relative': 0.0038904095881644074, 'energy_relative': 0.004432953383932771}, {'H': 0.125, 'h': 0.015625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.0625, 'global_unknowns': 496, 'residual': 1.0512929247960976e-16, 'pressure_L2': 3.1368102919560713e-05, 'flux_L2': 0.0046017888463211086, 'flux_energy': 0.0031211773986935957, 'pressure_relative': 6.273620583912143e-05, 'flux_relative': 0.0009376626911749365, 'energy_relative': 0.001094897030291863}]
 Observed pressure rates: [4.18658544 2.75059657]
 Observed flux rates: [1.92657722 2.05278112]
 ```
 
 
 
-[![Figure 3 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)
+[![Figure 3 — Multiscale Darcy: a two-level primal MHM workflow](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)
 
 
 ```text
-h [{'H': 0.25, 'h': 0.125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 9.231134756817656e-17, 'pressure_L2': 0.012105242280670614, 'flux_L2': 0.12919546359592954, 'flux_energy': 0.09348496639326725, 'pressure_relative': 0.024210484561341228, 'flux_relative': 0.02632492931086992, 'energy_relative': 0.032794166753791494}, {'H': 0.25, 'h': 0.0625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 9.61531316556648e-17, 'pressure_L2': 0.00022120794842649276, 'flux_L2': 0.01925385654937096, 'flux_energy': 0.011696612799026125, 'pressure_relative': 0.0004424158968529855, 'flux_relative': 0.003923174997916797, 'energy_relative': 0.0041031267955124375}, {'H': 0.25, 'h': 0.03125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.4723033894585078e-16, 'pressure_L2': 0.00020700692400061393, 'flux_L2': 0.019169351587717043, 'flux_energy': 0.01258764699064487, 'pressure_relative': 0.00041401384800122785, 'flux_relative': 0.0039059562266067238, 'energy_relative': 0.004415698163836526}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}]
-Observed pressure rates: [ 5.77408492  0.0957242  -0.02828773]
-Observed flux rates: [2.74633606 0.00634591 0.00575373]
+h [{'H': 0.25, 'h': 0.125, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.2538891685613543e-16, 'pressure_L2': 0.0014175186973032102, 'flux_L2': 0.032107165227115826, 'flux_energy': 0.019148357106354187, 'pressure_relative': 0.0028350373946064203, 'flux_relative': 0.006542171307343601, 'energy_relative': 0.006717170045986694}, {'H': 0.25, 'h': 0.0625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.249712816668689e-16, 'pressure_L2': 0.0002134928004798865, 'flux_L2': 0.019233707237595186, 'flux_energy': 0.011695147063781344, 'pressure_relative': 0.000426985600959773, 'flux_relative': 0.003919069364534661, 'energy_relative': 0.004102612621224435}, {'H': 0.25, 'h': 0.03125, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.246386877072097e-16, 'pressure_L2': 0.0002070063686187589, 'flux_L2': 0.019169355242091866, 'flux_energy': 0.012587647033400743, 'pressure_relative': 0.0004140127372375178, 'flux_relative': 0.003905956971223881, 'energy_relative': 0.004415698178835121}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.1110151320839327e-16, 'pressure_L2': 0.00021110587827486888, 'flux_L2': 0.01909305299115884, 'flux_energy': 0.01263683572847488, 'pressure_relative': 0.00042221175654973776, 'flux_relative': 0.0038904095881644074, 'energy_relative': 0.004432953383932771}]
+Observed pressure rates: [ 2.73110844  0.04451227 -0.0282916 ]
+Observed flux rates: [0.73925843 0.00483505 0.005754  ]
 ```
 
 
 
-[![Figure 4 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)
+[![Figure 4 — Multiscale Darcy: a two-level primal MHM workflow](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)
 
 
 ```text
-macroface segment [{'H': 0.25, 'h': 0.015625, 'segments': 1, 'trace_segment_length': 0.25, 'global_unknowns': 96, 'residual': 8.273871608877269e-17, 'pressure_L2': 0.003837047167965644, 'flux_L2': 0.09746442298581488, 'flux_energy': 0.09155965342166678, 'pressure_relative': 0.007674094335931288, 'flux_relative': 0.019859397334962923, 'energy_relative': 0.03211877436633216}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}, {'H': 0.25, 'h': 0.015625, 'segments': 4, 'trace_segment_length': 0.0625, 'global_unknowns': 216, 'residual': 1.4389516488569565e-16, 'pressure_L2': 2.4324400283789275e-05, 'flux_L2': 0.0032500837373435256, 'flux_energy': 0.0022417239886972436, 'pressure_relative': 4.864880056757855e-05, 'flux_relative': 0.0006622386131727295, 'energy_relative': 0.0007863881556319045}]
+macroface segment [{'H': 0.25, 'h': 0.015625, 'segments': 1, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.25, 'global_unknowns': 96, 'residual': 9.543184134267058e-17, 'pressure_L2': 0.003837047167948131, 'flux_L2': 0.09746442298587585, 'flux_energy': 0.09155965342167202, 'pressure_relative': 0.007674094335896262, 'flux_relative': 0.019859397334975343, 'energy_relative': 0.03211877436633401}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.1110151320839327e-16, 'pressure_L2': 0.00021110587827486888, 'flux_L2': 0.01909305299115884, 'flux_energy': 0.01263683572847488, 'pressure_relative': 0.00042221175654973776, 'flux_relative': 0.0038904095881644074, 'energy_relative': 0.004432953383932771}, {'H': 0.25, 'h': 0.015625, 'segments': 4, 'assembly_gauss_points_per_axis': 26, 'trace_segment_length': 0.0625, 'global_unknowns': 216, 'residual': 1.4103711785446846e-16, 'pressure_L2': 2.4324400273386223e-05, 'flux_L2': 0.003250083737124539, 'flux_energy': 0.0022417239886965796, 'pressure_relative': 4.864880054677245e-05, 'flux_relative': 0.0006622386131281087, 'energy_relative': 0.0007863881556316715}]
 Observed pressure rates: [4.18395784 3.11749061]
 Observed flux rates: [2.35182789 2.55449901]
 ```
 
 
 
-[![Figure 5 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)
+[![Figure 5 — Multiscale Darcy: a two-level primal MHM workflow](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)
 
 
-## 8. Interpret accuracy and cost with their physical meaning
+## 8. Qualify the smooth asymptotic rate separately
 
-The residual of the original equations checks assembly and reconstruction. It does not replace field errors or an inf-sup argument. The declared local kernel is the constant pressure mode, and physical moments fix each local response's mean. Global Dirichlet moments remove the global gauge.
-
-Compare global MHM unknowns with the fine Galerkin unknowns, and compare **flux errors** as well as pressure errors. A convincing pressure image may hide insufficiently resolved gradients. Local setup and solves remain part of the multiscale cost. This notebook reports dimensions and accuracy, without claiming a timing speedup.
-
-The smooth coefficient gives a controlled analytical study. The following SPE10 tutorial instead uses jumps and high contrast, resolves pixel integration, and measures the numerical baseline's own refinement.
-
-## 9. Qualify the smooth asymptotic rate separately
-
-The oscillatory coefficient above resolves distinct macro, local and trace scales. Its short refinement sequences measure that chosen material; a smooth energy theorem is not transferred to them without its regularity and scale assumptions.
-
-For an independent smooth check, take the unit square, $K=I$ and
-
-
+The oscillatory study in section 7 varies macro, local and trace scales for its chosen material. Its measured orders do not verify a smooth asymptotic estimate. A separate analytical control uses the data of section 5.1 in [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) on the unit square:
 
 $$
-p=\cos(2\pi x)\cos(2\pi y),\qquad
-f=8\pi^2p,\qquad q=-\nabla p.
+\begin{aligned}
+K&=I,& p(x,y)&=\cos(2\pi x)\cos(2\pi y),\\
+f&=8\pi^2p,& q&=-\nabla p,\\
+q\cdot n&=0\quad\text{on }\partial\Omega,& \int_\Omega p&=0.
+\end{aligned}
 $$
 
+Use local P1 pressure on each macrotriangle and unsegmented P0 normal-flux traces. The zero physical pressure integral fixes the Neumann gauge. Refine the declared diagonal triangular mesh through $n=4,8,16,32,64$, with macro diameter $H=\sqrt{2}/n$.
 
-
-The exterior normal flux is zero and the physical pressure has zero integral. The local spaces are P1 pressure with P0 normal-flux traces, preserving their compatible constant kernel and integral gauge. The macro sequence is $n=4,8,16,32,64$. The first-order energy estimate and second-order measured pressure follow the smooth setting discussed by [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
-
-The record identifies the executed physical problem, spaces and source provenance. This analytical qualification uses its declared mesh family; it is not labeled a matching reconstruction of the paper's original meshes. The cell below recomputes the orders from the attributed full field norms.
+Theorem 4.1 of [Araya et al. (2013)](https://doi.org/10.1137/120888223) gives one-level energy order one and pressure order two under its solution and dual-regularity hypotheses, with exact local PDE responses. The finite P1/P0 family here also contains local finite-element error. Its first-order physical-flux and second-order pressure behavior are measured observations; the latter is also reported in the JCP paper. This control uses its declared mesh and does not claim reproduction of the original mesh connectivity. Its smooth rates do not transfer to a different coefficient, unresolved local solve or singular domain.
 
 ### Recompute every measured order
 
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
-
-
+For successive physical errors $E_{i-1},E_i$ at the actual macro diameters, compute
 
 $$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(H_{i-1}/H_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell reads the attributed numerical record, displays every measured level and recomputes its orders. It does not execute a PDE acquisition. The fitted terminal slope uses the final four levels and their three intervals. For each declared target $q$, the amplitude ratio is the maximum divided by the minimum of $E/H^q$ over those same levels. A value near one indicates stabilization of the compensated error; an observed L2 order is kept separate from a proved energy estimate.
 
 ```python
 import json
@@ -729,7 +770,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='primal-mhm', spaces='P1 local pressure; P0 normal-flux trace', rate_provenance='Harder, Paredes and Valentin (2013): first-order energy; second-order pressure observed', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='primal-mhm', spaces='P1 local pressure; P0 normal-flux trace', rate_provenance='Harder, Paredes and Valentin (2013): declared finite P1/P0 study; energy order one and pressure order two observed. Araya et al. (2013), Theorem 4.1 analyzes exact local responses; finite locals add local approximation error.', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -738,15 +779,13 @@ plt.show()
 
 ```
 
-
-Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order
---- | --- | --- | --- | ---
-0.353553 | 1.114293e-01 | — | 2.419077e+00 | —
-0.176777 | 3.020032e-02 | 1.883 | 1.276715e+00 | 0.922
-0.0883883 | 7.721936e-03 | 1.968 | 6.472200e-01 | 0.980
-0.0441942 | 1.941659e-03 | 1.992 | 3.247330e-01 | 0.995
-0.0220971 | 4.861202e-04 | 1.998 | 1.625073e-01 | 0.999
-
+| Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order |
+| --- | --- | --- | --- | --- |
+| 0.353553 | 1.114293e-01 | — | 2.419077e+00 | — |
+| 0.176777 | 3.020032e-02 | 1.883 | 1.276715e+00 | 0.922 |
+| 0.0883883 | 7.721936e-03 | 1.968 | 6.472200e-01 | 0.980 |
+| 0.0441942 | 1.941659e-03 | 1.992 | 3.247330e-01 | 0.995 |
+| 0.0220971 | 4.861202e-04 | 1.998 | 1.625073e-01 | 0.999 |
 
 ```text
 {'record': 'examples/results/darcy_2013_comparison.json', 'sha256': '81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155'}
@@ -754,16 +793,11 @@ pressure L2 {'last_three_orders': [1.968, 1.992, 1.998], 'fitted_order': 1.986, 
 physical Darcy flux L2 {'last_three_orders': [0.98, 0.995, 0.999], 'fitted_order': 0.992, 'target': 1.0, 'normalized_amplitude_ratio': 1.0182843961826575}
 ```
 
+![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/primal-mhm-convergence.png)
 
+Download the figure as [SVG](../../assets/tutorials/methods/primal-mhm-convergence.svg) or [PDF](../../assets/tutorials/methods/primal-mhm-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
 
-[![Figure 6 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_23_2.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_23_2.png)
-
-
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
-
-## References
-
-- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+The smooth convergence figure uses the [attributed numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy_2013_comparison.json) (SHA256 `81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155`). The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares the method sequences.
 
 ## Reproduce this tutorial
 
@@ -774,78 +808,20 @@ python -m pip install 'pymhm[notebooks,visualization]'
 jupyter lab darcy_multiscale_convergence.ipynb
 ```
 
-The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+The first cell downloads a SHA256-verified companion containing inspectable support files. Downloading does not execute them. Native UFL forms require the compatible backend described in the [installation guide](../../installation.md).
 
-For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+For batch execution, extract the same companion, change to its workspace and run:
 
 ```bash
 python -m scripts.run_notebooks /path/to/darcy_multiscale_convergence.ipynb --timeout 7200
 ```
 
-The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+The runner uses the active interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger field archives have [documented downloads](../../data.md).
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+Figures and outputs of sections 1–7 use notebook SHA256 `c68c829464b85ab26563022a2ddb45c64e5a7127303feb75438aa4bbb3d6a529` in the [publication manifest](notebook-manifest.json). The smooth convergence figure and tables use the separate numerical records cited in section 8. Running the current source produces a receipt for its actual notebook, support files and environment.
 
-## Check the hypotheses before reading the convergence figure
-
-The multiscale coefficient above deliberately tests a coarse macro mesh. Its
-three-level study varies distinct macro, local and trace scales; those measured
-orders are not a verification of the smooth asymptotic estimate. The final
-study below isolates that estimate with the analytical data of section 5.1 in
-[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019):
-
-$$
-\begin{aligned}
-K&=I,&
-p(x,y)&=\cos(2\pi x)\cos(2\pi y),\\
-f&=8\pi^2p,&
-q\cdot n&=0\quad\text{on }\partial\Omega,&
-\int_\Omega p&=0.
-\end{aligned}
-$$
-
-Use local P1 pressure on each macrotriangle and unsegmented P0 normal-flux
-traces. The zero physical pressure integral fixes the Neumann gauge. Refine the
-same diagonal triangular mesh through $n=4,8,16,32,64$, with
-$H=\sqrt{2}/n$. The smooth energy/physical-flux order is one; the paper also
-reports the second-order pressure observation for this family. The plot keeps
-the coarse levels and displays the final four levels together, so a single
-favorable interval cannot stand for the asymptotic regime. This is an analytical
-verification on the declared mesh, rather than a claim that the unavailable
-original mesh connectivity was reproduced.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **P1 local pressure; P0 normal-flux trace** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| pressure L2 | observed | 1.968 / 1.992 / 1.998 | 1.986 | — |
-| physical Darcy flux L2 | 1 | 0.980 / 0.995 / 0.999 | 0.992 | 1.018 |
-
-![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/primal-mhm-convergence.png)
-
-Download the figure as [SVG](../../assets/tutorials/methods/primal-mhm-convergence.svg) or [PDF](../../assets/tutorials/methods/primal-mhm-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order |
-| ---: | ---: | ---: | ---: | ---: |
-| 0.353553 | 1.114293e-01 | — | 2.419077e+00 | — |
-| 0.176777 | 3.020032e-02 | 1.883 | 1.276715e+00 | 0.922 |
-| 0.0883883 | 7.721936e-03 | 1.968 | 6.472200e-01 | 0.980 |
-| 0.0441942 | 1.941659e-03 | 1.992 | 3.247330e-01 | 0.995 |
-| 0.0220971 | 4.861202e-04 | 1.998 | 1.625073e-01 | 0.999 |
-
-Harder, Paredes and Valentin (2013): first-order energy; second-order pressure observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy_2013_comparison.json) has SHA256 `81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
-
-## References for this method
+## References
 
 - Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
 - Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).

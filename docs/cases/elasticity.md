@@ -218,8 +218,9 @@ execution, including a picklable analytical body-force function.
 The separate P1 baseline in `examples/plot_scalar_elasticity.py` uses
 `formulation="primal"`. It uses $\lambda=\mu=1$ and five macro meshes; that
 moderately compressible experiment alone cannot establish resistance to
-locking. See [the theory](../theory.md) and
-[the literature catalog](../literature.md) for the other elasticity families.
+locking. The [Methods](../methods.md) and
+[bibliography](../literature.md) list the original publications for the
+other elasticity formulations.
 
 ## References
 

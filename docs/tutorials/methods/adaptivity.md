@@ -64,6 +64,10 @@ for step in range(8):
         adaptive_mesh = refine_triangles(adaptive_mesh, marked).mesh
 ```
 
+For budget-based refinement, `refine_darcy_budget` preserves the Dörfler bulk
+set and conforming closure; the resulting macro-cell count may exceed the
+requested budget.
+
 The acquisition additionally integrates each physical error at orders 12 and
 16 and checks original global compatibility and continuous-test equilibrium at every
 cycle. A separate native eight-subdivision control verifies all original
@@ -75,7 +79,7 @@ The mesh owner performs conforming closure; refining only the selected
 triangles without this closure would not satisfy the estimator's mesh
 hypotheses.
 
-## 4. Distinguish marking from the chosen approximation scale
+## 4. Distinguish marking from the chosen discretization control
 
 Dörfler marking satisfies
 
@@ -83,10 +87,10 @@ $$
 \sum_{T\in\mathcal M}\eta_T^2\ge\theta\sum_T\eta_T^2,\qquad\theta=\tfrac12.
 $$
 
-This study refines the macro partition and rebuilds local meshes. Refining
-local meshes or trace segments changes a different approximation scale and
-requires rechecking degree and partition compatibility. Refinement ancestry is
-available for preserving material and boundary markers.
+This study refines the macro partition and rebuilds local meshes. Local mesh
+refinement changes the local approximation; trace segmentation changes the
+skeleton space. Each choice requires compatible degrees and partitions.
+Refinement ancestry is available for preserving material and boundary markers.
 
 ## 5. Compare adaptive error against a matching uniform sequence
 
@@ -195,13 +199,17 @@ The reference fields use the 64-subdivision global mesh. The overlay is the
 16-subdivision uniform comparison macro mesh, rather than the adaptive mesh.
 Every pressure/flux error shown compares the same analytical localized fields.
 
-## 7. Decide when to change another scale
 
-If the local solver or interface approximation dominates, macro refinement
-alone can become inefficient. Change `MeshHierarchy` for local resolution and
-`FaceSpace` for trace h/p refinement, then reassemble the declared equations.
-`refine_darcy_budget` controls a requested macro-cell budget while preserving
-the Dörfler bulk set and conforming closure, which can exceed that budget.
+## Reproduce this tutorial
+
+The notebook linked at the top defines the forms and runs the recovery,
+indicator, adaptive and recursive studies. Install the native notebook backend
+as described in the [installation guide](../../installation.md), then open it
+from the source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/reconstruction_and_indicators.ipynb
+```
 
 ## References
 

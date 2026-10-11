@@ -79,6 +79,10 @@ def solve_mh2m_3d(
     each incident macrocell has its own outward conormal copy. All partitions
     must align the fine tetrahedral boundary. A singular local Neumann map or
     pressure-trace system is rejected; this check is not a uniform inf-sup proof.
+    The article's functional local maps include dimensions two and three, but
+    its sufficient polynomial Fortin constructions in Section 6 use
+    two-dimensional edges. Those constructions do not certify arbitrary
+    triangular-face degree and subdivision pairs here.
 
     Neumann data prescribe outward physical q.n. Remaining exterior faces
     interpolate pressure at Gamma nodes. Pure Neumann data require integral

@@ -54,6 +54,10 @@ The solver checks the condensed system's numerical rank. In particular,
 an unrefined cubic macrocell with local $P_2$ and face $P_1$ contains an
 invisible trace mode; it is rejected. The $P_4/P_1$ campaign below and the
 reported $P_3/P_1$ affine patches satisfy the checked discrete coupling.
+The 2024 analysis gives the sufficient 3D degree condition $k\ge\ell+3$
+under its facet-matching Assumptions A1–A2. Thus P4/P1 meets that degree
+condition; the P3/P1 patches establish finite polynomial reproduction and
+rank, without claiming the theorem's general error estimate.
 
 ## PDE and boundary convention
 

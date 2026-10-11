@@ -1,8 +1,21 @@
 # Hybrid formulation and local/global decomposition
 
-The common structure follows [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13). Define the mesh hierarchy, write the local variational equations, declare their interface pairing and retained physical moments, then assemble and solve the global problem. The [API overview](../tutorials/overview.md) follows this order in code.
+The original elliptic MHM decomposes a hybrid PDE into local Neumann
+responses and a global normal-flux/pressure-mean system, as described in
+the [theoretical introduction](../theory.md). The abstract operator
+construction of [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13)
+also accommodates different local and global equations. Its exact
+decomposition requires a closed-range local operator and compatible
+kernel complements; its discrete stability requires the additional
+inf-sup and coercivity hypotheses of Lemma 3. Algebraic elimination alone
+does not supply those hypotheses for a new formulation.
 
-## Three independent discretization scales
+In PyMHM, define the mesh hierarchy, write the local variational
+equations, declare their interface pairing and retained physical
+moments, then assemble and solve the global problem. The
+[API overview](../tutorials/overview.md) follows this order in code.
+
+## Macro, skeleton and local approximation
 
 Let a bounded domain be partitioned into macroelements $K\in\mathcal P_H$.
 Each macroface has its own subdivision and polynomial degree. Each macroelement
@@ -205,10 +218,11 @@ CPU diagnostic factorization, while the SciPy path reuses its factorization.
 For smooth problems, two-level error bounds have the schematic structure
 
 $$
-\text{error}\ \lesssim\
-\text{trace approximation error}+
-\text{local discretization error}+
-\text{algebraic error}.
+\begin{aligned}
+\text{error}\ &\lesssim\ \text{trace approximation error}\\
+&\quad+\text{local discretization error}\\
+&\quad+\text{algebraic error}.
+\end{aligned}
 $$
 
 The powers, norms, and constants depend on the problem and hypotheses. They may

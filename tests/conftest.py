@@ -20,6 +20,114 @@ from scripts.build_notebook_companions import (
 pytest_plugins = ["scripts.pytest_suite"]
 
 
+@pytest.fixture
+def oscillatory_q2_reference() -> dict[str, Any]:
+    """Independently integrate a Q2 cell spanning one nonpolynomial material period.
+
+    The physical cell is [0,1/8]^2, with x-fastest equispaced nodal ordering.
+    Explicit cardinal polynomials and adaptive one-dimensional integrals avoid
+    PyMHM/Basix tables and their tensor Gauss rule. The manufactured pressure
+    is sin(pi*x)*sin(pi*y); the source is -div(K*grad(pressure)).
+    """
+    import numpy as np
+    from numpy.polynomial import Polynomial
+    from scipy.integrate import quad
+
+    from pymhm.meshes.cartesian import CartesianMacroMesh
+
+    width, amplitude, omega = 1 / 8, 1.5, 16 * np.pi
+    cardinal = (Polynomial([1, -3, 2]), Polynomial([0, 4, -4]), Polynomial([0, -1, 2]))
+    derivative = tuple(polynomial.deriv() for polynomial in cardinal)
+
+    def kxx(x: Any) -> Any:
+        """Evaluate the x-dependent diagonal permeability."""
+        return np.exp(amplitude * np.sin(omega * x))
+
+    def kyy(y: Any) -> Any:
+        """Evaluate the y-dependent diagonal permeability."""
+        return np.exp(amplitude * np.cos(omega * y))
+
+    def force_x(x: Any) -> Any:
+        """Differentiate -d/dx(Kxx*d/dx(sin(pi*x))) explicitly."""
+        return kxx(x) * (
+            np.pi**2 * np.sin(np.pi * x)
+            - amplitude * omega * np.pi * np.cos(omega * x) * np.cos(np.pi * x)
+        )
+
+    def force_y(y: Any) -> Any:
+        """Differentiate -d/dy(Kyy*d/dy(sin(pi*y))) explicitly."""
+        return kyy(y) * (
+            np.pi**2 * np.sin(np.pi * y)
+            + amplitude * omega * np.pi * np.sin(omega * y) * np.cos(np.pi * y)
+        )
+
+    def integrate(function: Callable[[float], Any]) -> float:
+        """Integrate one physical coordinate with independent adaptive subdivision."""
+        return float(quad(function, 0, width, epsabs=2e-12, epsrel=2e-12)[0])
+
+    mass_1d = np.array(
+        [
+            [
+                integrate(lambda x, i=i, j=j: cardinal[i](x / width) * cardinal[j](x / width))
+                for j in range(3)
+            ]
+            for i in range(3)
+        ]
+    )
+    stiffness = []
+    for coefficient in (kxx, kyy):
+        stiffness.append(
+            np.array(
+                [
+                    [
+                        integrate(
+                            lambda x, i=i, j=j, coefficient=coefficient: (
+                                coefficient(x)
+                                * derivative[i](x / width)
+                                * derivative[j](x / width)
+                                / width**2
+                            )
+                        )
+                        for j in range(3)
+                    ]
+                    for i in range(3)
+                ]
+            )
+        )
+    sine = np.array(
+        [integrate(lambda x, i=i: np.sin(np.pi * x) * cardinal[i](x / width)) for i in range(3)]
+    )
+    forcing = tuple(
+        np.array(
+            [
+                integrate(lambda x, i=i, function=function: function(x) * cardinal[i](x / width))
+                for i in range(3)
+            ]
+        )
+        for function in (force_x, force_y)
+    )
+
+    def tensor(points: Any) -> Any:
+        """Return the positive diagonal material at physical (x,y) points."""
+        values = np.zeros((len(points), 2, 2))
+        values[:, 0, 0], values[:, 1, 1] = kxx(points[:, 0]), kyy(points[:, 1])
+        return values
+
+    def source(points: Any) -> Any:
+        """Return the independently differentiated separable physical forcing."""
+        x, y = points.T
+        return force_x(x) * np.sin(np.pi * y) + np.sin(np.pi * x) * force_y(y)
+
+    return {
+        "mesh": CartesianMacroMesh(1, bounds=(0, width, 0, width)),
+        "permeability": tensor,
+        "source": source,
+        "stiffness": np.kron(mass_1d, stiffness[0]) + np.kron(stiffness[1], mass_1d),
+        "mass": np.kron(mass_1d, mass_1d),
+        "load": np.kron(sine, forcing[0]) + np.kron(forcing[1], sine),
+    }
+
+
 @pytest.fixture(scope="session")
 def notebook_companion_archives(
     tmp_path_factory: pytest.TempPathFactory,

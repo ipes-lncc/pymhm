@@ -44,9 +44,11 @@ interface = bind_interface(skeleton, convention="normal")
 
 This gives a continuous P1 basis on four segments of each complete macroface.
 Continuity within a face does not impose continuity between unrelated faces.
-The `normal` convention declares a physical normal multiplier and supplies
-canonical-to-outward incidence signs. Use the value convention only when it
-matches the formulation you write.
+The `normal` convention declares a normal-oriented trace and supplies
+canonical-to-outward incidence signs. Its physical meaning follows the local
+equations: a normal-oriented multiplier can represent Darcy flux, a Robin
+quantity or pseudotraction. Use the value convention only when it matches the
+formulation you write.
 
 The built-in Cartesian numerical coupling integrates over the union of local
 fine-edge and face-space breakpoints. These partitions need not coincide,

@@ -135,6 +135,12 @@ The bound can remain more restrictive than the constrained spectral radius.
 
 ## Published TM cavity data
 
+The paper's Lemma 4 proves the staggered energy identity with a sufficient
+CFL condition. Section 6.2 observes combined $L^2$ order $\ell+1$ and broken
+$H(\mathrm{curl})$ order $\ell$, together with second-order time convergence.
+These are published numerical rates, not discrete error theorems; the paper
+leaves the semidiscrete and fully discrete error analysis open.
+
 Section 6.2 uses $\varepsilon=\mu=1$, zero source, PEC walls, and
 $\omega=2\sqrt2\pi$:
 

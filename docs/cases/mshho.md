@@ -40,6 +40,12 @@ an arbitrary full-source finite-element MHM solve. The face-only setting
 `cell_degree=-1` uses the reconstructed-source variant, as in Remark 5.4;
 it is not the same method as MHM with a source lifting.
 
+Lemma 4.2's $H(\mathrm{div})$ property applies to the exact-local
+projected-source solution. Remark 5.3 explicitly states that the
+reconstructed-source variant can lose that property even with exact
+local solves. The broken finite Galerkin raw flux on this page therefore
+requires its own normal-continuity measurement.
+
 The example helpers below are repository sources, supplied separately from the
 installed library. Open the corresponding notebook to acquire its verified
 companion, as described in the [notebook guide](../tutorials/notebooks.md#execute-downloaded-notebooks).
@@ -69,10 +75,12 @@ ranges from $1$ to $1/16$. Error quadrature is independent of assembly.
 
 ![Five-level pressure and physical flux convergence](../figures/mshho/convergence.png)
 
-For $m=k_F=0$, the expected leading orders are two for pressure and one for
-the raw physical flux. For $m=k_F=1$, they are three and two. The final measured
-orders are approximately **2.00/1.00** and **3.08/2.01**, respectively. Local
-discretization remains part of the measured error.
+For $m=k_F=0$ and $m=k_F=1$, Theorem 6.3's ideal-space energy estimate
+has leading order one and two, respectively, under its source/conormal
+regularity and mesh hypotheses. It does not give the pressure $L^2$
+orders. The final measured pressure/raw-flux orders here are approximately
+**2.00/1.00** and **3.08/2.01**, respectively. Local discretization
+remains part of the measured error.
 
 ![Analytical, reconstructed and error fields with the macro mesh](../figures/mshho/fields.png)
 

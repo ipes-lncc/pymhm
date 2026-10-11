@@ -40,8 +40,8 @@ The independently derived analytical concentration and source are
 
 $$
 \begin{aligned}
-c_*(x,y,t)&=e^{-t}b(x),
-&b(x)&=1+\frac{x(3-x)}9,\\
+c_*(x,y,t)&=e^{-t}b(x),\\
+b(x)&=1+\frac{x(3-x)}9,\\
 f&=e^{-t}\left[-b(x)+\frac{2(\alpha_m+\alpha_lK)}9
 +\frac{K(3-2x)}9\right].
 \end{aligned}
@@ -64,10 +64,10 @@ The backward-Euler local equation includes both mass terms:
 
 $$
 \begin{aligned}
-\left(\frac{c_T^{n+1}-c_T^n}{\Delta t},v\right)_T
-+a_T(c_T^{n+1},v)
-+\langle\lambda_T^{n+1},v\rangle_{\partial T}
-&=(f^{n+1},v)_T,\\
+&\left(\frac{c_T^{n+1}-c_T^n}{\Delta t},v\right)_T
++a_T(c_T^{n+1},v)\\
+&\quad+\langle\lambda_T^{n+1},v\rangle_{\partial T}
+=(f^{n+1},v)_T,\\
 a_T(c,v)&=(D\nabla c,\nabla v)_T\\
 &\quad+\tfrac12\big[(\beta\cdot\nabla c,v)_T
 -(c,\beta\cdot\nabla v)_T\big].

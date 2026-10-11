@@ -1,6 +1,6 @@
 # Robin MH
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/robin_mh_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/robin_mh_workflow.ipynb) · [Theory and degree conditions](../../theory/alternatives.md)
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/robin_mh_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/robin_mh_workflow.ipynb)
 
 We write the Robin weak equations directly in UFL. Our independently manufactured data are $p=\sin(2\pi x)\sin(2\pi y)$, $K=I$, $f=8\pi^2p$, and homogeneous exterior pressure. Follow **meshes → local forms → global forms → assemble → solve → physical fields**.
 
@@ -255,39 +255,55 @@ plt.show()
 [![Figure 2 — robin-mh variational workflow](../../assets/tutorials/methods/robin-mh-field-01.png)](../../assets/tutorials/methods/robin-mh-field-01.png)
 
 
-## 7. Keep the Robin and local refinement terms distinct
+## 7. Keep Robin and local refinement errors distinct
 
-The complete smooth acquisition uses the identity coefficient on the unit square with the paper's independently differentiated data $p=\sin(6\pi x)\sin(14\pi y)$ and $f=232\pi^2p$, P3 local pressure, two local subdivisions, P1 Robin traces and $\nu=1/4$. L-shaped **macroelements** partition the square; the physical domain has no reentrant corner.
-
-Corollary 2.7 of [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) separates the local Galerkin and skeletal energy contributions:
-
-
+The smooth refinement uses the data of section 4.1, equation (4.1), in
+[Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556):
+identity diffusion on the unit square, homogeneous exterior pressure, and
+independently differentiated fields
 
 $$
-\lVert K^{1/2}\nabla(p-p_{Hh})\rVert
-\lesssim H^{\ell+1}\lvert K\nabla p+p\sigma\rvert_{\ell+1}
-+h^k\lvert p\rvert_{k+1}.
+p=\sin(6\pi x)\sin(14\pi y),\qquad f=232\pi^2p.
 $$
 
+The L-shaped **macroelements** partition the square; the physical domain has no
+reentrant corner. Keep P3 local pressure, two local subdivisions, P1 Robin
+traces and $\nu=1/4$ fixed throughout macro refinement. These data differ from
+the lower-frequency field illustration above; the variational equations are
+unchanged.
 
+Corollary 2.7 separates the skeletal and local Galerkin contributions:
 
-Thus $\ell=1$, $k=3$ and a fixed local subdivision ratio give second-order physical flux. Pressure order three is a measurement for these smooth data. The Robin multiplier is not the physical Darcy flux, so the error below uses $q=-K\nabla p$. The record states its assembly/error quadrature, equation checks and execution sources. It is read as attributed numerical data; this cell does not execute the campaign again.
+$$
+\begin{aligned}
+\lVert p-p_{Hh}\rVert_V
+&\le C\bigl(
+ H^{\ell+1}\lvert K\nabla p+p\sigma\rvert_{H^{\ell+1}(\mathcal T_H)}\\
+ &\qquad +h^k\lvert p\rvert_{H^{k+1}(\mathcal T_H)}
+\bigr).
+\end{aligned}
+$$
 
-### Recompute every measured order
+Assumption A1, matching regularly refined local partitions, and the stated
+pressure/modified-flux regularity belong to this estimate. With $\ell=1$,
+$k=3$ and fixed $h/H$, the second-order contribution governs the physical-flux
+error. Pressure order three is a numerical observation for these smooth data.
+The Robin multiplier is not the physical Darcy flux: the volume error uses
+$q=-K\nabla p$, rather than multiplier coefficients.
 
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+### Recompute orders from the numerical record
 
-
+For successive physical errors at the actual refinement sizes, compute
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell below reads the attributed record and recomputes the complete table,
+consecutive orders, final-four-level fitted slope and plot. It does not choose
+a PDE or rerun the acquisition. For a justified target $q$, the maximum/minimum
+of $E/h^q$ over the final four levels measures stabilization of its amplitude.
+Pressure orders reported as observations are kept separate from theorem targets.
 
 ```python
 import json
@@ -310,7 +326,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='robin-mh', spaces='P3/r2 locals; P1 Robin trace; nu=1/4', rate_provenance='Barrenechea, Gomes and Paredes (2024), corollary 2.7: smooth energy order two; pressure order three observed', refinement='macro diameter', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='robin-mh', spaces='P3/r2 locals; P1 Robin trace; nu=1/4', rate_provenance='Barrenechea, Gomes and Paredes (2024), Corollary 2.7: energy order two under Assumption A1, matching regularly refined local partitions and the stated pressure/modified-flux regularity; pressure order three observed separately.', refinement='macro diameter', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -337,81 +353,30 @@ physical Darcy flux L2 {'last_three_orders': [2.054, 2.035, 2.01], 'fitted_order
 
 
 
-[![Figure 3 — robin-mh variational workflow](../../assets/tutorials/methods/robin-mh-field-02.png)](../../assets/tutorials/methods/robin-mh-field-02.png)
+![Physical errors, successive orders and normalized amplitudes](../../assets/tutorials/methods/robin-mh-convergence.png)
+
+[SVG](../../assets/tutorials/methods/robin-mh-convergence.svg) · [PDF](../../assets/tutorials/methods/robin-mh-convergence.pdf)
 
 
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+All coarse and fine measurements are retained; shading covers the final four
+levels. The publication figure is generated from the same attributed record
+read by the notebook, separately from its embedded field plots. See
+[convergence plot conventions](index.md#convergence-plots)
+for the target curves, interval orders and normalized amplitudes.
 
-## Reproduce this workflow
+## Reproduce this tutorial
 
-Open or download the notebook linked above. Its first cell acquires a checksum-verified companion containing inspectable support files and the individual convergence record. It then runs every numbered variational assembly and solve step. The final section reads the attributed refinement measurements and recomputes their orders; it does not rerun their full PDE acquisition.
-
-Install the notebook and visualization extras, and use the [installation guide](../../installation.md) for any native UFL/DOLFINx requirements. From this source checkout, open the step-by-step workflow in its locked environment:
+Open the notebook linked at the top. Its checksum-verified companion supplies
+inspectable support files and the [refinement record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/mh/comparison.json).
+The notebook executes the variational workflow; its convergence cell reads the
+record and recomputes the table and plot, without rerunning the full acquisition.
+Use the [installation guide](../../installation.md) for notebook, plotting and
+native-backend requirements. From a source checkout:
 
 ```bash
 pixi run --locked -e introduction jupyter lab notebooks/darcy/robin_mh_workflow.ipynb
 ```
 
-The displayed outputs come from all 10 executed code cells in the locked `introduction` environment, with no skipped cells or error outputs. The source SHA256 is `01a6b2fe54e754871498c576fffab2fd7e96151cce93d6c8a48efee972d2df8d`; the executed notebook SHA256 is `997175c44ef62113deec34d173e58ffb3bcc27fdabca7ab29b873693446553e8`. The field, classical-reference and convergence plots are embedded outputs of that same execution.
-
-## Keep the Robin and local discretization errors distinct
-
-The final smooth study follows section 4.1, equation (4.1), of
-[Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556):
-identity diffusion, homogeneous pressure and the paper's smooth frequencies
-$n=3$, $m=7$. The declared L-shaped polygon partitions form a mesh family
-inside the square; the physical domain is not an L-shaped domain with a
-re-entrant singularity. P1 Robin traces, local P3 pressure, two local
-subdivisions and $\nu=1/4$ are fixed throughout refinement.
-
-Corollary 2.7 controls the broken energy error by the sum of skeletal and
-local interpolation errors:
-
-$$
-\lVert p-p_{Hh}\rVert_V
-\le C\bigl(
- H^{\ell+1}\lvert K\nabla p+p\sigma\rvert_{H^{\ell+1}(\mathcal T_H)}
- +h^k\lvert p\rvert_{H^{k+1}(\mathcal T_H)}
-\bigr).
-$$
-
-Here $\ell=1$, $k=3$ and $h$ decreases proportionally to $H$. Thus the
-second-order term governs the asymptotic physical-flux error; the observed
-third-order pressure is reported separately. The boundary multiplier is the
-Robin quantity declared earlier, not the physical Darcy flux. Its coefficient
-error is not substituted for the independently integrated volume flux error.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **P3/r2 locals; P1 Robin trace; nu=1/4** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| pressure L2 | observed | 2.984 / 3.024 / 3.008 | 3.007 | — |
-| physical Darcy flux L2 | 2 | 2.054 / 2.035 / 2.010 | 2.033 | 1.071 |
-
-![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/robin-mh-convergence.png)
-
-Download the figure as [SVG](../../assets/tutorials/methods/robin-mh-convergence.svg) or [PDF](../../assets/tutorials/methods/robin-mh-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order |
-| ---: | ---: | ---: | ---: | ---: |
-| 0.600925 | 1.815189e-01 | — | 1.080378e+01 | — |
-| 0.300463 | 3.378326e-02 | 2.426 | 3.009670e+00 | 1.844 |
-| 0.150231 | 4.269770e-03 | 2.984 | 7.249964e-01 | 2.054 |
-| 0.0751157 | 5.247353e-04 | 3.024 | 1.769622e-01 | 2.035 |
-| 0.0375578 | 6.522051e-05 | 3.008 | 4.392428e-02 | 2.010 |
-
-Barrenechea, Gomes and Paredes (2024), corollary 2.7: smooth energy order two; pressure order three observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/mh/comparison.json) has SHA256 `0e49ca0d9f39bf10d94b911b0cd64624194652a5932222bac1f1b00fa0086f39` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
-
-## References for this method
+## References
 
 - Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).

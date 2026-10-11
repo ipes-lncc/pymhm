@@ -38,13 +38,28 @@ $$
 (K^{-1}\boldsymbol q_T,\boldsymbol v)_T
 -(p_T,\nabla\cdot\boldsymbol v)_T&=0
 &&\text{for }\boldsymbol v\cdot\boldsymbol n_T=0,\\
-(\nabla\cdot\boldsymbol q_T,w)_T&=(f,w)_T,\\
+(\nabla\cdot\boldsymbol q_T,w)_T&=(f,w)_T
+&&\text{for }w\in Q_h(T),\quad\int_Tw=0,\\
 \boldsymbol q_T\cdot\boldsymbol n_T&=s_{TF}\lambda.
 \end{aligned}
 $$
 
-The retained local pressure constants and global pressure-continuity moments
-complete the hybrid system, with the physical mean-pressure constraint.
+The global unknowns are the skeletal flux and the local pressure
+constants. For a local flux lifting $v_{\mu,T}$ with outward normal
+$\mu_T$, their equations are
+
+$$
+\begin{aligned}
+\sum_T\bigl[(K^{-1}q_T,v_{\mu,T})_T
+ -(p_T,\nabla\cdot v_{\mu,T})_T\bigr]&=0,\\
+\int_{\partial T}\lambda_T\,ds&=\int_Tf\,dx.
+\end{aligned}
+$$
+
+The first equation represents pressure coupling through the mixed
+variational boundary functional; the discontinuous pressure is not
+evaluated pointwise on a face. Boundary fluxes are zero and
+$\int_\Omega p_h=0$ fixes the one global pressure constant.
 RT0 normal continuity and fine-cell balance apply to this mixed flux.
 A primal local pressure alternative instead produces the broken flux
 $-K\nabla p_h$, with different fine-scale conservation properties.

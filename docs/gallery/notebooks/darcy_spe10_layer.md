@@ -31,8 +31,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/325a92a06c8bf97ff87a7497abd8d2d6fb0a1ec684e4e73ce08e4072d0cdf1c6/darcy_spe10_layer-companion.zip"
-COMPANION_SHA256 = "325a92a06c8bf97ff87a7497abd8d2d6fb0a1ec684e4e73ce08e4072d0cdf1c6"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/1d2ec8b0d25291cfc5e4f3f4165491bc39ff665c3c0d7594dd8b2216d1eeed13/darcy_spe10_layer-companion.zip"
+COMPANION_SHA256 = "1d2ec8b0d25291cfc5e4f3f4165491bc39ff665c3c0d7594dd8b2216d1eeed13"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -258,7 +258,7 @@ The visible provider and global declaration define the entire formulation. `asse
 
 ### Evaluate pressure in its executed coefficient basis
 
-Before reconstructing fields, define how the x-fastest Qk coefficients represent pressure and physical gradients. The second function selects a macrocell and evaluates its independent local coefficients. This is field evaluation, not another solve; it preserves the distinction between broken pressure and physical Darcy flux.
+Each named pressure view stores its executed native basis and the corresponding portable Qk coefficient order. `evaluate_bound_pressure` selects a macrocell and evaluates that view's independent coefficients and physical gradients. The solution coefficients represent pressure; the material tensor $K$ is applied separately to obtain the physical Darcy flux $-K\nabla p_h$.
 
 
 ```python

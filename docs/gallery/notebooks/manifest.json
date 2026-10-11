@@ -23,7 +23,7 @@
       "executed_sha256": "2203f29ed5769ced72db29a73bc93cf1463d7a002560e3aad26ff9a4277f2fc2",
       "executed_code_cells": 4,
       "page": "gallery/notebooks/darcy_3d_parallel_scalability.md",
-      "page_sha256": "6c4f154081c39156bd7936a1b551f4109993507475f89ddfd2cf07e0351f4a4d",
+      "page_sha256": "21ac2bfab7c28ca708036850bfd2115260a9daf4884bc0b8c566952953549839",
       "assets": [
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png",
@@ -69,7 +69,8 @@
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_9.png",
           "sha256": "5a37c65f9f642f90096551899f197a0327eecd5a83b7d85fc123cfc0d148b32f"
         }
-      ]
+      ],
+      "current_source_sha256": "4fc78f6ce93980b60742037b3b94fde840f10157fac3abd9c28975fbfdc5d584"
     },
     {
       "source_notebook": "notebooks/introduction/darcy_parallel_scalability.ipynb",
@@ -92,7 +93,7 @@
       "executed_sha256": "9ecc51b8bbe228d41cf38323ba5c9cf6760492e0247ec69e4b4acef506dbe717",
       "executed_code_cells": 5,
       "page": "gallery/notebooks/darcy_parallel_scalability.md",
-      "page_sha256": "07a52b3f2075234087759fa653328e63b94e82a044c2eb6ef91a787cf083edb9",
+      "page_sha256": "a9d86900d320860f59d203a93eda9f87088c16f54f2fa9a6f1e9f5f13530faae",
       "assets": [
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_1.png",
@@ -118,7 +119,8 @@
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_7.png",
           "sha256": "10066f261045dd64d780e1cd90d6d5ebf2a4aad58beda1cb1db17a956c957449"
         }
-      ]
+      ],
+      "current_source_sha256": "933c846c353dd51f9a3155a07f7fe1435e540b9e95b26b8ab934287c2698c353"
     },
     {
       "source_notebook": "notebooks/introduction/darcy_process_scalability.ipynb",
@@ -141,7 +143,7 @@
       "executed_sha256": "2513625b37e7faac9344f472b1e85e7ec29c5477d91bcb1c5ad0f98095168d05",
       "executed_code_cells": 5,
       "page": "gallery/notebooks/darcy_process_scalability.md",
-      "page_sha256": "21da22e81c5f3a8101436426bce8a558e7a98ee14d8130e81063c616fb0e119f",
+      "page_sha256": "a62ea5d59e47739bb0f8b95d94f4023df8905bdfd08bb94bb2040697eeffa490",
       "assets": [
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_1.png",
@@ -175,7 +177,8 @@
           "path": "assets/tutorials/darcy_process_scalability/figure_7_9.png",
           "sha256": "26acd526d5fd402a3afc7a8e3b1da27828f8d9276ad4101c379282c67a9023dd"
         }
-      ]
+      ],
+      "current_source_sha256": "7713ce1057658e845284a5b80900fd18c9ec70f6260a2df37eb59abcd9c26d1e"
     },
     {
       "source_notebook": "notebooks/introduction/darcy_spe10_layer.ipynb",
@@ -198,7 +201,7 @@
       "executed_sha256": "873764311a4a20d8d7591038513224ea4585eff545764093c196ff4c3e0b901b",
       "executed_code_cells": 11,
       "page": "gallery/notebooks/darcy_spe10_layer.md",
-      "page_sha256": "f9817149bd2f02b4d0ce82a6aa51828d893efdb10ce985e16770d40f2728b8c9",
+      "page_sha256": "39acd441c175e53c4698365de5fb7db80d64409d114145ea9d6d869aab3064eb",
       "assets": [
         {
           "path": "assets/tutorials/darcy_spe10_layer/figure_16_0.png",
@@ -216,7 +219,8 @@
           "path": "assets/tutorials/darcy_spe10_layer/figure_21_1.png",
           "sha256": "064cf0a2a399c8f17d085a34d10b8300ee9c3fe6744929fcfc6746970923c39c"
         }
-      ]
+      ],
+      "current_source_sha256": "e6ae7395d09221ed8c26edeb946185cc845fccf0de61fd6f678c209cf6b60708"
     },
     {
       "source_notebook": "notebooks/introduction/multiscale_elasticity.ipynb",
@@ -239,7 +243,7 @@
       "executed_sha256": "861182c18ef81d930d064aae9d4203a7dbc9b76e43d1490b8c1054b0dc9afb31",
       "executed_code_cells": 12,
       "page": "gallery/notebooks/multiscale_elasticity.md",
-      "page_sha256": "05a41fc3f250022c3ab971f200bc000280abe2a604e97e2dff6c860a6e449be9",
+      "page_sha256": "9b4e4dc2afc330fb047b385b60f67bf695a461bb6474f3a04c471911f133ddd9",
       "assets": [
         {
           "path": "assets/tutorials/multiscale_elasticity/figure_18_0.png",
@@ -249,7 +253,8 @@
           "path": "assets/tutorials/multiscale_elasticity/figure_20_0.png",
           "sha256": "0097fbfb70df07404887dab1b44dc84191c48dab10656b242184acf7e1290b19"
         }
-      ]
+      ],
+      "current_source_sha256": "404b17616adc5b54d95f053ade10ed96a88d551a132dc7c77fcbf6f1ea3ed2f8"
     },
     {
       "source_notebook": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
@@ -272,7 +277,7 @@
       "executed_sha256": "b70a9f622afc3cbfe151ecbd58e59d2a9f3add840cdfd88cca392c3dafa7054a",
       "executed_code_cells": 24,
       "page": "gallery/notebooks/stokes_brinkman_boundary_layer.md",
-      "page_sha256": "b805beb55842f9ced92f9db125254622fe21a90a3f9f1401f6bca01b0658cd6f",
+      "page_sha256": "febac5e1702a005a2901d352779503d125e52ef9fdbce4b31d8b74383ab3a7fc",
       "assets": [
         {
           "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png",
@@ -322,7 +327,8 @@
           "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg",
           "sha256": "a8c33b01fe2b9c743c099151c6f484f7d1fed8b0bdc26115b1ef73fa4f598027"
         }
-      ]
+      ],
+      "current_source_sha256": "5668646e2505252b312fbef41797d716fd3e9f7239e292f6463cc2a35d3c2afc"
     }
   ]
 }

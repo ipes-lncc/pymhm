@@ -112,6 +112,13 @@ def solve_mshho_3d(
     pressure. Pure Neumann data require compatibility and fix the volume mean.
     The face-only case m=-1 requires the reconstructed-source variant. Local
     numerical spaces must represent all independent volume and face moments.
+    Theorem 5.1 concerns ideal local PDE solves, rather than arbitrary finite
+    tetrahedral lifts. Theorem 6.3 bounds energy with piecewise H^(m+1) source,
+    H^(ell+1) A grad(p), regular matching macrocell submeshes and
+    material-dependent constants. Pressure L2 rates require separate
+    evidence. Projected-source ideal flux conformity (Lemma 4.2) does not
+    apply to reconstructed-source loads (Remark 5.3) or to generic finite
+    local raw gradients without a conformity check.
     ``local_refinement_precision='extended'`` uses the same preserved moment
     arithmetic as the two-dimensional and polygonal solvers, without changing
     local spaces, represented operators or the original 1e-10 residual check.

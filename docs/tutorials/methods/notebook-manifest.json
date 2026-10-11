@@ -4,7 +4,7 @@
   "notebooks": [
     {
       "source_notebook": "notebooks/introduction/darcy_multiscale_convergence.ipynb",
-      "source_sha256": "12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d",
+      "source_sha256": "c68c829464b85ab26563022a2ddb45c64e5a7127303feb75438aa4bbb3d6a529",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -18,38 +18,47 @@
         "examples/introduction/transport.py": "b9b1b76f03e87c9609c5fb962475881d531aacfac3612c65041fbe08c984d6fb",
         "examples/introduction/vector.py": "2d2cde7f23af2401311d28d8454c97cc65993219a2973d7b677e508f2eacdee7"
       },
-      "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
+      "pixi_lock_sha256": "5dd48b85a99d3ed1d8a2a246cdd5e91e14206d175e2db817c72136c5fec470f3",
       "executed_notebook": "build/notebooks/introduction/darcy_multiscale_convergence.ipynb",
-      "executed_sha256": "c0a994fdfa1b5557f6f584f14e9e38cc0497cae80bf9fe3b43e3527bd716c55b",
+      "executed_sha256": "76a56dc46e027dfcbc23572ccd501a81938be579fad9176c7c97a76524d0fbd2",
       "executed_code_cells": 11,
       "page": "tutorials/methods/primal-mhm.md",
-      "page_sha256": "f7aa181729fea10f34c5b8208e90d68214c54688690abf86876b32a52f73ecd5",
+      "page_sha256": "0b4ad53eab046f11657c81c068116e7605dbd04c7ff5360e7faaefae4d51a25b",
       "assets": [
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_17_0.png",
-          "sha256": "7b4d76702985f09f6e7d2feb75fd78fe30d8bccc8dd752938840fe0f49e87312"
+          "sha256": "b4f849a8935d838aa80cfed3cca1990aa58da88909842b71c7d9b0626526bee4"
         },
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_17_1.png",
-          "sha256": "f63860ec1f3001c93491ee478c3dfa8eafc00a8af310d265d9c092e762220cf9"
+          "sha256": "c819d86fc1779c8ed1ca3c6867f05e6f4f922c55ce48532d7c5e4024ed33c2eb"
         },
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_19_1.png",
-          "sha256": "af299cbd6fbc000bf7c01108f7b848493fc208c7aee3167303be7d74f7e793bd"
+          "sha256": "b85e08f85e0305d331407a75a14c6f3671fb4c0face955728bcc5164ea78ec78"
         },
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_19_3.png",
-          "sha256": "bab4c8f2f5e91eaf09979bb62b8abc985a37152a9b932b2cb9536e8948562d14"
+          "sha256": "bcbcbdb303d834bb6ec896c0efd18ae3fddb50af6dabb77769df28a2328aa9bf"
         },
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_19_5.png",
-          "sha256": "da94252abcdff5e5d4a9b9a462419eb3ef9f45e7c32eaefd42c61104f4e7d374"
+          "sha256": "4129dd39b589d636abb85dfe7f28f53dede052664a7352f7a5f2e868b5d442e9"
         },
         {
-          "path": "assets/tutorials/darcy_multiscale_convergence/figure_23_2.png",
-          "sha256": "bf3d96e901bc7d21bda656a51e80c0eaedc028a8c44edf6a44666cc2eef32334"
+          "path": "assets/tutorials/methods/primal-mhm-convergence.png",
+          "sha256": "71d0c4207edb14bd4114211704b01b49aff0223d049f99c037c8dccfaf3bbeff"
+        },
+        {
+          "path": "assets/tutorials/methods/primal-mhm-convergence.svg",
+          "sha256": "ec7f523c04d9f89b8e44a510cd54ccd12a358b666db7fc5cefbb0011c08fd047"
+        },
+        {
+          "path": "assets/tutorials/methods/primal-mhm-convergence.pdf",
+          "sha256": "37b7121749d0e07b9015a9018574ebdb25023fbaa9e191f193f1f50ab2ba8d8f"
         }
-      ]
+      ],
+      "current_source_sha256": "aeab977c60331f686454e6c2e34f53c6a66c9b0f02f88244d899d9b4edff09dd"
     },
     {
       "source_notebook": "notebooks/introduction/mh2m_multiscale.ipynb",
@@ -72,8 +81,12 @@
       "executed_sha256": "98c4df69447fab0e538a730edb93c267b6f1c3a6e6361a0ddd31bd1fed5bfb91",
       "executed_code_cells": 15,
       "page": "tutorials/methods/mh2m.md",
-      "page_sha256": "f045ca78c37c1952df5ea7bdfac2e5aa1159cfa637b02ff42ba9b479c1a0d851",
+      "page_sha256": "dce751446486553a61004a61f813404ac8364a678e0caf10d400dde7d41729f2",
       "assets": [
+        {
+          "path": "assets/tutorials/mh2m_multiscale/figure_4_0.png",
+          "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
+        },
         {
           "path": "assets/tutorials/mh2m_multiscale/figure_18_1.png",
           "sha256": "7316060720c1d15e475a2ea326d51088e1da7da226e677a6db70181bf3becb88"
@@ -83,14 +96,19 @@
           "sha256": "fed45e9297bf5178965178ae0eec896811cef7f58061fc88e4bbefcee009c47f"
         },
         {
-          "path": "assets/tutorials/mh2m_multiscale/figure_27_2.png",
-          "sha256": "85bdb6d966e1bad0439e9cd41ae6a173061e7b08fed520542a6ce422d458413f"
+          "path": "assets/tutorials/methods/mh2m-convergence.png",
+          "sha256": "59fab129734bc63033ded0e32866cd2a1da6f0c3a76c72b2adddd603d0f46b52"
         },
         {
-          "path": "assets/tutorials/mh2m_multiscale/figure_4_0.png",
-          "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
+          "path": "assets/tutorials/methods/mh2m-convergence.svg",
+          "sha256": "ac3a502f6e307995ebf71fd0baa37d07d05a02cc52c2751af140e7087a3e87f8"
+        },
+        {
+          "path": "assets/tutorials/methods/mh2m-convergence.pdf",
+          "sha256": "da59db79ac4067fa7927fa2191750306988cbaf8719acf03b87b290bbc121a9e"
         }
-      ]
+      ],
+      "current_source_sha256": "56de7ca304b6a81a210d5ac9cfce368a954f50cb03d02c2d806cfefa2537b9e9"
     },
     {
       "source_notebook": "notebooks/introduction/mhm_usfem_rad.ipynb",
@@ -113,7 +131,7 @@
       "executed_sha256": "97e079e57bac2fd3b574126de9d587ead4ee9b683ae9a67e021feb2fb96070db",
       "executed_code_cells": 21,
       "page": "tutorials/methods/mhm-usfem.md",
-      "page_sha256": "740a56c523a6d7af468a3a24d7df105b91568934a6e932e256f5557a6ca4622a",
+      "page_sha256": "93c2009bee59e8995755991ce50d212ba0426761455cec67e3bb66bdffea0661",
       "assets": [
         {
           "path": "assets/tutorials/mhm_usfem_rad/figure_27_0.png",
@@ -152,10 +170,19 @@
           "sha256": "12dcc35f507e4f8935d44ef670cf3d99e4accf3a5386ca64b63b05f00f19f25d"
         },
         {
-          "path": "assets/tutorials/mhm_usfem_rad/figure_43_2.png",
-          "sha256": "948ffff2a372e0abe8396b73ae22a45a6477047677ab2d5d9922fa347b395e3b"
+          "path": "assets/tutorials/methods/mhm-usfem-convergence.png",
+          "sha256": "73e5e53d4e85714a5763434da0e99974c2e9fa741bd6cdfbf7be8ca5b894b8a7"
+        },
+        {
+          "path": "assets/tutorials/methods/mhm-usfem-convergence.svg",
+          "sha256": "2db6edd9aa4d398e4f4b8c12b326ae29427ac69045bd0f644396e7bc57330cdb"
+        },
+        {
+          "path": "assets/tutorials/methods/mhm-usfem-convergence.pdf",
+          "sha256": "3524834a23ca0e668c2f708a3f18abc4f228b3a56448cfec0cd5e1d22c880dcf"
         }
-      ]
+      ],
+      "current_source_sha256": "e01ebff3dbb2f0589325e314d8ffb956c2f0f45002841daa9047ddad633bc835"
     },
     {
       "source_notebook": "notebooks/introduction/mshho_multiscale.ipynb",
@@ -178,8 +205,12 @@
       "executed_sha256": "65908501de04307acb09c0c66f65d73d27a4b480df62ac0dec477bb343a970d3",
       "executed_code_cells": 15,
       "page": "tutorials/methods/mshho.md",
-      "page_sha256": "a603f3ef803228bfb02576e5eb5df1e84aef76176153cda9cc3fbbb026030a5c",
+      "page_sha256": "30e259486a67529bc374b4e855bfb82947e82bff317ebcf602cb60c9eb77f994",
       "assets": [
+        {
+          "path": "assets/tutorials/mshho_multiscale/figure_4_0.png",
+          "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
+        },
         {
           "path": "assets/tutorials/mshho_multiscale/figure_18_1.png",
           "sha256": "7316060720c1d15e475a2ea326d51088e1da7da226e677a6db70181bf3becb88"
@@ -189,14 +220,19 @@
           "sha256": "f7aedf0223fdec128404c96e5517c114429b8511053d2fc5cc57f9f75ba9d703"
         },
         {
-          "path": "assets/tutorials/mshho_multiscale/figure_27_2.png",
-          "sha256": "2175dafeef8acb275f017f8e30c2dcd02dd130b7d5bcc501ed513a000df208ea"
+          "path": "assets/tutorials/methods/mshho-convergence.png",
+          "sha256": "ad09d263dbe02e3de2d02335b038c0ab0a0d6a805b3d88819c1709f6795c95bb"
         },
         {
-          "path": "assets/tutorials/mshho_multiscale/figure_4_0.png",
-          "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
+          "path": "assets/tutorials/methods/mshho-convergence.svg",
+          "sha256": "1d892a784755016aed7b1bee9933408e5ce9da71c0069c7232c10b8a4f5abbba"
+        },
+        {
+          "path": "assets/tutorials/methods/mshho-convergence.pdf",
+          "sha256": "a00b2f4b5795ddfd42a9c1b24cca876701e3ec7752c99b2a2464c44769cfd0a9"
         }
-      ]
+      ],
+      "current_source_sha256": "3a4d90236f4eb67b55ce25509668f507a8a7de8342d157346864681655a1fc1f"
     }
   ]
 }

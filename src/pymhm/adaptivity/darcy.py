@@ -91,6 +91,10 @@ def solve_adaptive_darcy(
     an original adaptive policy, not a reproduction of a published marking schedule. All estimator
     assumptions remain required: polynomial represented boundary data, conforming fine
     triangulations, certified ellipticity and ``local degree >= trace degree + 2``. Local refinement
+    does not certify the recovery paper's optimal flux approximation hypotheses: Theorem 4.7
+    additionally requires polynomial diffusion on each fine triangle, H^(k+1) pressure and
+    A grad(p) in H^(ell+1) intersected with H(div), with compatible shape-regular partitions.
+    These are separate from the energy decomposition's reliability assumptions. Local refinement
     and degree stay fixed. Neumann face data and macro-local ellipticity bounds follow exact
     ancestry. ``iterations`` counts solves. A proposed refinement exceeding ``maximum_cells`` is not
     solved. No contraction or optimality theorem is inferred from the loop, and indicator changes

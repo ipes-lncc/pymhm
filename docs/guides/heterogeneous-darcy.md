@@ -90,7 +90,9 @@ to coefficients and preserve those IDs during mesh refinement. Follow
 a coefficient, and material interfaces inside a macrocell must remain represented
 in its local integration.
 
-The [SPE10 application](../gallery/applications/spe10.md) demonstrates a measured
-reservoir permeability field. Its data, geometry, boundary conditions and
-reference solutions belong to that application; these coefficient interfaces
+The [SPE10 application](../gallery/applications/spe10.md) demonstrates the
+geostatistical reservoir permeability field from the
+[SPE10 benchmark](https://www.ipt.ntnu.no/~kleppe/pub/SPE-COMPARATIVE/papers/tenth.pdf).
+Its data, geometry, boundary conditions and reference solutions belong to that
+application; these coefficient interfaces
 also apply to user-defined materials.

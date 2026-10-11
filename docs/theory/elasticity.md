@@ -58,11 +58,27 @@ $$
 $$
 
 Translations give force balance and rotations give moment balance.
+In [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046),
+Equations (2.4)–(2.6) define these local responses and global equations on
+the continuous rigid-motion complement. Separately, a trace response has
+the rigid projection of its traction resultant as a volume load; a source
+response has load $f-\Pi_{\mathcal R}f$ and zero traction
+(Equations (2.8)–(2.10)). Their combination satisfies the full physical
+equilibrium when the global rigid rows hold.
+
 Prescribed physical traction $t_N=\tau n$ fixes $\lambda=-t_N$ on
 $\Gamma_N$; free trace tests vanish there. A pure-traction problem needs
 global force/moment compatibility and one set of global rigid-displacement
 moments. Fixing every cell's rigid displacement would remove the coarse
-physical unknowns.
+physical unknowns. The original analysis uses a full displacement boundary;
+mixed and pure-traction boundary handling are implementation extensions.
+
+The exact-local one-level stress is symmetric, belongs to
+$H(\operatorname{div};\Omega)$ and satisfies $\operatorname{div}\tau=-f$
+(Corollary 4.4). A two-level primal finite element reconstruction generally
+has discontinuous raw stress and enforces only macrocell force and moment
+balance through these retained rows (Remark 6.11). Its small algebraic residual
+does not give fine-cell equilibrium or an $H(\operatorname{div})$ stress.
 
 The mixed weak-symmetry formulation of [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) uses stress in a tensor H(div) space,
 displacement in a discontinuous space, and a rotation multiplier. In two dimensions,
@@ -77,6 +93,8 @@ $$
 \nabla\cdot u+\lambda_L^{-1}p=0.
 $$
 
+Here $p=-\lambda_L\operatorname{div}u$ is Herrmann pressure; it is generally
+different from the negative mean of the Cauchy stress.
 The method of [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) combines this local mixed form with consistent least-squares stabilization and
 rigid-motion constraints. A primal displacement-only local method can lock as
 $\lambda_L/G\to\infty$. Accurate affine patches at one Poisson ratio cannot
@@ -120,6 +138,23 @@ against the three rigid modes; there is no local pressure gauge. For variable
 shear modulus, $R$ includes $2\varepsilon(u)\nabla G$. The API requires its
 derivative and material bounds used in the stabilization inequality. The
 inverse constant is computed without an exact solution or measured error.
+More precisely, (4.4) defines $C_{I,K}$ on the local discrete rigid complement
+and (4.9) requires
+
+$$
+\begin{aligned}
+0<\alpha_K&<\frac{G_{0,K}C_{I,K}}
+ {2\lVert G\rVert_{1,\infty,\mathcal T_h^K}^2},\\
+\lVert G\rVert_{1,\infty,\mathcal T_h^K}
+ &=\max_{\tau\subset K}
+ \left(\lVert G\rVert_{L^\infty(\tau)}^2
+       +h_K^2\lVert\nabla G\rVert_{L^\infty(\tau)}^2\right)^{1/2}.
+\end{aligned}
+$$
+
+$G_{0,K}$ is a strictly positive lower bound. This condition uses physical
+fine-cell sizes, the macro diameter and bounds on the derivative of $G$;
+it cannot be inferred from a chosen stabilization number alone.
 In two dimensions, a linear traction segment needs four fine intervals for
 P1, two for P2 and one for P3; the implemented sufficient conditions follow
 [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) Lemma 4.5 and reject incompatible trace/local choices before elimination.
@@ -134,7 +169,9 @@ $$
 This identity is enforced consistently with the assembled boundary moments,
 including when $\lambda_L$ varies spatially. If the entire material is exactly
 incompressible, compatibility requires zero boundary volume flux and one global
-pressure mean instead. The unconstrained physical equations are checked after
+pressure mean instead. The preprint assumes finite compressibility
+$0<\nu<1/2$; exact incompressibility and its global gauge are implementation
+extensions. The unconstrained physical equations are checked after
 this augmentation; a nonzero imposed mean does not replace equilibrium.
 The [elasticity cases](../cases/elasticity.md) and
 [MSL comparison](../cases/elasticity-reference.md) provide non-affine verification.
@@ -144,14 +181,14 @@ The [elasticity cases](../cases/elasticity.md) and
 Write $\mathsf A$ for the material compliance and $r_K$ for a
 skew-symmetric rotation field. **Locally**, prescribe
 $\tau_hn_K=-\lambda_K$ and find stress, displacement and rotation from
+the equations below. The stress tests satisfy $Sn_K=0$, and the
+rotation tests $s$ are skew-symmetric.
 
 $$
 \begin{aligned}
-(\mathsf A\tau_h,S)_K+(u_h,\operatorname{div}S)_K+(r_h,S)_K&=0,
- &&Sn_K=0,\\
+(\mathsf A\tau_h,S)_K+(u_h,\operatorname{div}S)_K+(r_h,S)_K&=0,\\
 (\operatorname{div}\tau_h,v)_K&=-(f,v)_K,\\
-(\tau_h,s)_K&=0,
- &&s\text{ in the skew-symmetric test space}.
+(\tau_h,s)_K&=0.
 \end{aligned}
 $$
 
@@ -161,6 +198,14 @@ belongs to the complement of this coupled kernel. The omitted kernel
 tests remain global equilibrium equations; the complete reconstructed
 solution satisfies the displayed divergence and symmetry rows for the
 full test space. The last equation enforces weak stress symmetry.
+In two dimensions the scalar rotation and its skew tensor are
+
+$$
+q=\tfrac12(\partial_yu_x-\partial_xu_y),\qquad
+r=\begin{pmatrix}0&q\\-q&0\end{pmatrix}.
+$$
+
+The counterclockwise rigid displacement $(-y,x)$ has $q=-1$.
 
 **Globally**, negative-traction coefficients and the coupled rigid
 coefficients determine displacement continuity. The local displacement
@@ -206,12 +251,15 @@ example, convergence, material sweep and independent finite-element comparison.
 
 [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046)
 require injectivity of the skeletal traction lifting. For one triangular
-local element, Lemma 6.6 gives the sufficient conditions
+local element in two dimensions, Lemma 6.6 gives the sufficient conditions
 $k\ge\ell+1$ for even $\ell$ and $k\ge\ell+2$ for odd $\ell$.
 Compatible bubble enrichment or local mesh refinement offers other
 constructions. Smooth primal energy/stress rates and displacement gains
 require the theorem's local and dual regularity; the primal material
 constants are not uniform at incompressibility.
+Theorem 5.2 concerns exact local responses with polynomial trace degree
+$\ell\ge1$; the two-level estimate (Corollary 6.4) includes a separate local
+approximation term.
 
 [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) analyze
 row-wise mixed stress spaces with independent interior enrichment in two
@@ -221,8 +269,12 @@ uses the AFW tetrahedral family of
 [Arnold, Falk and Winther (2007)](https://doi.org/10.1090/S0025-5718-07-01998-9):
 BDM$_k$ stress rows and discontinuous P$_{k-1}$ displacement/rotation, with
 $k\ge2$ so every rigid displacement is retained. Six rigid modes are
-required. Smooth $L^2$ stress, displacement and rotation targets are order
-$k$ for this stated family, with sufficiently accurate macro traction.
+required. Theorems 7.1–7.2 establish classical conforming stability and
+smooth $L^2$ stress, displacement and rotation order $k$ on a shape-regular
+tetrahedral mesh with bounded positive-definite compliance. Restricting
+the normal trace to an MHM skeleton needs its own compatibility assessment;
+this classical theorem alone does not establish the restricted method's
+rate or its exact-incompressible limit.
 The 2D polygonal enrichment theorem is not used as a proof for arbitrary
 3D mixed polyhedra.
 
@@ -230,7 +282,11 @@ GaLS requires its own strain-energy inverse inequality. The two-dimensional
 linear-trace sufficient pairs $(k,r)=(1,4),(2,2),(3,1)$ come from
 [Gomes, Pereira and Valentin (2024)](https://arxiv.org/abs/2403.16890v1),
 Lemma 4.5. The tetrahedral implementation recomputes inverse bounds on the
-physical cell and retains six rigid modes. A sampled Lamé sweep verifies
+physical cell and retains six rigid modes. The preprint's three-dimensional
+sufficient constructions following Lemma 4.5 require three noncollinear
+interior fine nodes on each macroface for $k=\ell=1$, or an interior node on
+every macro-boundary edge for $k=\ell+1=2$. A numerical rank check alone is
+not a mesh-uniform inf-sup theorem. A sampled Lamé sweep verifies
 the stated discretization; it does not establish contrast-independent
 accuracy for arbitrary anisotropic elasticity.
 

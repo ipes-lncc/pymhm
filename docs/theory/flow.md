@@ -24,7 +24,10 @@ a_K(u,v)-(p,\nabla\cdot v)_K+
 \end{aligned}
 $$
 
-Velocity is prescribed on $\Gamma_D$ and pseudotraction on $\Gamma_N$.
+Velocity is prescribed on $\Gamma_D$. On $\Gamma_N$, the public `traction`
+datum is the outward natural vector-Laplacian traction
+$t=(\nu\nabla u-pI)n=-\lambda_K$; its fixed multiplier coordinates therefore
+carry the opposite sign.
 The pressure test has been negated to match the symmetric saddle form
 used below; this does not change incompressibility.
 
@@ -41,8 +44,9 @@ natural-traction mixed problem: it acts on velocity boundary traces. The global
 pressure shift is represented jointly by $p\mapsto p+c$ and
 $\lambda_F\mapsto\lambda_F+c n_F$.
 
-When a pressure normalization is required, it is global. If $m_K^Tw_K$
-integrates the local pressure, the
+When a pressure normalization is required, it is global. Here $w_K$ is the
+coefficient vector of the mixed fields in their executed local basis, and
+$m_K^Tw_K$ integrates the reconstructed local pressure. The
 [hybrid reconstruction](foundations.md#local-matrices-and-condensation) induces
 
 $$
@@ -150,8 +154,10 @@ cross-component coupling. Taylor–Hood uses Pk/P(k−1); USFEM uses Pk/Pk.
 
 The API makes the material parameter convention explicit:
 
-- `stabilization="tensor-2025"` uses the largest eigenvalue over the fine cell
-  and is the default.
+- `stabilization="tensor-2025"` uses the largest resistance eigenvalue at the
+  fine cell's integration points and is the default. For a general callback,
+  this sampled maximum is not a certified supremum over the whole cell; the
+  literature stability hypothesis requires an actual cellwise upper bound.
 - `stabilization="minimum-2017"` uses the minimum-eigenvalue expression printed
   in [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) with a declared global lower bound `gamma_min`.
 - `stabilization="pointwise-2017"` evaluates that expression using the smallest
@@ -235,26 +241,39 @@ $$
 Here $d_\Omega$ is the domain diameter. The
 [Oseen tutorial](../tutorials/methods/oseen.md) compares order two in this
 observable on the same smooth space family. Its additional third-order
-velocity $L^2$ measurement is reported separately; the product-norm estimate
-alone does not establish that stronger velocity estimate.
+velocity $L^2$ measurement is reported separately. Section 5.1 reports observed
+orders; the paper's main theorem concerns a posteriori reliability and efficiency,
+and does not provide a separate third-order velocity $L^2$ estimate.
 
 
 ## Space compatibility and rates
 
-In [Araya et al. (2025)](https://doi.org/10.1137/24M1649368), Theorem 4.2
-for equal-order stabilized locals gives a sufficient condition
+In [Araya et al. (2025), Theorem 4.1](https://doi.org/10.1137/24M1649368),
+equal-order stabilized locals have the sufficient degree condition
 $k-\ell\ge d$, with $\ell\ge0$ for discontinuous traces and
-$\ell\ge1$ for continuous traces. Refined compatible local partitions
-can relax this condition as described in Remark 4.4; the requirement is
-still a trace lifting condition, not a choice of method name. The
-Taylor–Hood analysis uses its separate local mesh/inf-sup hypotheses.
+$\ell\ge1$ for continuous traces. The theorem also requires shape-regular,
+facet-aligned local partitions and the size comparability in (4.9) between
+the facet-matching simplices and their fine refinements. Remark 4.4 gives
+relaxed degree/refinement choices specifically in **two dimensions**; it
+does not establish their three-dimensional counterparts.
+
+The Taylor–Hood result, Theorem 4.3, uses Pk/P(k−1), $k\ge2$, the same
+sufficient degree gap, and Assumption M: an internal local vertex in 2D,
+and an internal vertex on every local tetrahedron in 3D. The separately
+stated single-element exceptions in Remark 4.7 have their own restrictions.
+Discrete rank checks on a particular refined space do not replace these
+uniform lifting and inf-sup hypotheses.
 
 For local regularity $u\in H^{s+1}$ and $p\in H^s$, with
-$1\le s\le\min(k,\ell+1)$, velocity energy/pressure errors contain
-$h_\Gamma^s+h^s$. With one extra derivative, the face contribution gains
-one half-order for a fixed macro partition, with macro-diameter dependence
-stated separately in the theorem. Smooth velocity $L^2$ studies can gain
-an additional order under the relevant dual regularity. A boundary-layer
+$1\le s\le\ell+1$, Theorem 4.2 bounds the broken velocity $V$ norm and
+pressure $L^2$ norm by skeletal and fine approximation terms of orders
+$h_\Gamma^s$ and $h^s$. This statement assumes its admissible equal-order
+spaces and local regularity on every macrocell. With one extra derivative
+and a quasi-uniform macro family, Lemma 4.1 and Theorem 4.2 improve the face
+factor to $h_\Gamma^{s+1/2}/H_{\rm macro}^{1/2}$. The fixed-macro
+interpretation and simultaneous macro refinement therefore differ.
+The theorem does not state an additional velocity $L^2$ order; the smooth
+studies report that observable separately. A boundary-layer
 study must first resolve the layer; an underresolved local mesh need not
 achieve these targets or remove overshoots solely through stabilization.
 

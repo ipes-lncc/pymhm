@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>unfitted convergence</dc:title>
-    <dc:description>unfitted; all 6 measured levels; final four diagnostic levels. P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles. Record examples/results/unfitted/convergence/rate-verification.json; SHA256 4f9ff4518fcaf820bb4d8f743eb6cecd05387eb4b71864abc35faac07aa856ff. Chaumont-Frelet, Paredes and Valentin (2026), section 6.1: smooth trace reference ell+3/2. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>unfitted; all 6 measured levels; final four diagnostic levels. P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles. Record examples/results/unfitted/convergence/rate-verification.json; SHA256 4f9ff4518fcaf820bb4d8f743eb6cecd05387eb4b71864abc35faac07aa856ff. Chaumont-Frelet, Paredes and Valentin (2026), Theorem 2, equation (20): fixed-macro trace contribution of order 5/2 for q=ell=1 with exact local solves, pressure piecewise H^4 and A piecewise W^{2,infinity} on Lipschitz material regions, A grad(p) in H(div), fitted skeletal subfaces and regular quasi-uniform macrocells; finite P8/r32 local error is controlled separately. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

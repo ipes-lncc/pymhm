@@ -6,8 +6,9 @@ electric and magnetic fields communicate through tangential macroface traces.
 
 ![Relative permittivity of the fifteen-cylinder device and its 16-by-16 macro mesh](../../assets/gallery/maxwell-permittivity.png)
 
-This figure shows the declared material, rather than a computed wave snapshot.
-Its three colors denote air, silica and inclusions.
+This figure shows the prescribed relative permittivity. Its three colors denote
+air, silica and inclusions. Computed electric and magnetic fields are reported
+in the [complete result report](../../cases/maxwell-nanoguide.md).
 
 ## Physical problem
 
@@ -107,6 +108,9 @@ The finest reference has $1024\times1024$ DG $Q_2$ cells and time step
 controls give increments 0.127%, 0.080% and 0.035%, respectively.
 These numerical-reference increments quantify sensitivity; they are not
 rigorous bounds on its remaining error.
+The device baseline uses central DG. Its qualification does not include a
+separately refined conforming transient reference for these heterogeneous
+material and incident data.
 
 The [complete result report](../../cases/maxwell-nanoguide.md)
 provides componentwise norms, physical times, reference controls and reproduction

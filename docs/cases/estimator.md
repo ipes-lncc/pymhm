@@ -125,6 +125,11 @@ Assembly and estimator quadrature use Duffy order 10; independent energy and
 pressure errors use order 12. These are declared package calculations of the
 published analytical problem, not a claim of equality with the article's tables.
 
+The projected-divergence and source-oscillation contributions differ from
+Table 3 for the declared meshes. Exact historical macro/fine connectivity
+and executable estimator/projection inputs are unavailable, so the cause
+of that discrepancy is unresolved.
+
 ![Energy errors, complete estimators and measured effectivity](../figures/estimator/convergence.svg)
 
 ![The four estimator contributions measured separately](../figures/estimator/components.svg)

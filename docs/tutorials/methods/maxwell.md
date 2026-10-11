@@ -4,10 +4,11 @@ Advance user-written electric and magnetic equations with a tangential global
 coupling. Start with a tetrahedral stationary patch to verify the declarations,
 then propagate the original smooth two-dimensional TM cavity mode. Separate
 spatial and temporal studies compare physical fields and the fixed semidiscrete
-ODE, respectively. [The original analysis](../../theory/waves.md#maxwell-tangential-coupling-and-staggered-dynamics)
-states their different error estimates.
+ODE, respectively. [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X)
+state their energy theorem and present numerical convergence studies;
+the paper does not prove a discrete error estimate.
 
-[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) · [Theory and CFL conditions](../../theory/waves.md)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb)
 
 ## 1. Distinguish electric and magnetic times
 
@@ -149,8 +150,8 @@ for row in rows:
 
 Compare electric and magnetic fields at their own recorded times. The tangential moment norm, original electric equations and staggered energy balance are different checks. This stationary patch is not a propagation-accuracy test. The local spaces are discontinuous polynomial fields; they do not claim Nédélec conformity. The notebook also compares the declared providers against the uncondensed original coefficient equations on identical spaces. This is an algebraic check, not an independent physical discretization.
 
-The stationary patch supplies no propagation baseline. The TM example below
-has a separately assembled conforming scalar-wave Galerkin reference. That
+The TM example below has a separately assembled conforming scalar-wave
+Galerkin reference. That
 exact two-dimensional reduction supplies a classical control for this TM
 physical case; it does not qualify a general three-dimensional H(curl) solver.
 
@@ -222,8 +223,7 @@ for _ in range(20):
 
 The notebook defines every exact callback before this cell. Homogeneous PEC
 means the electric tangential trace vanishes on the exterior; `absorbing=None`
-introduces no impedance loss. This nonconstant field is a propagation example,
-not a stationary reproduction patch.
+introduces no impedance loss.
 
 ![Analytical, MHM and signed-error TM fields with the actual macro mesh](../../assets/tutorials/methods/maxwell-tm-fields.png)
 
@@ -262,7 +262,7 @@ agreement at an invented common time is not claimed. The classical table
 qualifies the electric and magnetic $L^2$ fields; the MHM broken
 $H(\mathrm{curl})$ error is evaluated directly against the analytical derivatives.
 
-## 8. Reach the spatial estimates, then assess time integration
+## 8. Compare spatial rates, then assess time integration
 
 For $\ell=1$, Section 6.2 reports combined maximum-in-time $L^2$ order two
 and combined broken $H(\mathrm{curl})$ order one. The comparison uses local $P_3$
@@ -273,7 +273,7 @@ the electric curl is the rotated gradient of scalar $E$, while the magnetic
 curl is $\partial_x H_y-\partial_y H_x$. The combined broken curl norm includes
 both field $L^2$ errors and both cellwise curl errors. The individual electric
 field can converge more rapidly; that is additional observed accuracy,
-separate from the combined-field estimate.
+separate from the combined-field numerical observation.
 
 All six macro-grid resolutions $n=16,24,32,48,64,96$ remain in the figure.
 The common final four-level window is $n=32,48,64,96$, with unchanged local and
@@ -282,7 +282,7 @@ is the square-grid spacing $H=1/n$. The consecutive orders use the actual
 non-dyadic refinement ratios, and both target-normalized error amplitudes vary
 by only approximately 3% across the final window.
 
-| Physical maximum-in-time observable | Literature order | Last three orders | Maximum/minimum of $E/H^q$ |
+| Physical maximum-in-time observable | Published numerical order | Last three orders | Maximum/minimum of $E/H^q$ |
 | --- | ---: | --- | ---: |
 | combined $L^2$ | 2 | 1.9399, 2.1034, 1.9856 | 1.0302 |
 | combined broken $H(\mathrm{curl})$ | 1 | 1.0319, 1.0470, 1.0080 | 1.0301 |

@@ -1,6 +1,6 @@
 # MHM with mixed H(div) local problems
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/mixed_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/mixed_mhm_workflow.ipynb) · [Theory and degree conditions](../../theory/elliptic.md)
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/mixed_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/mixed_mhm_workflow.ipynb)
 
 We write every local block and the global boundary equation, then assemble, solve and evaluate the fields. No named Darcy constructor chooses the problem. The source is independently derived from $p=1+x^2+y^2$ and $q=-2(x,y)$: $f=\nabla\cdot q=-4$. Exterior pressure equals the analytical value.
 
@@ -252,38 +252,46 @@ plt.show()
 
 ## 7. Verify a smooth mixed refinement
 
-The polynomial patch above verifies the flux, pressure convention and fine-cell conservation. Its exactly representable flux cannot give a meaningful convergence rate. We therefore use a separate smooth unit-square sequence:
-
-
+The RT0 polynomial patch verifies the flux convention and fine-cell conservation.
+Its exactly representable flux cannot give a meaningful convergence rate. Use a
+separate smooth problem on the unit square:
 
 $$
 p=\sin(2\pi x)\sin(2\pi y),\qquad
 f=8\pi^2p,\qquad q=-\nabla p.
 $$
 
+Exterior pressure is zero. Keep the three mixed saddle equations stated above,
+but use RT1/P1 local flux and pressure, P1 normal-flux traces and two fine
+subdivisions per macro edge. Mathematical RT1 corresponds to Basix degree two.
+Refine through $n=1,2,4,8,16,32$, keeping $h=H/2$.
 
+Theorem 4, equations (53)–(55), of
+[Durán, Devloo, Gomes and Valentin (2019)](https://doi.org/10.1016/j.cma.2019.05.013)
+gives order two for both physical fields in this un-enriched RT1/P1 family.
+Its hypotheses include smooth pressure and flux, compatible spaces on aligned
+shape-regular partitions, bounded commuting projections, and dual regularity
+for the pressure estimate. The enhanced pressure estimate requires additional
+interior enrichment and does not apply to the P1 pressure used here.
 
-Exterior pressure is zero. The three mixed saddle equations remain the ones written above; their local spaces are now RT1/P1 with P1 normal-flux traces and two fine subdivisions per macro edge. Mathematical RT1 corresponds to Basix degree two. Macro resolutions are $n=1,2,4,8,16,32$.
+The acquisition integrates pressure and vector-flux errors at independent
+quadrature orders 10 and 12. It separately checks original local/global equations,
+fine-cell divergence moments and oriented normal-flux moments. These equation
+and conservation checks do not replace the comparison with analytical fields.
 
-For this smooth convex-square problem and fixed $h=H/2$, theorem 4, equations (53)–(55), of [Durán, Devloo, Gomes and Valentin (2019)](https://doi.org/10.1016/j.cma.2019.05.013) gives order two for physical flux and for the un-enriched P1 pressure. The enhanced pressure estimate requires the corresponding interior enrichment and does not apply to this pair.
+### Recompute orders from the numerical record
 
-The recorded acquisition integrates both physical fields at independent quadrature orders 10 and 12, and checks original local/global equations, fine-cell divergence moments and oriented normal-flux moments. These controls differ from the error against the analytical fields. RT1/BDM and enriched families replace the compatible local operators; the declared global workflow is unchanged.
-
-### Recompute every measured order
-
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
-
-
+For successive physical errors at the actual refinement sizes, compute
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell below reads the attributed record and recomputes the complete table,
+consecutive orders, final-four-level fitted slope and plot. It does not choose
+a PDE or rerun the acquisition. For a justified target $q$, the maximum/minimum
+of $E/h^q$ over the final four levels measures stabilization of its amplitude.
+Pressure orders reported as observations are kept separate from theorem targets.
 
 ```python
 import json
@@ -306,7 +314,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mixed-mhm', spaces='RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions', rate_provenance='Durán, Devloo, Gomes and Valentin (2019), theorem 4, equations (53)–(55): smooth compatible un-enriched RT1/P1 spaces', refinement='macro diameter', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mixed-mhm', spaces='RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions', rate_provenance='Durán, Devloo, Gomes and Valentin (2019), Theorem 4, equations (53)–(55): smooth compatible un-enriched RT1/P1 spaces on aligned shape-regular partitions with bounded commuting projections; pressure L2 estimates also require dual regularity.', refinement='macro diameter', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -334,82 +342,18 @@ physical Darcy flux L2 {'last_three_orders': [1.983, 1.995, 1.999], 'fitted_orde
 
 
 
-[![Figure 3 — mixed-mhm variational workflow](../../assets/tutorials/methods/mixed-mhm-field-02.png)](../../assets/tutorials/methods/mixed-mhm-field-02.png)
+![Physical errors, successive orders and normalized amplitudes](../../assets/tutorials/methods/mixed-mhm-convergence.png)
+
+[SVG](../../assets/tutorials/methods/mixed-mhm-convergence.svg) · [PDF](../../assets/tutorials/methods/mixed-mhm-convergence.pdf)
 
 
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+All coarse and fine measurements are retained; shading covers the final four
+levels. The publication figure is generated from the same attributed record
+read by the notebook, separately from its embedded field plots. See
+[convergence plot conventions](index.md#convergence-plots)
+for the target curves, interval orders and normalized amplitudes.
 
-## Reproduce this workflow
-
-Open or download the notebook linked above. Its first cell acquires a checksum-verified companion containing inspectable support files and the individual convergence record. It then runs every numbered variational assembly and solve step. The final section reads the attributed refinement measurements and recomputes their orders; it does not rerun their full PDE acquisition.
-
-Install the notebook and visualization extras, and use the [installation guide](../../installation.md) for any native UFL/DOLFINx requirements. From this source checkout, open the step-by-step workflow in its locked environment:
-
-```bash
-pixi run --locked -e introduction jupyter lab notebooks/darcy/mixed_mhm_workflow.ipynb
-```
-
-The displayed outputs come from all 10 executed code cells in the locked `introduction` environment, with no skipped cells or error outputs. The source SHA256 is `db84314d02a7aeff11d0f32c2a5f1c200c3de9ffe6c9ddb8016a24f4ec57f7be`; the executed notebook SHA256 is `e1137203c70e83242316a869bd1cb02d43173e3c364fe80c49f16ae556c2ff47`. The field, classical-reference and convergence plots are embedded outputs of that same execution.
-
-## Match the mixed estimate to the refinement
-
-For the smooth refinement, replace the RT0 polynomial patch by the RT1/P1 pair
-and the sinusoidal data stated above. In the code, this changes the shared
-H(div) tabulation, pressure basis and oriented normal-moment map; it does not
-change the three declared saddle equations or the assembly workflow.
-Mathematical RT degree one corresponds to Basix element degree two.
-
-Theorem 4, equations (53)–(55), of
-[Durán, Devloo, Gomes and Valentin (2019)](https://doi.org/10.1016/j.cma.2019.05.013)
-separates the macro normal-flux degree from the local pressure/divergence
-degree. For the present un-enriched RT1/P1 family on a convex square, smooth
-pressure/flux and the fixed local subdivision ratio $h=H/2$, both physical
-errors have order two:
-
-$$
-\lVert q-q_{Hh}\rVert_{L^2(\Omega)}
-+\lVert p-p_{Hh}\rVert_{L^2(\Omega)}
-=O(H^2).
-$$
-
-The current acquisition preserves the coarse levels $n=1,2,4,8,16$ and adds
-$n=32$. Each level integrates the full physical pressure and vector flux at
-orders 10 and 12, and checks fine-cell divergence moments and normal-flux
-moments separately. The final four levels are $n=4,8,16,32$. The pressure
-estimate is not the enhanced order available with additional interior
-enrichment: P1 pressure retains its own approximation limit.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| pressure L2 | 2 | 2.057 / 2.014 / 2.004 | 2.024 | 1.053 |
-| physical Darcy flux L2 | 2 | 1.983 / 1.995 / 1.999 | 1.993 | 1.016 |
-
-![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/mixed-mhm-convergence.png)
-
-Download the figure as [SVG](../../assets/tutorials/methods/mixed-mhm-convergence.svg) or [PDF](../../assets/tutorials/methods/mixed-mhm-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order |
-| ---: | ---: | ---: | ---: | ---: |
-| 1.41421 | 2.801158e-01 | — | 2.729029e+00 | — |
-| 0.707107 | 1.407425e-01 | 0.993 | 1.965643e+00 | 0.473 |
-| 0.353553 | 2.097802e-02 | 2.746 | 2.874953e-01 | 2.773 |
-| 0.176777 | 5.042521e-03 | 2.057 | 7.271039e-02 | 1.983 |
-| 0.0883883 | 1.248438e-03 | 2.014 | 1.823489e-02 | 1.995 |
-| 0.0441942 | 3.113361e-04 | 2.004 | 4.563337e-03 | 1.999 |
-
-The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `9.926e-11`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities. Its source closure is unchanged during execution. The norm-only record contains no persisted coefficient vector.
+The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `9.926e-11`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities.
 
 ### Local Galerkin sensitivity at fixed macro resolution
 
@@ -424,8 +368,19 @@ A material part of the coarse error responds to local refinement. The macro sequ
 
 The full physical-error norms agree at quadrature orders 10 and 12, with maximum relative change `5.551e-16`. For the two-grid sensitivity, the change in the integrated field difference divided by the coarse analytical error is `1.032e-15`. This scale assesses the local contribution to that physical error and remains meaningful when the two fields differ only at roundoff. The raw differences at both quadrature orders and their unscaled relative changes remain in the [local-control record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/scalar-local-controls-current.json) (SHA256 `8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350`). Original equations and reconstruction constraints retain their separate unchanged checks.
 
-Durán, Devloo, Gomes and Valentin (2019), theorem 4, equations (53)–(55): smooth compatible un-enriched RT1/P1 spaces. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/mixed-mhm-current.json) has SHA256 `e4af57e118ab0b582f8dd6ba0189bff67ff17dda4ae030037577d18188034380` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
+## Reproduce this tutorial
 
-## References for this method
+Open the notebook linked at the top. Its checksum-verified companion supplies
+inspectable support files and the [refinement record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/mixed-mhm-current.json).
+The notebook executes the variational workflow; its convergence cell reads the
+record and recomputes the table and plot, without rerunning the full acquisition.
+Use the [installation guide](../../installation.md) for notebook, plotting and
+native-backend requirements. From a source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/mixed_mhm_workflow.ipynb
+```
+
+## References
 
 - Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

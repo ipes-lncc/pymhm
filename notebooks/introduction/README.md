@@ -90,9 +90,9 @@ controls can take over an hour on a CPU. The rendered course provides their
 completed outputs; interactive execution lets you start with the problem,
 local equations and global solve before running the remaining controls.
 
-The Brinkman introduction runs a three-level single-element family by default
+The Brinkman introduction runs a three-mesh single-element refinement family by default
 ($n=8,16,32$ at each trace degree). Its complete original qualification sequence
-is available with `PYMHM_FULL_STUDY=1`; the profile and levels are recorded in
+is available with `PYMHM_FULL_STUDY=1`; the profile and mesh resolutions are recorded in
 the provenance. The main MHM comparisons, three classical reference meshes and
 subface controls run in both profiles.
 

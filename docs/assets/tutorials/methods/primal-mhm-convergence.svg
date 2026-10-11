@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>primal-mhm convergence</dc:title>
-    <dc:description>primal-mhm; all 5 measured levels; final four diagnostic levels. P1 local pressure; P0 normal-flux trace. Record examples/results/darcy_2013_comparison.json; SHA256 81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155. Harder, Paredes and Valentin (2013): first-order energy; second-order pressure observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>primal-mhm; all 5 measured levels; final four diagnostic levels. P1 local pressure; P0 normal-flux trace. Record examples/results/darcy_2013_comparison.json; SHA256 81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155. Harder, Paredes and Valentin (2013): declared finite P1/P0 study; energy order one and pressure order two observed. Araya et al. (2013), Theorem 4.1 analyzes exact local responses; finite locals add local approximation error.. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
