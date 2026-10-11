@@ -113,7 +113,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"pressure L2": "pressure_l2", "physical Darcy flux L2": "flux_l2"},
         {"physical Darcy flux L2": 1.0},
         "P1 local pressure; P0 normal-flux trace",
-        "Harder, Paredes and Valentin (2013): first-order energy; second-order pressure observed",
+        "Harder, Paredes and Valentin (2013): declared finite P1/P0 study; energy order one "
+        "and pressure order two observed. Araya et al. (2013), Theorem 4.1 analyzes exact "
+        "local responses; finite locals add local approximation error.",
     )
 
     name = "tutorial-methods/mixed-mhm-current.json"
@@ -126,7 +128,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"pressure L2": "pressure_l2", "physical Darcy flux L2": "flux_l2"},
         {"pressure L2": 2.0, "physical Darcy flux L2": 2.0},
         "RT1/P1 locals; P1 normal-flux trace; two local edge subdivisions",
-        "Durán, Devloo, Gomes and Valentin (2019): compatible smooth mixed spaces",
+        "Durán, Devloo, Gomes and Valentin (2019), Theorem 4, equations (53)–(55): smooth "
+        "compatible un-enriched RT1/P1 spaces on aligned shape-regular partitions with "
+        "bounded commuting projections; pressure L2 estimates also require dual regularity.",
     )
 
     name = "mh/comparison.json"
@@ -142,8 +146,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"pressure L2": "pressure_error_l2", "physical Darcy flux L2": "flux_error_l2"},
         {"physical Darcy flux L2": 2.0},
         "P3/r2 locals; P1 Robin trace; nu=1/4",
-        "Barrenechea, Gomes and Paredes (2024): smooth energy order two; pressure order "
-        "three observed",
+        "Barrenechea, Gomes and Paredes (2024), Corollary 2.7: energy order two under "
+        "Assumption A1, matching regularly refined local partitions and the stated "
+        "pressure/modified-flux regularity; pressure order three observed separately.",
     )
 
     name = "tutorial-methods/mh2m-compatible-current.json"
@@ -157,8 +162,10 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"broken gradient L2": 2.0},
         "Gamma P2; two Lambda P1 segments per Gamma edge; local P2/r4; "
         "two fine edges per Lambda segment; M1/M2-compatible",
-        "de Barros, Madureira and Valentin (2026), theorem 19: compatible smooth "
-        "energy order two; pressure order three observed separately",
+        "de Barros, Madureira and Valentin (2026), version 3, Theorem 19: energy order two "
+        "under the two-dimensional M1/M2 Fortin conditions, regular aligned partitions and "
+        "the stated pressure/source-lift/volume-flux regularity; pressure order three "
+        "observed separately.",
     )
 
     name = "tutorial-methods/mshho-current.json"
@@ -171,8 +178,10 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"pressure L2": "pressure_l2", "physical Darcy flux L2": "flux_l2"},
         {"physical Darcy flux L2": 1.0},
         "Matching P0 cell/face moments; P3/r2 finite energy reconstruction; projected source",
-        "Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order "
-        "two observed",
+        "Chaumont-Frelet et al. (2022), Theorem 6.3: first-order energy for exact local PDE "
+        "reconstructions, source in H^1 and A grad(p) in H^1 on regular matching macrocell "
+        "submeshes; finite P3/r2 reconstruction adds local approximation error; pressure "
+        "order two observed separately.",
     )
 
     name = "tutorial-methods/pgmhm-current.json"
@@ -188,8 +197,10 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         },
         {"enriched Darcy flux L2": 2.0},
         "P3 locals; P1 trace; residual enrichment; alpha=0.1",
-        "Fernando et al. (2023), section 5: smooth energy; ell>=1, k>=ell+d; pressure "
-        "order three observed",
+        "Fernando et al. (2023), section 5: the energy estimate requires ell>=1, k>=ell+d, "
+        "the stated regularity and sufficiently small alpha for uniform stability; energy "
+        "order two and pressure order three are measured for the declared finite P3/P1 "
+        "family with alpha=0.1.",
     )
 
     name = "unusual/analytical.json"
@@ -207,8 +218,8 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"scalar L2": "scalar_l2", "broken gradient L2": "gradient_l2"},
         {"broken gradient L2": 1.0},
         "P1/r2 locals; P0 trace; epsilon=1; negative residual pairing",
-        "Santiago, Valentin and Martins (2025): admissible reaction-diffusion "
-        "stabilization; smooth scalar order two observed",
+        "Martins, Pacazuca and Valentin (2025), Theorem 1: admissible reaction-diffusion "
+        "energy bound with local Peclet factor; Figure 1 smooth numerical orders",
     )
 
     name = "unfitted/convergence/rate-verification.json"
@@ -226,7 +237,11 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"broken gradient L2": "error"},
         {"broken gradient L2": 2.5},
         "P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles",
-        "Chaumont-Frelet, Paredes and Valentin (2026), section 6.1: smooth trace reference ell+3/2",
+        "Chaumont-Frelet, Paredes and Valentin (2026), Theorem 2, equation (20): "
+        "fixed-macro trace contribution of order 5/2 for q=ell=1 with exact local solves, "
+        "pressure piecewise H^4 and A piecewise W^{2,infinity} on Lipschitz material "
+        "regions, A grad(p) in H(div), fitted skeletal subfaces and regular quasi-uniform "
+        "macrocells; finite P8/r32 local error is controlled separately.",
         refinement="trace segment size on a fixed macro mesh",
     )
     name = "stokes-adaptive/polynomial-uniform-nu1-g0-l1.json"
@@ -240,7 +255,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"velocity L2": "velocity_l2", "pressure L2": "pressure_l2"},
         {"velocity L2": 3.0, "pressure L2": 2.0},
         "Stabilized P3/P3 USFEM locals; vector P1 traces; viscosity one, zero drag",
-        "Araya, Harder, Poza and Valentin (2017): smooth velocity/pressure estimates",
+        "Araya et al. (2017): observed smooth velocity L2 order three; Araya et al. "
+        "(2025), Theorem 4.2: broken V × Q product-norm bound under stability, "
+        "lifting and regularity hypotheses",
     )
 
     name = "tutorial-methods/stokes-taylor-hood-asymptotic.json"
@@ -254,8 +271,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"velocity L2": 3.0, "pressure L2": 2.0},
         "Continuous P2/P1 Taylor–Hood locals on r4 meshes; unsplit vector P1 "
         "traces; viscosity one, zero drag; retained translations and pressure gauge",
-        "Araya, Harder, Poza and Valentin (2017), smooth degree estimates: "
-        "analytical qualification on diagonal macrotriangles with positive "
+        "Observed smooth P2/P1-local, P1-trace family; k-ell=1 is outside the sufficient "
+        "degree gap k-ell>=2 of Araya et al. (2025), Theorem 4.3, in addition to "
+        "Assumption (M). Analytical qualification on diagonal macrotriangles with positive "
         "streamfunction; not a reproduction of the paper's negative-streamfunction data",
     )
 
@@ -274,8 +292,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         },
         {"pressure L2": 2.0, "mixed V × Q error": 2.0},
         "Stabilized P3/P3 Oseen locals; vector P1 trace; smooth data, viscosity one",
-        "Araya, Cárcamo, Poza and Valentin (2021), section 5.1: mixed V × Q "
-        "estimate of order ell+1; velocity L2 order three is observed separately",
+        "Araya, Cárcamo, Poza and Valentin (2021), Section 5.1: observed mixed V × Q "
+        "order ell+1; velocity L2 order three measured separately; Theorem 7 is "
+        "a posteriori reliability and efficiency",
     )
 
     name = "elasticity.json"
@@ -293,8 +312,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         },
         {"displacement L2": 2.0, "broken gradient L2": 1.0},
         "Equal-order P1 GaLS locals; fixed macro mesh; matched fine/trace refinement",
-        "Smooth stabilized first-order energy and second-order displacement; pressure "
-        "reported separately",
+        "Gomes, Pereira and Valentin (2024), theorem 5.2: conditional smooth energy order "
+        "one; displacement L2 order two additionally requires Remark 5.5 dual smoothing; "
+        "pressure orders reported separately",
         refinement="trace/fine size on the fixed macro mesh",
     )
 
@@ -309,8 +329,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"displacement L2": 3.0, "physical stress L2": 2.0},
         "P3 local displacement; one local subdivision; P1 physical traction; "
         "fixed homogeneous anisotropic tensor",
-        "Harder, Madureira and Valentin (2016): smooth traction-driven estimates; "
-        "fresh current-source physical stress and displacement norms",
+        "Harder, Madureira and Valentin (2016), theorem 5.2 and corollary 6.4: conditional "
+        "smooth one-level and two-level estimates; displacement L2 order three additionally "
+        "requires dual H2 regularity; physical stress L2 target order two",
     )
 
     name = "tutorial-methods/mixed-elasticity-asymptotic.json"
@@ -328,8 +349,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"stress L2": 2.0, "rotation L2": 2.0},
         "BDM2 stress rows; P1 displacement/rotation; P1 interior and full fine P2 "
         "exterior traction",
-        "Smooth compatible mixed spaces; stress/rotation order two; displacement "
-        "measured separately",
+        "Devloo et al. (2021), theorem 5.2, equation (5.5): conditional smooth "
+        "two-dimensional compatible mixed estimate; stress and weak rotation target order "
+        "two; displacement measured separately",
         refinement="macro grid spacing",
     )
 
@@ -390,7 +412,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"relative pressure L2": "pressure", "relative gradient L2": "gradient"},
         {"relative pressure L2": 4.0, "relative gradient L2": 3.0},
         "Local Q4/r2; polynomial P2 face trace; fixed analytical plane wave and frequency",
-        "Chaumont-Frelet and Valentin (2020): resolved fixed-frequency estimates; PyMHM "
+        "Chaumont-Frelet and Valentin (2020), theorem 5.4: conditional fixed-frequency "
+        "polynomial one-level rates require global uniqueness, aligned smooth material and "
+        "frequency-dependent mesh smallness; finite local errors are separate; PyMHM "
         "measurements, not digitized article values",
         refinement="macro grid spacing",
     )
@@ -420,8 +444,10 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"broken gradient L2": 2.0},
         "Native local P2/r2; P1 traces; capacity one, diffusion one; smooth "
         "fixed convection/reaction; c=t sin(pi x) sin(pi y)",
-        "Araya et al. (2024), theorems 2–3 and assumption A2: smooth energy "
-        "order ell+1; concentration order three observed; independent time-step control",
+        "Araya et al. (2024), Theorems 2–3 and assumption A2: stationary smooth energy "
+        "order ell+1 applied as a spatial target to each backward-Euler step; "
+        "concentration order three observed; independent time-step control; "
+        "no uniform-in-time parabolic estimate",
     )
     name = "tutorial-methods/elastodynamics-spatial-asymptotic.json"
     data = read(name)
@@ -438,8 +464,10 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"displacement L2": 3.0, "velocity L2": 3.0, "physical stress L2": 2.0},
         "Two-dimensional smooth homogeneous isotropic analogue; P3/r1 local "
         "displacement, P1 traction; quadratic time dependence; Newmark",
-        "Gomes, Paredes, Pereira, Souto and Valentin (2017): smooth linear-traction spatial "
-        "targets; independent time-step control and conforming reference",
+        "Gomes, Paredes, Pereira, Souto and Valentin (2017), section 5.1 and figure 3: "
+        "observed dynamic displacement and velocity L2 order ell+2 and broken H1 order "
+        "ell+1; current stress L2 uses gradient target ell+1, distinct from the paper's "
+        "broken H(div) stress norm; independent time-step control and conforming reference",
     )
     name = "tutorial-methods/maxwell-spatial-asymptotic.json"
     data = read(name)
@@ -453,8 +481,9 @@ def method_series(root: Path) -> list[dict[str, Any]]:
         {"combined L2": 2.0, "combined broken H(curl)": 1.0},
         "Two-dimensional TM cavity; P3 one-element locals, P1 tangential traces; "
         "maxima over staggered field times",
-        "Lanteri, Paredes, Scheid and Valentin (2018), section 6.2: combined "
-        "L2 order ell+1 and broken H(curl) order ell; fine time-step control",
+        "Lanteri, Paredes, Scheid and Valentin (2018), section 6.2: numerical observations "
+        "of combined L2 order ell+1 and broken H(curl) order ell; no discrete error "
+        "theorem; fine time-step control",
         refinement="macro grid spacing",
     )
     return studies

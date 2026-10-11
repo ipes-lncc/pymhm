@@ -243,6 +243,12 @@ def reconstruct_darcy_moments_3d(
     Both discontinuous and C0 multiplier bases are supported through their
     declared subtriangle coefficient maps. This algebraic construction alone
     does not establish the hypotheses of a posteriori estimator theorems.
+    Theorem 4.7 of Barrenechea et al. (2026) requires k>=ell+3 in three
+    dimensions, ell<=m<=k, diffusion polynomial on every fine tetrahedron,
+    piecewise H^(k+1) pressure and A grad(p) in piecewise H^(ell+1)
+    intersected with H(div), and the
+    paper's compatible shape-regular partitions. Callbacks do not certify
+    those approximation hypotheses.
     """
     m = solution.degree if degree is None else positive_int(degree, "RT degree", 0)
     if m > solution.degree or np.any(solution.skeleton.degrees > m):

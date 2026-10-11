@@ -17,7 +17,7 @@ $$
 
 `DATA.period` controls the current material, independently derived forcing, reference and physical-flux integration. The complete timing campaign uses its fixed period-0.1 data.
 
-The domain is the unit square, with zero exterior pressure. The multiplier is the oriented normal flux. Fine Q1 pressures are conforming inside each macrocell; each macroface carries continuous piecewise P1 functions on four segments. The constant local kernel is represented by physical-volume moments.
+The domain is the unit square, with zero exterior pressure. The multiplier is the oriented normal flux. Fine Q1 pressures are conforming inside each macrocell; each macroface carries continuous piecewise P1 functions on four segments. The local kernel is the constant function. Physical volume moments select zero-mean source and trace responses.
 
 
 
@@ -29,6 +29,8 @@ A_Kp_K+B_K\lambda&=f_K,\\
 $$
 
 
+
+Here $p_K$ and $\lambda$ are coefficient vectors in the local pressure and skeletal bases; $K$ is the material coefficient. Their basis expansions define the pressure and normal flux fields.
 
 The global system retains one pressure constant per macrocell together with the multiplier. The physical flux below is the broken gradient field $-K\nabla p_h$; the figures do not assert fine-cell H(div) conservation.
 
@@ -46,8 +48,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/af1e75a40be0dd9f18607229302446518e43b317866d6c7afcfc72437393f39b/darcy_process_scalability-companion.zip"
-COMPANION_SHA256 = "af1e75a40be0dd9f18607229302446518e43b317866d6c7afcfc72437393f39b"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/4a6eb0d2c21805ffa59c35ce50ed8301dd9c4479c5fb0e5abc58db4182883546/darcy_process_scalability-companion.zip"
+COMPANION_SHA256 = "4a6eb0d2c21805ffa59c35ce50ed8301dd9c4479c5fb0e5abc58db4182883546"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )

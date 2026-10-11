@@ -40,6 +40,9 @@ theme:
       icon: material/brightness-4
       name: Switch to light mode
 exclude_docs: |
+  # Detailed theoretical sources are retained for scientific review.
+  /theory.md
+  /theory/**
   /cases/adaptive-transport.md
   /cases/anisotropic-stress.md
   /cases/darcy-jump.md
@@ -377,17 +380,7 @@ nav:
   - Windows: windows.md
   - Data and notebook downloads: data.md
   - Figure reuse and attribution: licensing.md
-- Theoretical Background:
-  - Introduction: theory.md
-  - Multiscale variational foundations: theory/foundations.md
-  - Primal, mixed and Robin elliptic methods: theory/elliptic.md
-  - MH²M, MsHHO, Petrov–Galerkin and unfitted methods: theory/alternatives.md
-  - Stokes, Brinkman and Oseen: theory/flow.md
-  - Elasticity and elastodynamics: theory/elasticity.md
-  - Transport and reaction–diffusion: theory/transport.md
-  - Helmholtz and Maxwell: theory/waves.md
-  - Meshes and approximation spaces: theory/meshes.md
-  - Recovery, indicators and adaptivity: theory/recovery.md
+- Methods: methods.md
 - Guides:
   - guides/index.md
   - Defining heterogeneous coefficients: guides/heterogeneous-darcy.md
@@ -405,7 +398,7 @@ nav:
   - External local providers: guides/providers.md
 - Tutorials:
   - tutorials/index.md
-  - Start here -- feature overview: tutorials/overview.md
+  - Start here - feature overview: tutorials/overview.md
   - Methods and verified rates: tutorials/methods/index.md
   - Scalar elliptic methods:
     - Primal MHM: tutorials/methods/primal-mhm.md
@@ -413,11 +406,11 @@ nav:
     - Robin MH: tutorials/methods/robin-mh.md
     - Three-field MH²M: tutorials/methods/mh2m.md
     - MsHHO: tutorials/methods/mshho.md
-    - Petrov–Galerkin MHM: tutorials/methods/pgmhm.md
+    - Petrov-Galerkin MHM: tutorials/methods/pgmhm.md
     - MHM-USFEM: tutorials/methods/mhm-usfem.md
     - Unfitted MHM: tutorials/methods/unfitted.md
   - Vector and time-dependent methods:
-    - Stokes–Brinkman MHM: tutorials/methods/stokes-brinkman.md
+    - Stokes-Brinkman MHM: tutorials/methods/stokes-brinkman.md
     - Oseen MHM: tutorials/methods/oseen.md
     - Primal elasticity: tutorials/methods/primal-elasticity.md
     - GaLS elasticity: tutorials/methods/gals-elasticity.md

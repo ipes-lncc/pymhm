@@ -10,6 +10,17 @@ User-defined formulations compose these public numerical owners with
 Physical field records provide optional interpretation of the resulting
 coefficients. Named `FieldDefinition` views require no physical solver object.
 
+The volume operator is the vector Laplacian. The normal-oriented hybrid
+multiplier is $\lambda_K=(-\nu\nabla u+pI+u\otimes\beta/2)n_K$;
+the `traction` convenience arguments prescribe its negative. With zero
+convection the half-advection term vanishes. Velocity/pressure coefficient
+arrays require their executed bases to recover these physical fields.
+The API below documents its kernels, pressure gauge and residual signs.
+For the analytical hypotheses, consult
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
+[Araya et al. (2025)](https://doi.org/10.1137/24M1649368).
+Successful matrix assembly does not establish those hypotheses.
+
 ::: pymhm.fem.vector.operators
     options:
       show_source: false

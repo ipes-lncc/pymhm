@@ -189,8 +189,10 @@ evaluation for heterogeneous permeability or a numerical value of the
 admissible inverse constant. Here C is computed from the local polynomial
 inverse inequality, and the chosen coefficient evaluation is recorded with
 the result. The 2025 maximum-eigenvalue rule is separately selectable; it
-must not be silently used as the 2017 parameter. See [theory](../theory.md)
-for these distinctions and the stability limitation of a global minimum.
+must not be silently used as the 2017 parameter. Consult
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
+[Araya et al. (2025)](https://doi.org/10.1137/24M1649368)
+for their respective parameter definitions and stability hypotheses.
 
 ![PyMHM layer-1 velocity and pressure on the published P3/P3 and DG-P1 spaces](../figures/spe10/brinkman-layer1.png)
 

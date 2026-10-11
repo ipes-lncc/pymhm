@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>Stokes MHM — Taylor–Hood locals</dc:title>
-    <dc:description>All seven measured levels 1,2,4,8,16,32,64; actual H=sqrt(2)/n; fixed final-four diagnostic window. Continuous P2/P1 Taylor–Hood locals on r4 meshes; unsplit vector P1 traces; viscosity one, zero drag; retained translations and pressure gauge. Araya, Harder, Poza and Valentin (2017), smooth degree estimates: analytical qualification on diagonal macrotriangles with positive streamfunction; not a reproduction of the paper's negative-streamfunction data. Record examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json; SHA256 67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>All seven measured levels 1,2,4,8,16,32,64; actual H=sqrt(2)/n; fixed final-four diagnostic window. Continuous P2/P1 Taylor–Hood locals on r4 meshes; unsplit vector P1 traces; viscosity one, zero drag; retained translations and pressure gauge. Observed smooth P2/P1-local, P1-trace family; k-ell=1 is outside the sufficient degree gap k-ell&gt;=2 of Araya et al. (2025), Theorem 4.3, in addition to Assumption (M). Analytical qualification on diagonal macrotriangles with positive streamfunction; not a reproduction of the paper&#x27;s negative-streamfunction data. Record examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json; SHA256 67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

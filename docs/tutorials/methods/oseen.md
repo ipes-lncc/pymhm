@@ -5,7 +5,7 @@ UFL, then assemble, solve and recover the two physical fields. The convection
 velocity is prescribed; the interface unknown is the half-advection
 pseudotraction.
 
-[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/flow/oseen_variational.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/flow/oseen_variational.ipynb) · [Theory and space conditions](../../theory/flow.md)
+[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/flow/oseen_variational.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/flow/oseen_variational.ipynb)
 
 Run the notebook in the locked `introduction` environment. It first verifies an
 affine Taylor–Hood example, includes independently assembled classical controls,
@@ -18,10 +18,10 @@ $\beta=(2,3)$. Choose the solution before assembling any operator:
 
 $$
 \begin{aligned}
--\Delta u+(\beta\cdot\nabla)u+u+\nabla p&=f,
-&\nabla\cdot u&=0,\\
-u_*&=(1-x+2y,-2-x+y),
-&p_*&=x+2y-0.8,\\
+&-\Delta u+(\beta\cdot\nabla)u+u+\nabla p=f,\\
+\nabla\cdot u&=0,\\
+u_*&=(1-x+2y,-2-x+y),\\
+p_*&=x+2y-0.8,\\
 f&=u_*+(5,3).
 \end{aligned}
 $$
@@ -186,11 +186,10 @@ evaluated independently.
 ## 7. Finish with a smooth asymptotic refinement family
 
 The notebook next defines the smooth refinement problem explicitly, assembles
-its stabilized local and global equations, and plots the resulting fields. It
-then reads the attributed refinement record, prints its SHA-256 digest and
-computes consecutive rates. This second family uses **stabilized P3/P3 local
-fields, vector P1 traces and a crisscross macro mesh**. Its local spaces and
-operator differ from the affine Taylor–Hood control above.
+its stabilized local and global equations, and plots the resulting fields.
+This second family keeps **stabilized P3/P3 local fields, vector P1 traces and
+a crisscross macro mesh** throughout refinement. Its local spaces and operator
+differ from the affine Taylor–Hood control above.
 
 For that rate family the independently differentiated data are
 
@@ -287,23 +286,25 @@ $$
 For face degree one, Section 5.1 reports order two in this norm. The same
 observable is integrated here, with $d_\Omega=\sqrt2$ on the unit square.
 The last three orders are $2.0268$, $2.0144$ and $1.9991$. Pressure has orders
-$2.0778$, $2.0904$ and $2.0549$, consistent with that product-norm estimate.
+$2.0778$, $2.0904$ and $2.0549$, consistent with the published numerical
+product-norm orders.
 The separately plotted velocity $L^2$ orders $3.0692$, $2.9885$ and $2.9697$
-are **observed additional accuracy**; the cited Oseen product-norm result
-does not by itself prove a third-order velocity $L^2$ estimate.
+are **observed additional accuracy**. Section 5.1 is a numerical study;
+the paper's Theorem 7 proves a posteriori reliability and efficiency under
+its hypotheses, rather than a third-order velocity $L^2$ estimate.
 
 The comparison assumes constant positive viscosity, full Dirichlet velocity,
 smooth data, a regular mesh family and positive effective reaction
 $\gamma-\tfrac12\nabla\cdot\beta$. These conditions hold for this fixed
-coefficient example. The stabilized P3/P3 local pair and vector P1 traces
-are preserved throughout refinement. The
-[theory page](../../theory/flow.md#space-compatibility-and-rates) explains the
-coercivity and residual-test requirements; decreasing viscosity is a different
-parameter study.
+coefficient example.
+[Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8)
+state the coercivity and residual-test requirements; decreasing viscosity
+is a different parameter study.
 
 ![Measured Oseen product-norm and field errors, three terminal rates and normalized amplitudes](../../assets/tutorials/methods/oseen-convergence.svg)
 
-The notebook identifies the exact JSON acquisition and its source digest.
+The notebook reads the attributed JSON acquisition, prints its SHA-256 source
+digest and computes consecutive rates.
 The [flow gallery](../../gallery/index.md) links the other current Oseen studies.
 This study qualifies the declared uniform mesh family; adaptive refinement
 is evaluated in the separate gallery studies.

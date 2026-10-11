@@ -6,6 +6,9 @@ $d=2,3$. Continuous tetrahedral local spaces are $[P_k]^3/P_k$, $k=1,\ldots,4$;
 the alternative Taylor–Hood spaces use $[P_k]^3/P_{k-1}$, $k=2,\ldots,4$.
 The tests below are original three-dimensional manufactured cases. The numerical
 examples printed in [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) use two-dimensional geometries.
+The preprint assumes $0<\nu<1/2$ and a nonempty displacement boundary.
+The exact-incompressible and pure-traction contracts below are separately
+verified implementation extensions.
 
 ## Operator and physical constraints
 

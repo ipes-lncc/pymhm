@@ -10,6 +10,18 @@ User-defined formulations compose these public numerical owners with
 Physical field records provide optional interpretation of the resulting
 coefficients. Named `FieldDefinition` views require no physical solver object.
 
+Conservative RAD uses the Robin multiplier
+$\lambda_K=(-K\nabla u+\beta u/2)\cdot n_K$, while its physical flux is
+$j=-K\nabla u+\beta u$. The low-level `p1_operators` function uses the
+conventional advective volume form; `triangle_transport_operators` and
+`tetra_transport_operators` supply the conservative skew form. Scalar UNUSUAL
+subtracts the complete reaction–diffusion residual pairing and its source
+term; SUPG instead tests the conservative residual along the velocity.
+The original local/global equations and analytical assumptions are given by
+[Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499)
+and [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089).
+The API below documents the implemented operators and boundary conventions.
+
 Three-dimensional tetrahedral and polyhedral examples share the editable
 `examples/formulations/scalar_3d.py` four-block provider. The importable
 `define_transport_3d` composition selects only geometry and trace integration;
@@ -25,6 +37,14 @@ or numerical nullspace thresholds.
       show_source: false
 
 ::: pymhm.fem.scalar.stabilization
+    options:
+      show_source: false
+
+::: pymhm.fem.scalar.transport
+    options:
+      show_source: false
+
+::: pymhm.fem.scalar.unusual
     options:
       show_source: false
 

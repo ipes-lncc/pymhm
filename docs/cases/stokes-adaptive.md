@@ -20,8 +20,11 @@ $$
 The denominator is the **original macroface** length. Interior faces appear
 in both adjacent macrocell boundary sums. The second level contains fine-cell
 momentum residuals, divergence, and complete pseudotraction jumps or mismatch
-with the skeletal field. The pseudotraction is
-\(\nu\nabla u_h n-p_hn\). Unlike the Oseen estimator, the Stokes–Brinkman
+with the skeletal field. The residual stress is
+\(t_h=(\nu\nabla u_h-p_hI)n\), whereas the skeletal multiplier is
+\(\lambda=(-\nu\nabla u+pI)n\). The boundary mismatch is consequently
+\(t_h+\lambda_h\), with the incident orientation applied to \(\lambda_h\).
+Unlike the Oseen estimator, the Stokes–Brinkman
 estimator has no factor \(2^{-2\ell}\):
 
 $$
@@ -78,9 +81,11 @@ the distinct operation of changing the macro partition.
 On the unit square, the campaign uses
 
 $$
-\psi=128x^2(x-1)^2y^2(y-1)^2,\qquad
-u=(\partial_y\psi,-\partial_x\psi),\qquad
-p=150(x-1/2)(y-1/2),
+\begin{aligned}
+\psi&=128x^2(x-1)^2y^2(y-1)^2,\\
+u&=(\partial_y\psi,-\partial_x\psi),\\
+p&=150(x-1/2)(y-1/2),
+\end{aligned}
 $$
 
 with \(f=-\nu\Delta u+\nabla p\), zero velocity boundary data, and zero

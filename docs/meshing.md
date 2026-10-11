@@ -164,7 +164,9 @@ Select approximation spaces and boundary data separately from these mesh labels.
 polygonal faces of star-shaped cells (including nonconvex cells), and `HexMesh` supplies trilinear hexahedral
 maps. These native geometry constructors have their own validation contracts;
 they do not silently convert arbitrary CAD or curved high-order elements.
-See [mesh theory](theory/meshes.md) for geometric hypotheses.
+The [geometry API](api/geometry.md) documents the accepted cells and
+validation contracts. Analytical mesh assumptions depend on the selected
+formulation and its original publication.
 
 ## Conforming adaptive triangles
 

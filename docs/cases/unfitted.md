@@ -46,7 +46,14 @@ their material intersections exactly; its error is shown separately below.
 The theoretical mechanism is that each skeletal subface belongs to one physical
 material region. Theorem 2 and equation (20) of
 [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) use piecewise regularity on the
-physical partition, positive coefficient bounds and geometric regularity. They
+physical partition, positive coefficient bounds and geometric regularity. For
+$0\le q\le\ell$, the estimate assumes $p\in H^{q+3}(\mathcal P_\Omega)$,
+$a\in W^{q+1,\infty}(\mathcal P_\Omega)$ and
+$a\nabla p\in H(\mathrm{div},\Omega)$. Its constants include the physical-region
+extension bounds, macrocell shape regularity and macro-mesh quasi-uniformity
+(§§3.1–3.2). In three dimensions the skeletal projection constants also depend
+on subface geometry (Remark 1); arbitrary thin cut polygons do not have a
+uniform constant merely because they fit the material. The results
 do not cover a multiplier segment that straddles an unresolved coefficient
 jump. S1 is such a diagnostic configuration; S2 restores the fitted-subface
 condition. The theorem analyzes exact local problems. The finite P4 local solves

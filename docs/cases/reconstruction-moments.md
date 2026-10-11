@@ -45,7 +45,11 @@ must coincide with a fine boundary vertex. The native wrapper requires
 \(m\leq k\), where \(k\) is the primal pressure degree. The optimal flux
 estimates in the paper additionally assume \(k\geq\ell+2\) in two dimensions,
 where \(\ell\) is the skeletal degree, together with the stated mesh,
-coefficient and solution regularity assumptions. An accepted API input alone
+coefficient and solution regularity assumptions. In particular, Theorem 4.7
+assumes diffusion polynomial on each fine triangle,
+\(p\in H^{k+1}(K)\) and
+\(K\nabla p\in H^{\ell+1}(K)^2\cap H(\operatorname{div};K)\).
+An accepted API input alone
 does not establish those estimates.
 
 The example helpers below are repository sources, supplied separately from the

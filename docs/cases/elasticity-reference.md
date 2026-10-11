@@ -107,10 +107,18 @@ continuity and equilibrium conditions.
 
 ## Provenance and retained data
 
-The reference consists of MSL_MHM at
-`4cb8cf81518284313b680b13fd586ee619f08b99`, MSL_CG at
-`afb76d14c1baf50f0b9e69f7bcac675749ef4458` and MSL_CORE at
-`7f15f455717173d29080d411a7e732c72c1e87f8`.
+The reference consists of [MSL_MHM](https://github.com/ipes-lncc/msl_mhm) at
+`4cb8cf81518284313b680b13fd586ee619f08b99`,
+[MSL_CG](https://github.com/ipes-lncc/msl_cg) at
+`afb76d14c1baf50f0b9e69f7bcac675749ef4458` and
+[MSL_CORE](https://github.com/ipes-lncc/msl_core) at
+`7f15f455717173d29080d411a7e732c72c1e87f8`. These are the recorded upstream
+origins; public source access is restricted. The supplied MSL_CG module
+`examples/src/problem_cgelasticityGaLS.cpp` defines the native strain,
+displacement–pressure, compressibility and residual blocks. Its GaLS residual
+assumes shear modulus constant within each fine element. The matched
+constant-$\mu$ cases satisfy that restriction; they do not verify the
+variable-shear derivative terms of the PyMHM implementation.
 The comparison uses the native GaLS element assembly and numerical libraries
 with a mixed-field MHM adapter. The adapter applies rigid-mode source projection
 to displacement rows and reconstructs pressure with the same native skeletal

@@ -26,8 +26,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/735a2aa9bd1ef9ae57aeaaab237a12cd1c524a86329939094a8a806e5cd1ade2/multiscale_elasticity-companion.zip"
-COMPANION_SHA256 = "735a2aa9bd1ef9ae57aeaaab237a12cd1c524a86329939094a8a806e5cd1ade2"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/2b46d35d598a626ec0cf24aae3095fc315ba3bb6687dd33814116e45d3e19a1a/multiscale_elasticity-companion.zip"
+COMPANION_SHA256 = "2b46d35d598a626ec0cf24aae3095fc315ba3bb6687dd33814116e45d3e19a1a"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )

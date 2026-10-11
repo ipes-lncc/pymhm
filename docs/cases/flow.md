@@ -38,9 +38,10 @@ $$
 `examples/manufactured.py` provides the Stokes/Brinkman terms;
 `examples/plot_flow_cases.py` evaluates the additional Oseen derivative. Both
 local methods use the pseudostress operator \(-\nu\Delta u\), with a single
-global mean-pressure constraint. The [theory](../theory.md) and
-[UFL formulation](../fenics.md) describe its distinction from a
-symmetric-gradient traction operator.
+global mean-pressure constraint.
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) give this
+formulation; the [UFL guide](../fenics.md) shows how to declare the volume operator
+and boundary pairing.
 
 The displayed run uses a \(4\times4\) diagonal macro grid: **32 macrotriangles**,
 four subdivisions per local edge, **512 microtriangles**, and degree-one,

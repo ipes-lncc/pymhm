@@ -197,11 +197,20 @@ $$
 \end{aligned}
 $$
 
-Thus the physical flux has order one or two as $\ell=0$ or $1$, and the
-**projected** divergence has order three. Here $\Pi_{\Omega,2}$ acts separately
+The flux estimate assumes diffusion polynomial on every fine triangle,
+$p\in H^{k+1}(K)$ and
+$A\nabla p\in H^{\ell+1}(K)^2\cap H(\mathrm{div};K)$, with
+Assumption A's compatible shape-regular partitions. Identity diffusion
+and the sine solution satisfy these conditions. The physical flux therefore
+has order one or two as $\ell=0$ or $1$. The **projected** divergence has
+order three. Here $\Pi_{\Omega,2}$ acts separately
 on each macrotriangle: its range is continuous P2 on that macrotriangle's
 fine mesh, without continuity across macrofaces. The raw divergence is recorded
-separately and is not assigned the projected-divergence estimate. Both norms
+separately and is not assigned the projected-divergence estimate. The
+projected bound additionally uses
+$f\in H^3(K)$ and Assumption B's globally conforming fine mesh. In
+the displayed flux bound $H$ is skeletal-subface diameter; macrocell
+diameter enters the estimator's Poincaré factor separately. Both norms
 are integrated with 12 and 16 Gauss points per Duffy coordinate; their difference
 is checked before accepting each level. The figures display every measured
 level, every successive order, and the normalized $E/H^q$ plateau.
@@ -253,7 +262,7 @@ samples are taken independently at each fine-triangle centroid; no averaging
 across an interface is used. Pressure error is signed; flux error is the
 magnitude of the vector difference. Error norms use volume quadrature.
 
-## 8. Recover a conforming potential or impose strict fine-cell balance
+## 8. Recover a conforming potential
 
 ```python
 from pymhm.estimators.darcy import recover_potential
@@ -278,7 +287,9 @@ new universal reconstruction estimate.
 | 1 | 16 | 6.893670e-05 | 3.001 |
 | 1 | 32 | 8.671578e-06 | 2.991 |
 
-`equilibrate_flux` instead solves a weighted RT0 minimization with strict
+## 9. Equilibrate an RT0 flux with strict fine-cell balance
+
+`equilibrate_flux` solves a weighted RT0 minimization with strict
 fine-cell source-average balance. Its P0 skeletal trace must align with fine
 boundary edges. The notebook explicitly rebuilds those compatible spaces
 before calling it. A dedicated [RT0 step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/equilibrated_flux_workflow.ipynb)
@@ -314,6 +325,17 @@ conformity and physical approximation error are separate properties.
 The [indicator lesson](error-indicators.md) evaluates reliability and
 convergence of the estimator; the [adaptive lesson](adaptivity.md) uses it on a
 localized smooth solution.
+
+## Reproduce this tutorial
+
+The notebook linked at the top defines the forms and runs the recovery,
+indicator, adaptive and recursive studies. Install the native notebook backend
+as described in the [installation guide](../../installation.md), then open it
+from the source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/reconstruction_and_indicators.ipynb
+```
 
 ## References
 

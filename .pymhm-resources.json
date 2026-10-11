@@ -1,0 +1,100 @@
+{
+  "resources": {
+    ".pymhm-notebook-resources.json": {
+      "sha256": "639c2412e3fdd45bd6a18f8cbaa4042bcd1686be91ec7abef7a357b77d96310a",
+      "size_bytes": 344
+    },
+    "LICENSE": {
+      "sha256": "20c17d8b8c48a600800dfd14f95d5cb9ff47066a9641ddeab48dc54aec96e331",
+      "size_bytes": 26526
+    },
+    "examples/__init__.py": {
+      "sha256": "1b7168211c5b6e392309f6ce47da1928a17df43de32bc89fc437fe9f44cceb1b",
+      "size_bytes": 675
+    },
+    "examples/data/reconstruction3d-macro.json": {
+      "sha256": "281dafb5a077196ee4e5af6b2280c7646d307a8d426d0d6ab888794942149d86",
+      "size_bytes": 10644
+    },
+    "examples/data/three-layer-2017/case.json": {
+      "sha256": "63b3a0887e9ffc91948c533b6e47aba4d5ec464b9f8bc510df3ccb0c2d2d5ee9",
+      "size_bytes": 6715
+    },
+    "examples/data/three-layer-2017/macro-mesh.json": {
+      "sha256": "9b53285f766942131df24f7d18d813c8824299acdfcb06970d759bb989e05742",
+      "size_bytes": 23305
+    },
+    "examples/field_sampling.py": {
+      "sha256": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
+      "size_bytes": 8270
+    },
+    "examples/introduction/__init__.py": {
+      "sha256": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
+      "size_bytes": 82
+    },
+    "examples/introduction/provenance.py": {
+      "sha256": "8c9e122179accaff845014cb423bc01e8073970ca6a19406039374cdf948031f",
+      "size_bytes": 3993
+    },
+    "examples/introduction/scalar.py": {
+      "sha256": "6f7533436a64ab06b5f8fc37fb5dcaaed92078876dd96b54cbad0bdb90bad4a8",
+      "size_bytes": 33685
+    },
+    "examples/plot_mesh.py": {
+      "sha256": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6",
+      "size_bytes": 3800
+    },
+    "examples/plot_style.py": {
+      "sha256": "823f7a9eba6adad258683aa1c5cce7b24ad22029400b2daa9f5b4eed8077f2ce",
+      "size_bytes": 1132
+    },
+    "examples/results/darcy_2013_comparison.json": {
+      "kind": "record",
+      "provenance": "Original tracked file examples/results/darcy_2013_comparison.json; retain its scientific attribution and scope. Third-party sources keep their own terms.",
+      "sha256": "81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155",
+      "size_bytes": 6293,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155/darcy_2013_comparison.json"
+    },
+    "examples/results/hpc4e/dataset.json": {
+      "sha256": "f77137fc029f1f50e91d3a33e90054a97f74c3327814a253b6b4e67dee90043e",
+      "size_bytes": 800
+    },
+    "examples/results/marmousi/dataset.json": {
+      "sha256": "44f3fb4953c85163f710749e0dc148225e1553250f838dd6a769d1c6f2cf85eb",
+      "size_bytes": 1299
+    },
+    "examples/results/spe10/dataset.json": {
+      "sha256": "0e1b94a95c331b6e102e4593d506d5ca9b3ee92101e48ddaaa83bf4cb2fe700a",
+      "size_bytes": 1831
+    },
+    "examples/tutorial_convergence.py": {
+      "sha256": "ea89405293016f437f5ca2d87f3ae2c2c694433dfb3829a86ecfeb09b0af767c",
+      "size_bytes": 26058
+    },
+    "scripts/__init__.py": {
+      "sha256": "e485862dbda92e73bd5e6c28ff248d6c1d4991ffa92a12b4c8b134533172d4a6",
+      "size_bytes": 89
+    },
+    "scripts/notebook_data.py": {
+      "sha256": "3f1207b0cad4775ff65a75df2793587cfdfab56b74e98ff0df67cfa6c9b28a3a",
+      "size_bytes": 23718
+    },
+    "scripts/notebook_images.json": {
+      "sha256": "76a1bb5c44a5b29167084ba0c1e58cca4e9cb6e67edf4e6053821f71cebee492",
+      "size_bytes": 21118
+    },
+    "scripts/notebook_reproduction.json": {
+      "sha256": "7e3ad91de5f0613a4d23bc306dbf5df7b25262509d54d36abc916e4937762136",
+      "size_bytes": 161774
+    },
+    "scripts/notebook_reproduction.py": {
+      "sha256": "90b8177418e421908c8d8f16b7b0a5cd90fdfbab1def8d80f504dab90181c130",
+      "size_bytes": 21416
+    },
+    "scripts/run_notebooks.py": {
+      "sha256": "6146d95b9d08e41a11da7193269269856e482253b4f632782e4e6c94218accf5",
+      "size_bytes": 10682
+    }
+  },
+  "unavailable": {}
+}

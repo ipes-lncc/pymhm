@@ -1,0 +1,13 @@
+{
+  "notebook_historical_resources": {
+    "introduction/darcy_multiscale_convergence.ipynb": []
+  },
+  "notebook_resources": {
+    "introduction/darcy_multiscale_convergence.ipynb": [
+      "examples/results/darcy_2013_comparison.json"
+    ]
+  },
+  "notebook_study_resources": {
+    "introduction/darcy_multiscale_convergence.ipynb": []
+  }
+}

@@ -16,15 +16,19 @@ $$
 $$
 
 Define $q=-\rho^{-1}\nabla p$ and outward normal trace
-$\lambda_K=q\cdot n_K$. **Locally**, source and trace responses solve
+$\lambda_K=q\cdot n_K$ on nonabsorbing faces. On the absorbing boundary
+$\Gamma_A$, the paper sets the multiplier to zero and includes
+$\rho^{-1}\partial_n p-i\omega(\rho\kappa)^{-1/2}p=g_A$ in the local
+form. With $\Gamma_{A,K}=\partial K\cap\Gamma_A$, **locally** solve
 
 $$
 \begin{aligned}
 a_K^\omega(p_K,v)+\langle\lambda_K,v\rangle_{\partial K}
- &=(f,v)_K,\\
+ &=(f,v)_K+\langle g_A,v\rangle_{\Gamma_{A,K}},\\
 a_K^\omega(p,v)
  &=(\rho^{-1}\nabla p,\nabla v)_K
-   -\omega^2(\kappa^{-1}p,v)_K.
+   -\omega^2(\kappa^{-1}p,v)_K\\
+ &\quad-i\omega\langle(\rho\kappa)^{-1/2}p,v\rangle_{\Gamma_{A,K}}.
 \end{aligned}
 $$
 
@@ -36,24 +40,43 @@ $$
  =\langle\mu,p_D\rangle_{\Gamma_D}.
 $$
 
-Prescribed natural traces are fixed; impedance boundaries contribute
-their pressure/normal-trace relation to the same global equations.
+Prescribed natural traces are fixed. Absorbing faces carry no free global
+trace coordinates in this construction. Equations (2.6)–(2.12) of
+[Chaumont-Frelet and Valentin](https://doi.org/10.1137/19M1255616) define
+the continuous hybridization and source, boundary-data and trace responses;
+Equations (2.13)–(2.15) distinguish exact local responses from their finite
+element approximations.
 There is no elliptic pressure-mean kernel at a resolved nonzero
 frequency, and an arbitrary mean constraint cannot repair a resonant
 operator. Polynomial and oscillatory face spaces are
 different trial bases; absorbing boundary forms and PML introduce complex
 coefficients and additional boundary/material conventions.
 
-Local Neumann operators must avoid resonance. For a convex interior
-macrocell with constant wave speed $c_K$, $\omega H_K/c_K<\pi$ is a
-sufficient resolved-cell condition; it is not a certificate for arbitrary
-heterogeneous or nonconvex cells. Numerical rank checks remain necessary.
-The global wave problem additionally needs the physical uniqueness
-conditions of its boundary value problem.
+Local Neumann operators must avoid resonance. Theorem 3.3 gives a sufficient
+condition for a convex interior macrocell with bounded positive coefficients:
 
-In the published smooth plane-wave family, trace degree $\ell$ gives
-pressure $L^2$ order $\ell+2$ and broken-gradient order $\ell+1$ once
-frequency and local approximation are resolved. Current Q$_{\ell+2}$
+$$
+c_{\min,K}=\sqrt{\frac{\operatorname{ess\,inf}_K\kappa}
+ {\operatorname{ess\,sup}_K\rho}},\qquad
+\frac{\omega H_K}{c_{\min,K}}\le\sqrt{1-\delta}\,\pi,
+\quad 0<\delta<1.
+$$
+
+This bound permits heterogeneous material within the cell. Nonconvex mapped
+cells and absorbing boundary cells require the additional geometric and
+coefficient conditions (3.3)–(3.4). Numerical rank checks do not establish the
+global stability of the boundary-value or discrete problem.
+
+For polynomial trace degree $\ell$, Theorem 5.4 gives fixed-frequency
+pressure $L^2$ order $\ell+2$ and broken energy order $\ell+1$ for the
+one-level method. It assumes global uniqueness, piecewise smooth material
+and solution, a regular macro mesh aligned to that regularity partition,
+and sufficiently small $\omega H$ and
+$C_s(\omega)(\omega H)^{\ell+1}$. Local approximation error is omitted
+from that theorem and must be controlled separately in a two-level solve.
+The smooth regularity argument is developed in two dimensions; it does not
+qualify arbitrary three-dimensional geometries. Oscillatory trace rates in
+Section 6.3 are numerical observations. Current Q$_{\ell+2}$
 controls independently assemble the same discrete problem with UFL. A
 frequency sweep, a PML study or a heterogeneous Marmousi calculation is a
 different qualification from this fixed-frequency rate. Follow the
@@ -75,7 +98,25 @@ $$
 \end{aligned}
 $$
 
-The local fields evolve on discontinuous fine spaces with central numerical
+The physical constraints are $\operatorname{div}(\varepsilon e)=\rho_c$
+and $\operatorname{div}(\mu h)=0$, with compatible initial data and
+$\operatorname{div}f=\partial_t\rho_c$. Lemma 2 identifies the continuous
+hybrid multiplier as $\lambda_K=h\times n_K$ and proves equivalence under
+the paper's data and domain hypotheses. Its local weak equations (2.5) are
+
+$$
+\begin{aligned}
+(\varepsilon\partial_t e_K,v)_K-(h_K,\operatorname{curl}v)_K
+ +\langle\lambda_K,v\rangle_{\partial K}&=(f,v)_K,\\
+(\mu\partial_t h_K,w)_K+(\operatorname{curl}e_K,w)_K&=0,\\
+\sum_K\langle\nu_K,e_K\rangle_{\partial K}&=0
+ \quad\text{for homogeneous PEC data}.
+\end{aligned}
+$$
+
+The pairings use the oriented tangential trace, not a scalar normal flux.
+Sections 3–5 then decompose the time-dependent local responses and discretize
+them. The implemented local fields evolve on discontinuous fine spaces with central numerical
 fluxes; the global multiplier imposes tangential coupling between macrocells.
 The implemented transverse-magnetic 2D fields have scalar $e_z$ and vector
 $(h_x,h_y)$; the tetrahedral 3D path has full electric and magnetic vectors.
@@ -130,13 +171,19 @@ Leapfrog stores $e^{n+1/2}$ and $h^n$ at different times. Compare each field
 with the exact field at its own recorded time. The conserved discrete
 quadratic energy uses this staggered pair and differs from simply adding
 two fields evaluated at an invented common time. Stability requires a
-CFL bound based on the actual condensed spatial operator and material
-masses; unstable time steps are rejected.
+CFL bound based on the assembled spatial curl and material masses. The
+implementation uses a conservative local mass-scaled curl upper bound;
+unstable time steps are rejected. Lemma 4, Equations (5.11)–(5.12),
+proves a staggered energy/work identity and CFL-dependent positivity for the
+published scheme. Energy and tangential-moment checks do not establish
+discrete Gauss-law preservation.
 
-For the published smooth TM cavity with trace degree $\ell=1,2$, combined
+Section 6.2 numerically observes, for its smooth TM cavity with trace degree
+$\ell=1,2$ and local $P_{\ell+2}$ fields, combined
 $L^2$ orders are $\ell+1$, combined broken-curl orders are $\ell$, and
-temporal order is two. The electric-field superconvergence observed for
-one published configuration is separate from these combined-field targets.
+temporal order two. Electric broken-curl order $\ell+1$ is an additional
+observation. These are numerical results; the paper explicitly leaves
+semidiscrete and fully discrete error estimates for future work.
 Local spaces and time steps must make their errors smaller than the
 skeletal spatial error during a spatial study. Recorded 2D cavity sequences
 approach these targets. The current 3D cavity sequence remains

@@ -6,8 +6,9 @@ Use the already declared local/global UFL equations in the
 [flux-recovery lesson](flux-recovery.md), then measure the estimator alongside
 the true physical error. The smooth analytical case uses the same data as
 [Barrenechea et al. (2026), §6.1](https://doi.org/10.1137/24M1673073).
-The purpose is to establish estimator reliability, its convergence, and a
-stable effectivity over a resolved refinement sequence.
+The study measures estimator decay and effectivity over a resolved refinement
+sequence; the reliability statement comes from the cited analysis under its
+stated hypotheses.
 
 ## 1. Solve the declared problem on compatible spaces
 
@@ -104,6 +105,12 @@ The independently assembled fine classical P3 baseline is checked against the
 same analytical pressure and physical flux on three refined global meshes.
 It is a numerical reference; the exact solution remains the analytical field.
 
+The projected-divergence and source-oscillation contributions differ from
+Table 3 for the declared meshes. Exact historical macro/fine connectivity
+and executable estimator/projection inputs are unavailable, so the
+matching degree choices and decay rates do not establish reproduction
+of that table.
+
 ## 5. Use the local indicator for a refinement decision
 
 ```python
@@ -114,6 +121,17 @@ assert estimate.local_squared[marked].sum() >= 0.5*estimate.local_squared.sum()
 `local_squared` contains integrated squared macro indicators. These values are
 not pointwise residual samples. Follow the [adaptive workflow](adaptivity.md)
 to rebuild the equations after marking and compare error against actual work.
+
+## Reproduce this tutorial
+
+The notebook linked at the top defines the forms and runs the recovery,
+indicator, adaptive and recursive studies. Install the native notebook backend
+as described in the [installation guide](../../installation.md), then open it
+from the source checkout:
+
+```bash
+pixi run --locked -e introduction jupyter lab notebooks/darcy/reconstruction_and_indicators.ipynb
+```
 
 ## References
 

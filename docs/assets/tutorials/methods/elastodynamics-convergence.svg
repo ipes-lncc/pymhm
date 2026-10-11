@@ -8,6 +8,7 @@
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:date>2026-10-09T08:07:50.038872</dc:date>
     <dc:format>image/svg+xml</dc:format>
+    <dc:description>elastodynamics; all stored measured levels; final-four diagnostic window. Two-dimensional smooth homogeneous isotropic analogue; P3/r1 local displacement and P1 traction; quadratic time dependence and Newmark. Analytical displacement, velocity and physical Cauchy stress L2 errors. Record examples/results/tutorial-methods/elastodynamics-spatial-asymptotic.json; SHA256 b67b62e73eeeaa78492724fad94848657999aa5e4713d3606d88eb31f0c1c2ba. Gomes, Paredes, Pereira, Souto and Valentin (2017), section 5.1 and figure 3: observed dynamic displacement and velocity L2 order ell+2 and broken H1 order ell+1; current stress L2 uses gradient target ell+1, distinct from the paper's broken H(div) stress norm; independent time-step control and conforming reference. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:creator>
      <cc:Agent>
       <dc:title>IPES Research Group</dc:title>

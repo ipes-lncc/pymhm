@@ -21,8 +21,8 @@ class UnusualParameters:
     Smooth coefficient callbacks require these declarations. Constant and
     resolved Cartesian materials admit bounds obtained directly from their data.
 
-    ``inverse_constant`` optionally prescribes m in Eq. (15) of Santiago,
-    Valentin and Martins (2025). It must satisfy 0<m<=1/3 and the discrete
+    ``inverse_constant`` optionally prescribes m in Eq. (15) of Martins,
+    Pacazuca and Valentin (CILAMCE 2025). It must satisfy 0<m<=1/3 and the discrete
     elementwise coercivity check in :func:`unusual_scale`. Without an explicit
     value, a conservative operator-inverse value up to 1/3 is computed. Thus constant-A
     P1 uses exactly the published m=1/3. Higher-degree and variable-A constants

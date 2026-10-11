@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>mshho convergence</dc:title>
-    <dc:description>mshho; all 6 measured levels; final four diagnostic levels. P0 cell and face moments; P3/r2 energy reconstruction; projected source. Record examples/results/tutorial-methods/mshho-current.json; SHA256 bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44. Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order two observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>mshho; all 6 measured levels; final four diagnostic levels. P0 cell and face moments; P3/r2 energy reconstruction; projected source. Record examples/results/tutorial-methods/mshho-current.json; SHA256 bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44. Chaumont-Frelet et al. (2022), Theorem 6.3: first-order energy for exact local PDE reconstructions, source in H^1 and A grad(p) in H^1 on regular matching macrocell submeshes; finite P3/r2 reconstruction adds local approximation error; pressure order two observed separately. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

@@ -8,6 +8,7 @@
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:date>2026-10-09T09:01:48.508382</dc:date>
     <dc:format>image/svg+xml</dc:format>
+    <dc:description>maxwell; all stored measured levels; final-four diagnostic window. Two-dimensional TM cavity; P3 one-element locals and P1 tangential traces; combined maximum-in-time physical L2 and broken H(curl) errors over staggered field times. Record examples/results/tutorial-methods/maxwell-spatial-asymptotic.json; SHA256 2fd33d8e3facb0595e0c45e9e77e8dedd20ef697abeb33c3a6864a2d6c4b5eb9. Lanteri, Paredes, Scheid and Valentin (2018), section 6.2: numerical observations of combined L2 order ell+1 and broken H(curl) order ell; no discrete error theorem; fine time-step control. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:creator>
      <cc:Agent>
       <dc:title>IPES Research Group</dc:title>

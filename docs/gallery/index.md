@@ -42,7 +42,7 @@ For mesh, solver and execution settings, use the [Guides](../guides/index.md).
   </a>
 
   <a class="pymhm-gallery-card" href="applications/heterogeneous-elasticity/">
-    <div class="pymhm-gallery-card__figure"><img src="../assets/gallery/elasticity-lame-preview.png" alt="Multiscale Lamé modulus in the heterogeneous solid" loading="lazy" decoding="async"></div>
+    <div class="pymhm-gallery-card__figure"><img src="../assets/gallery/elasticity-lame-preview.png" alt="Material Lamé parameters lambda equals mu in the heterogeneous solid" loading="lazy" decoding="async"></div>
     <div class="pymhm-gallery-card__body">
       <h2>Extension of a heterogeneous solid</h2>
       <p>Resolve material variations through local displacement fields and compare the physical stress.</p>

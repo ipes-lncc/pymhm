@@ -1,6 +1,6 @@
 # Unfitted MHM: independent skeletal partitions
 
-[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/unfitted_trace_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/unfitted_trace_workflow.ipynb) · [Theory and degree conditions](../../theory/alternatives.md)
+[Open the step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/unfitted_trace_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/unfitted_trace_workflow.ipynb)
 
 An unfitted trace partition can cut across the local boundary elements. It is declared independently rather than forcing its breaks to coincide with the fine mesh. We first show this geometric capability on smooth identity diffusion with an exact pressure, then distinguish its qualified convergence study from material-interface cases.
 
@@ -254,25 +254,51 @@ plt.show()
 
 ## 7. Refine the independent trace scale
 
-Keep the **same 16 macrotriangles** and refine the independent P1 trace segmentation through 1, 2, 4, 8, 16 and 32 pieces. The trace scale is $h_\Gamma=0.5/s$ for $s$ segments; it is not the fixed macro diameter. The attributed qualification uses P8 local Galerkin pressure with 32 subdivisions and a smooth analytical solution. Its record identifies the executed local fields and the independently checked local-discretization and error-integration controls.
+Keep the **same 16 macrotriangles**, P8 local pressure and 32 local edge
+subdivisions. Refine only the independent P1 skeletal segmentation through
+$s=1,2,4,8,16,32$ pieces. The refined scale is $h_\Gamma=0.5/s$, rather than
+the fixed macro diameter. This follows the smooth trace-refinement setting in
+section 6.1 of
+[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016).
 
-The smooth trace comparison in section 6.1 of [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) uses the $\ell+3/2$ trace estimate. With $\ell=1$, the target is 2.5 when the finite local Galerkin error is sufficiently smaller than the trace contribution. This is a fixed-macro trace study; the target is not transferred to macro refinement, singular physical domains or an unresolved local solver.
+The trace approximation and ideal-local MHM argument give
 
-### Recompute every measured order
+$$
+\inf_{\mu\in\Lambda_{h_\Gamma,\ell}}
+\lVert\lambda-\mu\rVert_\Lambda
+=O(h_\Gamma^{\ell+3/2}).
+$$
 
-For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+For $\ell=1$, Theorem 2, equation (20), gives a trace contribution of order
+$h_\Gamma^{5/2}$ to the broken-gradient estimate. The assumptions include
+pressure piecewise $H^4$, diffusion piecewise $W^{2,\infty}$ on Lipschitz
+physical material regions with bounded extension operators, and
+$A\nabla p\in H(\operatorname{div})$. Sections 3–4 also require regular
+quasi-uniform macrocells and skeletal subfaces contained in individual
+material regions. The smooth two-dimensional mesh here satisfies these
+geometric conditions. Three-dimensional projection constants depend on subface
+shape (Remark 1); the theorem does not provide uniform constants for arbitrary
+thin cut polygons.
 
+The executed P8/r32 finite local approximation is controlled separately by
+higher quadrature and local refinement. The target 2.5 requires its error to be
+smaller than the trace contribution. A heterogeneous material, singular physical
+domain, unresolved local solver, or simultaneous macro refinement does not
+inherit this smooth fixed-macro rate without the corresponding hypotheses.
 
+### Recompute orders from the numerical record
+
+For successive physical errors at the actual refinement sizes, compute
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-
-
-The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
-
-
+The cell below reads the attributed record and recomputes the complete table,
+consecutive orders, final-four-level fitted slope and plot. It does not choose
+a PDE or rerun the acquisition. For a justified target $q$, the maximum/minimum
+of $E/h^q$ over the final four levels measures stabilization of its amplitude.
+Pressure orders reported as observations are kept separate from theorem targets.
 
 ```python
 import json
@@ -296,7 +322,7 @@ for refinement_index, refinement_size in enumerate(refinement_sizes):
         refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
     refinement_lines.append(' | '.join(refinement_values))
 display(Markdown('\n'.join(refinement_lines)))
-refinement_series_data = refinement_series(refinement_record, refinement_rows, 'H', refinement_error_keys, refinement_targets, method='unfitted', spaces='P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles', rate_provenance='Chaumont-Frelet, Paredes and Valentin (2026), section 6.1: smooth trace reference ell+3/2', refinement='trace segment size on a fixed macro mesh', root=ROOT)
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'H', refinement_error_keys, refinement_targets, method='unfitted', spaces='P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles', rate_provenance='Chaumont-Frelet, Paredes and Valentin (2026), Theorem 2, equation (20): fixed-macro trace contribution of order 5/2 for q=ell=1 with exact local solves, pressure piecewise H^4 and A piecewise W^{2,infinity} on Lipschitz material regions, A grad(p) in H(div), fitted skeletal subfaces and regular quasi-uniform macrocells; finite P8/r32 local error is controlled separately.', refinement='trace segment size on a fixed macro mesh', root=ROOT)
 print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
 for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
     print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
@@ -323,83 +349,30 @@ broken gradient L2 {'last_three_orders': [2.491, 2.492, 2.497], 'fitted_order': 
 
 
 
-[![Figure 3 — unfitted variational workflow](../../assets/tutorials/methods/unfitted-field-02.png)](../../assets/tutorials/methods/unfitted-field-02.png)
+![Physical errors, successive orders and normalized amplitudes](../../assets/tutorials/methods/unfitted-convergence.png)
+
+[SVG](../../assets/tutorials/methods/unfitted-convergence.svg) · [PDF](../../assets/tutorials/methods/unfitted-convergence.pdf)
 
 
-The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+All coarse and fine measurements are retained; shading covers the final four
+levels. The publication figure is generated from the same attributed record
+read by the notebook, separately from its embedded field plots. See
+[convergence plot conventions](index.md#convergence-plots)
+for the target curves, interval orders and normalized amplitudes.
 
-## Reproduce this workflow
+## Reproduce this tutorial
 
-Open or download the notebook linked above. Its first cell acquires a checksum-verified companion containing inspectable support files and the individual convergence record. It then runs every numbered variational assembly and solve step. The final section reads the attributed refinement measurements and recomputes their orders; it does not rerun their full PDE acquisition.
-
-Install the notebook and visualization extras, and use the [installation guide](../../installation.md) for any native UFL/DOLFINx requirements. From this source checkout, open the step-by-step workflow in its locked environment:
+Open the notebook linked at the top. Its checksum-verified companion supplies
+inspectable support files and the [refinement record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/unfitted/convergence/rate-verification.json).
+The notebook executes the variational workflow; its convergence cell reads the
+record and recomputes the table and plot, without rerunning the full acquisition.
+Use the [installation guide](../../installation.md) for notebook, plotting and
+native-backend requirements. From a source checkout:
 
 ```bash
 pixi run --locked -e introduction jupyter lab notebooks/darcy/unfitted_trace_workflow.ipynb
 ```
 
-The displayed outputs come from all 10 executed code cells in the locked `introduction` environment, with no skipped cells or error outputs. The source SHA256 is `b78ae828e43d9f930ead97967f54eba007949b92b0211928d2cc34df7246ecbc`; the executed notebook SHA256 is `ce95a0865b322be7cc26fc9ae7231403cf48ea2cabc34b5481b3b5c98a23bb4d`. The field, classical-reference and convergence plots are embedded outputs of that same execution.
-
-## Refine the independent trace scale
-
-The final study follows the smooth trace-refinement setting of section 6.1 in
-[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016).
-Keep the 16 macrotriangles fixed, with local P8 pressure and 32 edge
-subdivisions. Bisect only the independent trace segments:
-$s=1,2,4,8,16,32$, so their size is $H_\Lambda=0.5/s$. The plotted exponent
-$\ell+3/2=2.5$ for P1 traces belongs to this fixed macro mesh regime,
-not to simultaneous macro refinement.
-
-The smooth trace-approximation result yields
-
-$$
-\inf_{\mu\in\Lambda_{H_\Lambda,\ell}}
-\lVert\lambda-\mu\rVert_\Lambda
-=O(H_\Lambda^{\ell+3/2}),
-$$
-
-and the corresponding ideal-local MHM argument transfers it to the broken
-gradient error. The executed finite local realization has independent
-higher-quadrature and local-refinement controls in its acquisition records.
-A local discretization floor must be examined separately from a measured
-trace slope. The figure retains all six levels and displays the last four,
-whose three successive orders approach 2.5. A heterogeneous coefficient or
-a singular interface does not inherit this smooth regularity without further
-analysis.
-
-## Smooth refinement and the asymptotic regime
-
-This independent qualification uses **P8/r32 locals; segmented P1 traces; 16 fixed macrotriangles** and refines the **trace segment size on a fixed macro mesh**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
-
-$$
-r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
-$$
-
-The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
-
-| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
-| --- | ---: | --- | ---: | ---: |
-| broken gradient L2 | 2.5 | 2.491 / 2.492 / 2.497 | 2.493 | 1.014 |
-
-![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/unfitted-convergence.png)
-
-Download the figure as [SVG](../../assets/tutorials/methods/unfitted-convergence.svg) or [PDF](../../assets/tutorials/methods/unfitted-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
-
-### Complete numerical sequence
-
-| Refinement size | broken gradient L2 | Order |
-| ---: | ---: | ---: |
-| 0.5 | 1.793579e+00 | — |
-| 0.25 | 2.320796e-01 | 2.950 |
-| 0.125 | 3.931712e-02 | 2.561 |
-| 0.0625 | 6.991994e-03 | 2.491 |
-| 0.03125 | 1.242905e-03 | 2.492 |
-| 0.015625 | 2.201390e-04 | 2.497 |
-
-Chaumont-Frelet, Paredes and Valentin (2026), section 6.1: smooth trace reference ell+3/2. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/unfitted/convergence/rate-verification.json) has SHA256 `4f9ff4518fcaf820bb4d8f743eb6cecd05387eb4b71864abc35faac07aa856ff` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
-
-For fixed macro size, Theorem 2, equation (20), with $q=\ell=1$ gives the $h_\Gamma^{5/2}$ trace contribution to the gradient estimate. Its assumptions include $u\in H^{q+3}$ on physical material regions, $A\in W^{q+1,\infty}$ and $A\nabla u\in H(\operatorname{div})$. Independent local-solve accuracy is required. The measured orders concern the independent trace scale, rather than a P1 volume-mesh energy rate.
-
-## References for this method
+## References
 
 - Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).

@@ -96,6 +96,6 @@ independent values on each side of a macroface.
 
 ## References
 
-- Juan Felipe Pacazuca Santiago, Frédéric Valentin and Larissa Martins
+- Larissa Martins, Juan F. Pacazuca and Frédéric Valentin
   (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*.
   [CILAMCE proceedings, DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).

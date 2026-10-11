@@ -7,6 +7,10 @@ cropping or contrast clipping. In this layer the two components are equal.
 
 ![Logarithmic SPE10 layer-36 permeability and the actual macro mesh](../../assets/tutorials/darcy_spe10_layer/figure_18_0.png)
 
+The image shows $\log_{10}(K_{xx}/\mathrm{mD})$, a prescribed material
+coefficient. Pressure and Darcy flux are computed solution fields and are
+shown in the results below.
+
 ## Physical problem
 
 Coordinates use the benchmark's feet convention and permeability is in mD.

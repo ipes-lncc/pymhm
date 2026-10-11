@@ -103,6 +103,21 @@ need P3 and P4. Trace subdivisions align with fine boundary facets. An
 algebraic reconstruction can exist under weaker conditions, but that fact
 does not establish the cited flux estimate or estimator efficiency.
 
+Theorem 4.7 additionally assumes that $A$ is polynomial on every fine
+simplex, $p\in H^{k+1}(K)$ and
+$A\nabla p\in H^{\ell+1}(K)^d\cap H(\mathrm{div};K)$, with the paper's
+shape-regular compatible local and skeletal partitions (Assumption A).
+Its flux estimate combines local error $h^k$, skeletal error
+$H_\Gamma^{\ell+1}$ and reconstruction error $h^{\ell+1}$ with the
+corresponding Sobolev seminorms. Here $H_\Gamma$ measures skeletal
+subfaces, separately from macrocell diameter $H_K$. The raw-divergence
+estimate also requires the stated quasi-uniform local/skeletal size
+relation and $f\in H^{k+1}(K)$, and loses one order. Remark 5.1 gives
+order $h^{m+1}$ for the continuous divergence projection when
+$f\in H^{m+1}(K)$ and the union of fine meshes is conforming
+(Assumption B). None of these regularity assumptions follows from
+evaluating a material callback.
+
 The estimator analysis also assumes independent polynomial tests on each
 skeletal subface. Continuous interpolation across several subfaces removes
 those independent constant tests. Reconstruction can still be meaningful
@@ -172,6 +187,16 @@ energy-normalized estimator have different coefficient scalings. The
 distinguishes these conventions. The code integrates floating-point
 quadrature estimates; it does not supply interval-certified integrals or
 an unconditional coefficient-independent bound.
+
+Theorem 5.2's reliability uses equilibrium, a conforming potential and
+convex macrocells for the displayed Poincaré factor (Assumption C);
+it does not require the additional solution regularity of the
+approximation theorem. The efficiency result in §5.2 is weaker than
+an error-only estimate: it includes skeletal normal-trace error and
+RT interpolation error, with constants depending on the face/fine and
+macro/fine size ratios. Stable effectivity observed on a fixed-ratio
+smooth sequence does not establish uniform efficiency on arbitrary
+heterogeneous or adaptive meshes.
 
 ## Residual indicators for other equations
 

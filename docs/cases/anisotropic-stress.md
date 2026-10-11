@@ -43,7 +43,9 @@ $$
 $$
 
 This condition retains the anisotropic compliance; an isotropic bulk-modulus
-formula would define a different problem.
+formula would define a different problem. For this positive finite compliance,
+the boundary displacement fixes this physical identity; it is not a freely
+selectable mean-pressure gauge.
 
 ## Spaces and convergence
 

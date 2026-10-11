@@ -57,6 +57,13 @@ def solve_adaptive_darcy_3d(
     guarantee. Physical Neumann data and per-cell ellipticity bounds follow their exact parent
     entities. The callback persists each solved state before refinement.
 
+    Estimation requires k>=ell+3, ell<=m<=k, globally conforming fine tetrahedra,
+    represented boundary data, continuous-test equilibrium and certified ellipticity.
+    Theorem 4.7's optimal flux approximation additionally requires polynomial
+    diffusion on each fine tetrahedron, H^(k+1) pressure and A grad(p) in
+    H^(ell+1) intersected with H(div), with compatible shape-regular partitions.
+    Those extra approximation hypotheses are not inferred from material callbacks.
+
     ``solve_step(mesh, skeleton=current, **problem)`` may assemble each state
     through user-declared public equations. It must return a Darcy3DSolution
     in the supplied mesh and trace space; all physical data, coefficient bounds

@@ -78,6 +78,9 @@ def triangle_elasticity_pressure_operators(
     are evaluated about the explicitly supplied physical center. Lambda=infinity
     has zero compressibility. Variable GaLS shear requires declared valid bounds
     and analytical derivatives; quadrature checks do not certify between samples.
+    The residual signs and strict alpha bound follow Gomes--Pereira--Valentin
+    (2024, arXiv:2403.16890v1), Eqs. (4.4), (4.7)--(4.10). Pressure is
+    Herrmann pressure p=-lambda*div(u), not negative mean Cauchy stress.
     """
     bary, weights = triangle_quadrature(order)
     dofs, nodes, basis, gradients, hessian = tabulate(fine, degree, bary)

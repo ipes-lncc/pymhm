@@ -1,6 +1,6 @@
 # Elastodynamic MHM
 
-[Executable step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/elastodynamics/formulation_workflow.ipynb) · [Theory and degree conditions](../../theory/elasticity.md)
+[Executable step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/elastodynamics/formulation_workflow.ipynb)
 
 
 ```python
@@ -147,7 +147,7 @@ plt.show()
 
 ```
 
-## Independent classical Galerkin reference
+## 5. Independently refine the classical translation reference
 
 On global P2 vector grids of 8, 16 and 32 subdivisions, assemble exactly the same density, isotropic energy and force. Zero exterior traction is the natural boundary condition. Initial displacement and velocity are zero. Use the common Newmark primitive and solve its positive inertial operator; no static rigid gauge is inserted. The exact rigid translation lies in every reference space, so these controls measure reproduction rather than a spatial rate.
 
@@ -197,10 +197,10 @@ $$
 \begin{aligned}
 w(x,y)&=(\sin(\pi x)\sin(\pi y),
           \sin(2\pi x)\sin(\pi y)),\\
-u_*(t,x,y)&=\tfrac12t^2w(x,y),
-&v_*(t,x,y)&=tw(x,y),\\
-\sigma(w)&=2\varepsilon(w)+(\nabla\cdot w)I,
-&f(t,x,y)&=w-\tfrac12t^2\nabla\cdot\sigma(w).
+u_*(t,x,y)&=\tfrac12t^2w(x,y),\\
+v_*(t,x,y)&=tw(x,y),\\
+\sigma(w)&=2\varepsilon(w)+(\nabla\cdot w)I,\\
+f(t,x,y)&=w-\tfrac12t^2\nabla\cdot\sigma(w).
 \end{aligned}
 $$
 

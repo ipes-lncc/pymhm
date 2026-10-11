@@ -2,8 +2,9 @@
 
 These signatures and docstrings are rendered directly from the implementation.
 They define admissible geometry, degree relations, physical constraints and
-operator compatibility. They supplement the method-level hypotheses in
-[Theoretical Background](../theory.md).
+operator compatibility. They document implementation contracts. Consult the
+original publications
+linked in [Methods](../methods.md) for the hypotheses of their analyses.
 
 [API overview](../api.md)
 

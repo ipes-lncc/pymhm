@@ -1,28 +1,19 @@
 # General tetrahedral degree and admissible P5/P2 estimation
 
-The tetrahedral scalar basis accepts every positive polynomial degree. Its
-nodes are the equispaced barycentric lattice, ordered by vertices, edges,
-faces and cell interior. The P1–P4 ordering and arithmetic are preserved.
-Higher degrees use a falling-factor recurrence for values, gradients and
-Hessians, without constructing expanded monomial coefficients. This avoids
-that additional source of cancellation; it does not remove the intrinsic
-conditioning of high-degree equispaced interpolation.
-
-For a barycentric coordinate \(x\), the one-dimensional factors satisfy
-
-$$
-F_0(x)=1,\qquad F_j(x)=F_{j-1}(x)\frac{kx-j+1}{j}.
-$$
-
-Differentiating this recurrence once and twice gives the tabulated derivatives.
-Physical gradients and Hessians use the affine tetrahedron map. The
-value/gradient-only path does not allocate Hessians. A general-degree basis
-is distinct from a formulation's own degree and compatibility contracts.
+The tetrahedral scalar adapter uses Basix Lagrange tabulation for positive
+polynomial degrees. Its nodes are the equispaced barycentric lattice,
+ordered by vertices, edges, faces and cell interior. PyMHM maps the Basix
+basis to this declared coefficient order and transforms derivatives
+through the affine tetrahedron map. The value/gradient-only path does not
+allocate Hessians. The conditioning of high-degree equispaced
+interpolation remains relevant; general-degree basis support is distinct
+from a formulation's degree and compatibility conditions.
 
 ## Independent operator checks
 
-P5 and P6 values, first derivatives and all Hessian entries agree with native
-Basix tabulation after matching physical nodes. Independent DOLFINx/UFL forms
+P5 and P6 adapter checks match the physical nodes and derivative maps to
+Basix tabulation; this validates the adapter's conventions, not an
+independent implementation of the polynomial basis. Independent DOLFINx/UFL forms
 check the anisotropic stiffness, nonconstant source and every degree-two face
 coupling on a sheared tetrahedron. Additional tests cover cardinality,
 partition of unity, exact polynomial derivatives, positive mass, the single
@@ -55,7 +46,8 @@ the independently integrated volume norms
 
 The sufficient degree condition for the estimator of
 [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073)
-is \(k\geq\ell+d\), together with \(\ell\leq m\leq k\).
+includes \(k\geq\ell+d\), \(\ell\leq m\leq k\), diffusion polynomial
+on each fine simplex and the theorem's regularity assumptions.
 The present local P5 / skeletal P2 configuration satisfies the three-dimensional
 boundary case \(5=2+3\). Both RT2 and RT3 reconstructions satisfy the stated
 range for \(m\). This is an original analytical verification, not a historical

@@ -366,6 +366,11 @@ def assemble_local(
     Electric and magnetic labels identify the two mass-weighted coordinate
     groups; their differential pairing is C=-curl and -C.T. Coefficients are
     interleaved by component within each independent element-local node.
+    This is central-flux DG, not a conforming Nedelec space. The tangential
+    density represents H cross n and loads the electric equation. The paired
+    operators implement Lanteri et al. (2018), DOI:10.1137/16M110037X,
+    Sec. 5; its energy identity is distinct from discrete Gauss-law or error
+    estimates, which are not established by this assembly.
     """
     dimension = mesh.points.shape[1]
     electric_components = 1 if dimension == 2 else 3

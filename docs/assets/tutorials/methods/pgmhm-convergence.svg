@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>pgmhm convergence</dc:title>
-    <dc:description>pgmhm; all 6 measured levels; final four diagnostic levels. P3/r1 locals; P1 trace; residual enrichment; alpha=0.1. Record examples/results/tutorial-methods/pgmhm-current.json; SHA256 c863231e79d60fe867fb492c7869396b5cb74eed001564d49fef634454ace47f. Fernando et al. (2023), section 5 energy estimates: ell&gt;=1, k&gt;=ell+d; pressure order three observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>pgmhm; all 6 measured levels; final four diagnostic levels. P3/r1 locals; P1 trace; residual enrichment; alpha=0.1. Record examples/results/tutorial-methods/pgmhm-current.json; SHA256 c863231e79d60fe867fb492c7869396b5cb74eed001564d49fef634454ace47f. Fernando et al. (2023), section 5: the energy estimate requires ell&gt;=1, k&gt;=ell+d, the stated regularity and sufficiently small alpha for uniform stability; energy order two and pressure order three are measured for the declared finite P3/P1 family with alpha=0.1. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

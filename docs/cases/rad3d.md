@@ -18,10 +18,12 @@ on shared vertices, edges and faces, without merging nearby geometric points.
 The local form is
 
 $$
-a_K(u,v)=(K\nabla u,\nabla v)_K
-+\tfrac12(\beta\cdot\nabla u,v)_K
--\tfrac12(u,\beta\cdot\nabla v)_K
+\begin{aligned}
+a_K(u,v)&=(K\nabla u,\nabla v)_K
++\tfrac12(\beta\cdot\nabla u,v)_K\\
+&\quad-\tfrac12(u,\beta\cdot\nabla v)_K
 +((c+\tfrac12\nabla\cdot\beta)u,v)_K.
+\end{aligned}
 $$
 
 Its skeletal variable is the outward **Robin flux**
@@ -104,8 +106,10 @@ Section 5.2.1 and Figure 4 of
 \(K=0.1I\), \(\beta=(1,0,0)\), \(c=0\), and
 
 $$
-u=\sin(6\pi x)\sin(4\pi y)\sin(2\pi z),\qquad
-f=5.6\pi^2u+6\pi\cos(6\pi x)\sin(4\pi y)\sin(2\pi z).
+\begin{aligned}
+u&=\sin(6\pi x)\sin(4\pi y)\sin(2\pi z),\\
+f&=5.6\pi^2u+6\pi\cos(6\pi x)\sin(4\pi y)\sin(2\pi z).
+\end{aligned}
 $$
 
 Homogeneous Dirichlet data apply to the complete exterior. The present study

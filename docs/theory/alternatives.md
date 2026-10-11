@@ -58,11 +58,15 @@ $$
 0<\nu\le\frac{A_{\min}}{4C_\sigma^2}.
 $$
 
-Local/skeletal trace compatibility remains necessary. Corollary 2.7 gives
-broken energy and multiplier errors of order
-$h_\Gamma^{\ell+1}+h^k$ under the stated piecewise regularity. The paper's
-smooth experiments use $k=\ell+2$ and display the additional pressure order;
-this pressure order requires the appropriate dual regularity. The
+Local/skeletal trace compatibility remains necessary. The paper's
+Assumption A1 requires a shape-regular simplicial mesh matching the
+skeletal segments; local meshes regularly refine its first red refinement.
+The discrete inf-sup constant in (2.22) is uniform under those hypotheses.
+Corollary 2.7 bounds the broken $V$-norm and multiplier errors by
+$h_\Gamma^{\ell+1}\lvert A\nabla p+p\sigma\rvert_{\ell+1}
++h^k\lvert p\rvert_{k+1}$, with piecewise regularity as in Lemma 2.6.
+The pressure $L^2$ orders in the examples are measured separately from
+this bound. The
 [MH tutorial](../tutorials/methods/robin-mh.md) follows both equations.
 Two-dimensional triangles and polygons, and a separate tetrahedral path,
 are implemented. Mixed and pure-Neumann boundary extensions use physical
@@ -85,6 +89,11 @@ a_K(\widetilde T_hf,v)&=(f,v)_K,\\
  &=\langle\mu,\rho\rangle_{\partial K}.
 \end{aligned}
 $$
+
+Here the Neumann tests have zero boundary mean and the conormal argument
+of $T_h$ has zero total boundary integral; $G_h$ takes values in that
+zero-integral conormal space. The separately determined constant
+conormal is $\lambda_K^0=-\int_Kf/\lvert\partial K\rvert$.
 
 **Local problems.** The cell field is reconstructed from these Neumann
 maps and the selected pressure-trace values. The conormal coefficients
@@ -119,6 +128,11 @@ p_h\big\vert_K=p_K^0+T_hG_h\rho
  +(I-T_hG_h)\widetilde T_hf.
 $$
 
+The constant is the boundary mean
+$p_K^0=\lvert\partial K\rvert^{-1}\int_{\partial K}\rho$, not a volume
+mean. The full conormal is
+$\lambda_K=\lambda_K^0+G_h\rho-G_h\widetilde T_hf$.
+
 Eliminating conormal coefficients produces a pressure-trace system. It is
 positive definite after Dirichlet elimination under the discrete stability
 assumptions. A pure-Neumann system retains the physical constant mode and
@@ -128,10 +142,17 @@ For $\Gamma=P_{r+1}$, $\Lambda=P_r$ and $V_h=P_{r+1}$, Theorem 19 bounds
 volume energy and pressure/conormal trace errors by contributions of order
 $h_\Gamma^{r+1}$, $h_\Lambda^{r+1}$ and $h^{r+1}$. It assumes piecewise
 $H^{r+2}$ regularity of pressure and the source lifting, piecewise
-$H^{r+1}$ conormal regularity, and the Fortin conditions. Sufficient mesh
+$H^{r+1}$ regularity of $A\nabla p$ with $A\nabla p\in H(\mathrm{div},\Omega)$,
+and the Fortin conditions. Sufficient mesh
 conditions put at least two local boundary edges inside every conormal
 segment and at least two conormal segments inside every pressure-trace
-segment. The exceptions in Remark 16 concern specified families, not every
+segment in the paper's two-dimensional polynomial construction. These
+partitions are regular and aligned; neighboring pressure-trace edges and
+the two baseline conormal pieces of a pressure segment have comparable
+lengths. Its
+functional decomposition is stated in dimensions two and three; those
+edge-refinement Fortin arguments do not by themselves certify arbitrary
+three-dimensional triangular-face spaces. The exceptions in Remark 16 concern specified families, not every
 choice passing a numerical rank check. See the
 [MH²M tutorial](../tutorials/methods/mh2m.md). Triangular/polygonal 2D and
 tetrahedral 3D implementations have separate evidence.
@@ -192,14 +213,29 @@ pressure, rather than a mean of the face vector alone.
 
 The reconstructed-source variant loads the energy-reconstructed test
 functions. The projected-source variant uses the cellwise $L^2$ projection
-onto $P_m$. Theorem 5.1's MHM equivalence requires the stated polynomial
-source condition for the semi-explicit construction; the projected variant
-extends it to square-integrable sources. The face-only choice $m=-1$ is an
-explicit exception.
+onto $P_m$. Theorem 5.1's one-level MHM equivalence uses exactly solved
+local PDEs. It requires $f\big\vert_K\in P_m(K)$ for the semi-explicit MHM
+construction; the fully explicit MHM construction projects $f$ and extends
+the equivalence to square-integrable sources. Independently chosen finite
+Galerkin local spaces need not preserve that equivalence: Remark 7.7
+specifies compatible second-level discretizations. The face-only choice
+$m=-1$ is an explicit exception (Remark 5.4).
 
-For regular data and admissible degree choices, the $m=\ell=0$ family has
-energy/physical-flux order one and pressure order two; $m=\ell=1$ has orders
-two and three. Local discretization adds its own error. The
+For exact local solves, Theorem 6.3 bounds the broken energy error by
+source-approximation contributions of order $H^{m+2}$ and conormal-field
+contributions of order $H^{\ell+1}$. It assumes $f\in H^{m+1}(K)$,
+$A\nabla p\in H^{\ell+1}(K)^d$ and the paper's shape-regular matching
+macrocell submesh. The constant depends on local ellipticity. Thus the
+regular $m=\ell=0$ and $m=\ell=1$ families have energy order one and two;
+the theorem does not supply pressure $L^2$ orders two and three. Pressure
+orders reported in the examples are measured separately. Finite local
+discretization adds its own error.
+
+With exact local solves, the projected-source variant has a globally
+$H(\mathrm{div})$ physical flux (Lemma 4.2). Loading reconstructed test
+functions changes that conclusion: Remark 5.3 states that its flux need
+not belong to $H(\mathrm{div})$, even before local discretization. A
+finite Galerkin raw gradient requires its own conformity check. The
 [MsHHO tutorial](../tutorials/methods/mshho.md) declares moments and the
 constrained reconstruction before assembly. Triangular/polygonal 2D and
 tetrahedral/polyhedral 3D evidence is stated separately.

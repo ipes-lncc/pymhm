@@ -311,10 +311,16 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution(
     workspace = prepare_notebook_companion("introduction/mshho_multiscale.ipynb")
     monkeypatch.chdir(workspace)
     notebook = json.loads((ROOT / "notebooks/introduction/mshho_multiscale.ipynb").read_text())
+    # Cell IDs persist when narrative cells are inserted, removed or reordered.
+    code_cells = {
+        cell["id"]: "".join(cell["source"])
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code"
+    }
     namespace: dict[str, Any] = {}
     # Execute the notebook's numerical bootstrap without its optional display
     # import and rcParams setup. The visualization profile tests display itself.
-    bootstrap = ast.parse("".join(notebook["cells"][1]["source"]))
+    bootstrap = ast.parse(code_cells["mshho_multiscale-01"])
     bootstrap.body = [
         node
         for node in bootstrap.body
@@ -329,15 +335,15 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution(
     ]
     exec(compile(bootstrap, "notebook numerical bootstrap", "exec"), namespace)
     assert namespace["ROOT"] == workspace
-    exec("".join(notebook["cells"][3]["source"]), namespace)
+    exec(code_cells["mshho_multiscale-03"], namespace)
     namespace["macro"] = TriangleMesh.unit_square(1)
     namespace["local_refinement"] = 4
-    for index in (6, 9, 11):
-        exec("".join(notebook["cells"][index]["source"]), namespace)
+    for cell_id in ("mshho_multiscale-06", "mshho_multiscale-09", "mshho_multiscale-11"):
+        exec(code_cells[cell_id], namespace)
     traces, pressures = [], []
     for source in (1.0, 2.75):
         namespace["source"] = source
-        exec("".join(notebook["cells"][13]["source"]), namespace)
+        exec(code_cells["mshho_multiscale-14"], namespace)
         solution, system = namespace["solution"], namespace["system"]
         traces.append(solution.trace.copy())
         pressures.append(np.concatenate([field.values for field in namespace["physical_fields"]]))
@@ -354,7 +360,7 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution(
         basis_digests=[],
         form_equivalence={},
     )
-    record_cell = ast.parse("".join(notebook["cells"][24]["source"]))
+    record_cell = ast.parse(code_cells["mshho_multiscale-28"])
     assignment = ast.Module(body=[record_cell.body[0]], type_ignores=[])
     exec(compile(assignment, "notebook scientific record", "exec"), namespace)
     assert namespace["record"]["source"] == 2.75

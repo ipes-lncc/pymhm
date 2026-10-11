@@ -1,5 +1,7 @@
 """Independent Cartesian-Qk, hybrid conservation and tensor-product patch checks."""
 
+from typing import Any
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
@@ -157,6 +159,24 @@ def test_q1_tensor_product_matrices_independently():
     assert_allclose(load, 6, atol=1e-14)
     assert_allclose(matrix @ np.ones(4), 0, atol=1e-14)
     assert np.linalg.eigvalsh(matrix.toarray())[1] > 0
+
+
+def test_nonpolynomial_q2_material_and_load_match_adaptive_integrals(
+    oscillatory_q2_reference: dict[str, Any],
+) -> None:
+    """Resolve one full material period without confusing FE degree with quadrature."""
+    reference = oscillatory_q2_reference
+    matrix, mass, load = quadrilateral_operators(
+        reference["mesh"],
+        2,
+        permeability=reference["permeability"],
+        source=reference["source"],
+        order=26,
+    )
+    assert_allclose(matrix.toarray(), reference["stiffness"], rtol=2e-11, atol=2e-12)
+    assert_allclose(mass.toarray(), reference["mass"], rtol=2e-11, atol=2e-12)
+    assert_allclose(load, reference["load"], rtol=2e-11, atol=2e-12)
+    assert_allclose(matrix @ np.ones(matrix.shape[0]), 0, rtol=0, atol=2e-12)
 
 
 def test_qk_dof_sharing_and_batch_assembly():

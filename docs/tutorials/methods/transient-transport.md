@@ -5,7 +5,7 @@ with UFL. A backward-Euler time loop updates physical source loads and previous
 concentration while the generic offline system reuses unchanged local and global
 operators.
 
-[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/transient_variational.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/transport/transient_variational.ipynb) · [Spatial theory](../../theory/transport.md)
+[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/transient_variational.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/transport/transient_variational.ipynb)
 
 Run in `introduction`. The notebook declares the entire problem and time loop;
 it does not call a ready-made transport simulation. Two complementary notebooks
@@ -20,9 +20,9 @@ constant transport velocity is $\beta=(1/4,-1/2)$:
 
 $$
 \begin{aligned}
-\partial_t c+\nabla\cdot(-\nabla c+\beta c)+\tfrac12c&=f,\\
-c_*(x,y,t)&=e^{-t}\phi(x,y),
-&\phi(x,y)&=\sin(\pi x)\sin(\pi y),\\
+&\partial_t c+\nabla\cdot(-\nabla c+\beta c)+\tfrac12c=f,\\
+c_*(x,y,t)&=e^{-t}\phi(x,y),\\
+\phi(x,y)&=\sin(\pi x)\sin(\pi y),\\
 f(x,y,t)&=e^{-t}\big[(2\pi^2-\tfrac12)\phi+\beta\cdot\nabla\phi\big].
 \end{aligned}
 $$
@@ -198,8 +198,7 @@ orders are plotted; a reference slope alone is not evidence of that order.
 
 ![Native MHM backward-Euler concentration errors and consecutive rates](../../assets/tutorials/methods/transient-transport-time-convergence.svg)
 
-The notebook records the physical errors, global compatibility diagnostics and
-independently refined classical comparisons. This experiment establishes the smooth temporal
+This experiment establishes the smooth temporal
 order of the displayed scheme; heterogeneous geometry, transport-dominated
 layers and monotonicity need separate assessments. The spatial study below
 qualifies the smooth spatial approximation independently. See the
@@ -295,9 +294,7 @@ $64\times64$ global grid. The actual macro mesh is visible on every panel.
 
 ![Spatial concentration, independent classical baseline and physical errors](../../assets/tutorials/methods/transient-spatial-fields.png)
 
-The complete notebook defines those forms, local equations, global equation,
-assembly, reusable solves, physical error integration and field plotting in
-successive cells. The concentration and broken gradient are integrated
+The concentration and broken gradient are integrated
 independently with quadrature orders six and eight; original physical rows
 are checked throughout the march.
 
@@ -371,8 +368,7 @@ these time controls are attributed separately in the
 The spatial and temporal figures retain every measured level. Their final
 four-level windows are fixed by the end of each sequence; the last three
 consecutive rates and $E/h^q$ variation assess a stable tail, not a selected
-single slope. A finer mesh remains a numerical approximation, even when its
-analytical errors are small.
+single slope.
 
 ## References
 

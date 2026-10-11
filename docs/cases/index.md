@@ -28,8 +28,8 @@ The [literature catalog](../literature.md) identifies the primary sources, and
 the [scope matrix](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) distinguishes implemented capabilities from
 literature results and remaining comparisons.
 
-Detailed application and reference reports are linked from their Gallery,
-theory and verification pages and open within this site. Each report identifies
+Detailed application and reference reports are linked from their Gallery
+and verification pages and open within this site. Each report identifies
 its available figures, numerical records and any inputs needed for field replay.
 A recorded error norm does not reconstruct a missing coefficient vector.
 

@@ -14,12 +14,18 @@
 [![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
 [![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/ipes-lncc/pymhm/blob/main/LICENSE)
 
-`pymhm` couples user-defined local and global variational equations through
-explicitly oriented trace coordinates. Declare the forms, choose a local
-provider, then call `assemble` or `solve`. Scalar, vector and mixed fields use
-the same interface; a local operator can itself be another multiscale problem.
-NumPy/SciPy coefficients and optional FEniCS/UFL forms share this contract.
-Basix supplies finite-element bases and tabulation.
+`pymhm` implements Multiscale Hybrid Mixed (MHM) methods and related hybrid
+formulations. MHM methods are derived from hybrid variational formulations
+through a global–local decomposition on a partition into macroelements.
+The package lets you declare local and global
+variational equations, choose their approximation spaces and local solvers,
+then assemble, solve and reconstruct the fields.
+
+Scalar, vector and mixed fields share the API; a local operator can itself be
+another multiscale problem. NumPy/SciPy coefficients and optional FEniCS/UFL
+forms share this interface, with Basix supplying finite-element bases and
+tabulation. The [Methods catalogue](https://ipes-lncc.github.io/pymhm/methods/)
+identifies the available constructions and their primary references.
 
 Version 1.3.1 is an official release of PyMHM. Built-in workflows
 include triangular and polygonal meshes, Cartesian quadrilaterals, tetrahedra,
@@ -29,46 +35,42 @@ and distinguishes it from extensions described in the literature.
 
 ## Available Methods
 
-Choose the variational method and its admissible approximation spaces independently
-of the linear solver and execution backend. **When publishing results obtained
-with PyMHM, cite the original publications of every method, reconstruction or
-estimator used**, together with the PyMHM version. The [Theoretical Background](docs/theory.md) states degree, geometry and regularity
-conditions; each linked tutorial follows the mathematical formulation in code.
+The package includes MHM formulations and related multiscale constructions.
+Consult [Methods](docs/methods.md) for the catalogue and the cited publications
+for their mathematical definitions and assumptions. **Cite the publications
+for every method and strategy used, together with the PyMHM version.**
 
-| Method | Original publication |
+| Formulation | Reference |
 | --- | --- |
-| [Primal MHM](docs/tutorials/methods/primal-mhm.md) | [Harder et al. (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
-| [Mixed H(div) MHM](docs/tutorials/methods/mixed-mhm.md) | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
-| [Robin MH](docs/tutorials/methods/robin-mh.md) | [Barrenechea et al. (2024)](https://doi.org/10.1137/22M1542556) |
-| [MH²M](docs/tutorials/methods/mh2m.md) | [de Barros et al. (2026, v3)](https://arxiv.org/abs/2404.16978v3) |
-| [MsHHO](docs/tutorials/methods/mshho.md) | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [MHM connection (2022)](https://doi.org/10.1051/m2an/2021082) |
-| [Petrov–Galerkin MHM](docs/tutorials/methods/pgmhm.md) | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
-| [MHM-USFEM (MHM-UNUSUAL)](docs/tutorials/methods/mhm-usfem.md) | [Santiago et al. (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
-| [Stokes–Brinkman MHM](docs/tutorials/methods/stokes-brinkman.md) | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
-| [Oseen MHM](docs/tutorials/methods/oseen.md) | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
-| [Primal elasticity MHM](docs/tutorials/methods/primal-elasticity.md) | [Harder et al. (2016)](https://doi.org/10.1051/m2an/2015046) |
-| [GaLS elasticity MHM](docs/tutorials/methods/gals-elasticity.md) | [Gomes et al. (2024, v1)](https://arxiv.org/abs/2403.16890v1) |
-| [Mixed stress elasticity MHM](docs/tutorials/methods/mixed-elasticity.md) | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
-| [Conservative transport MHM](docs/tutorials/methods/transient-transport.md) | [Harder et al. (2015)](https://doi.org/10.1137/130938499) |
-| [Elastodynamic MHM](docs/tutorials/methods/elastodynamics.md) | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
-| [Helmholtz MHM](docs/tutorials/methods/helmholtz.md) | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
-| [Maxwell MHM](docs/tutorials/methods/maxwell.md) | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
-| [Unfitted/face-refined MHM](docs/tutorials/methods/unfitted.md) | [Chaumont-Frelet et al. (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+| Primal MHM | [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
+| Mixed H(div) MHM | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
+| Petrov–Galerkin MHM | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
+| Scalar RAD MHM | [Harder et al. (2015)](https://doi.org/10.1137/130938499); [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089) |
+| Stokes–Brinkman MHM | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
+| Oseen MHM | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
+| Primal elasticity MHM | [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) |
+| GaLS elasticity MHM | [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) |
+| Mixed elasticity MHM | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
+| Elastodynamic MHM | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
+| Helmholtz MHM | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
+| Maxwell MHM | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
+| Robin Multiscale Hybrid method (MH) | [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) |
+| Three-field Multiscale Method (MH²M) | [de Barros, Madureira and Valentin (2026, preprint v3)](https://arxiv.org/abs/2404.16978v3) |
+| Multiscale Hybrid High-Order method (MsHHO) | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082) |
 
-Recovery and adaptive strategies complement those discretizations:
+Complementary strategies:
 
-| Strategy | Purpose | Original analysis |
-| --- | --- | --- |
-| [Flux and potential recovery](docs/tutorials/methods/flux-recovery.md) | RT0 equilibration, moment H(div) reconstruction and conforming potentials | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
-| [Error indicators](docs/tutorials/methods/error-indicators.md) | Field-specific residual and reconstructed-energy diagnostics | [Araya et al. (2013)](https://doi.org/10.1137/120888223) |
-| [Adaptive approximation](docs/tutorials/methods/adaptivity.md) | Independent macro, face, degree and local controls | [Araya et al. (2021)](https://doi.org/10.1093/imanum/drz053) |
-| [Recursive MHM](docs/tutorials/methods/recursive-mhm.md) | A multiscale local operator with its own global/local hierarchy | [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13) |
+| Strategy | Reference |
+| --- | --- |
+| MHM-USFEM: stabilized reaction–diffusion local problems | [Martins, Pacazuca and Valentin (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
+| Independent skeletal refinement | [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415) |
+| Unfitted macro meshes with material-fitted skeletal partitions | [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+| Flux reconstruction and associated estimators | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
+| Residual estimators and adaptive refinement | [Araya et al. (2013)](https://doi.org/10.1137/120888223); [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053) |
 
-The table identifies implemented families, not every theorem or historical
-experiment in their papers. The [Gallery](docs/gallery/index.md) records verified
-spaces and remaining limitations. RT0 equilibration and moment reconstruction
-are distinct operators; a generic indicator does not inherit the reliability
-proof of a complete published estimator.
+[Transient scalar integration](docs/api/transport.md) and
+[nested local/global providers](docs/guides/providers.md) are also available
+as software capabilities.
 
 ## Installation
 
@@ -222,7 +224,7 @@ user-defined forms.
 The [scientific scope](ROADMAP.md#scientific-scope-and-acceptance-criteria) maps each article to implemented paths,
 verification evidence and remaining reproduction limits. The stated geometry,
 space compatibility and estimator hypotheses are part of each capability.
-See [theory](docs/theory.md),
+See [Methods](https://ipes-lncc.github.io/pymhm/methods/),
 [Bibliography](docs/literature.md), [Gallery](docs/gallery/index.md) and
 [performance](docs/performance.md) for assumptions and evidence.
 

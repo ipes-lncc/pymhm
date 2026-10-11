@@ -103,6 +103,14 @@ subdivisions. The default P1 face modes use local refinement four with P1
 velocity, or refinement two with higher-degree velocity. Numerically deficient
 local/trace pairs are rejected without a diagonal perturbation.
 
+These supported refined pairs are finite-dimensional configurations.
+[Araya et al. (2025), Theorems 4.1 and 4.3](https://doi.org/10.1137/24M1649368)
+states the sufficient gap $k-\ell\ge3$ in three dimensions, together with
+facet/local size comparability and the applicable Taylor–Hood mesh condition.
+Its Remark 4.4 relaxes degrees in two dimensions only. The P1/P1 and P2/P1
+configurations below are therefore assessed by their own native checks and
+measured errors; their rank checks do not establish the cited uniform theorem.
+
 ## Manufactured fields and recorded discretizations
 
 The exact fields on the unit cube are

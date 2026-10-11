@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>mh2m convergence</dc:title>
-    <dc:description>mh2m; all 5 measured levels; final four diagnostic levels. Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2. Record examples/results/tutorial-methods/mh2m-compatible-current.json; SHA256 5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556. de Barros, Madureira and Valentin (2026): M1/M2-compatible smooth family; gradient order two; pressure order three observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>mh2m; all 5 measured levels; final four diagnostic levels. Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2. Record examples/results/tutorial-methods/mh2m-compatible-current.json; SHA256 5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556. de Barros, Madureira and Valentin (2026), version 3, Theorem 19: energy order two under the two-dimensional M1/M2 Fortin conditions, regular aligned partitions and the stated pressure/source-lift/volume-flux regularity; pressure order three observed separately. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

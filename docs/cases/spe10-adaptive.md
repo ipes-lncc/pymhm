@@ -56,6 +56,16 @@ not imply a separate source balance on every fine triangle. The classical mixed
 reference instead imposes all discontinuous-P2 divergence moments. See the
 [moment-reconstruction definitions](reconstruction-moments.md).
 
+Theorem 4.7 assumes diffusion polynomial on every fine simplex and
+piecewise smooth pressure/conormal fields. A triangle cut by permeability
+pixels does not meet that material assumption, even with exact cut
+integration. The four-triangle campaign therefore reports algebraic
+reconstruction and measured physical differences, without assigning that
+flux rate or the paper's regularity-dependent efficiency estimate. The
+material-fitted controls below make diffusion constant on each fine
+triangle; their very small measured angles still preclude a claim of
+uniform shape-regular constants.
+
 ## Published indicator and four-triangle local spaces
 
 The principal campaign retains four uniformly subdivided local triangles per

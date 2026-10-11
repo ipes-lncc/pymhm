@@ -3,7 +3,7 @@
 The oscillatory experiment in §4 of
 [Paredes, Valentin and Versieux (2017)](https://doi.org/10.1090/mcom/3108)
 uses local bilinear fields and constant normal-flux modes on macrofaces.
-Current controls verify the complete discretization, original equations and
+The controls below verify the complete discretization, original equations and
 persisted-field replay through local refinement $r=256$. The conforming
 $Q_1/4096$ reference space has been executed. Local and reference refinement
 increments remain material; accuracy and Figure 6 reproduction are not established.
@@ -213,21 +213,11 @@ spaces alone does not establish identical historical numerical reproduction.
 A final curve requires measured local and classical resolution, matching
 discretizations and the stated full norm.
 
-## Selected figures
-
-The selected convergence and spatial panels remain for regeneration from
-verified archives and fresh norm comparisons. Their final accuracy
-comparison is pending the local/reference controls above.
-
-![Selected face, local and classical-reference refinement](../figures/periodic/convergence.png)
-
-![Selected pressure and signed Darcy-flux panels](../figures/periodic/fields.png)
-
-Spatial panels highlight the actual macrogrid and reserve separate color scales
-for pressure and each signed Darcy-flux component. Profiles retain independent
-one-sided values at macrofaces and mark those intersections. Pixel samples
-illustrate fields; they do not define integrated norms. The raw constitutive
-flux of a primal Q1 field is not an $H(\mathrm{div})$ reconstruction.
+The raw constitutive flux of a primal Q1 field is not an
+$H(\mathrm{div})$ reconstruction. Physical comparisons retain independent
+incident values at macrofaces and use volume integrals, rather than image
+samples. The records above provide discrete verification and refinement
+sensitivity; they do not provide a resolved Figure 6 error curve.
 
 ## Acquisition and refinement procedures
 
@@ -268,11 +258,6 @@ record the sources they execute.
 Classical fields impose zero pressure strongly; MHM imposes the same physical
 data weakly. Consumers validate material, source, boundary, coefficient precision
 and basis/orientation contracts. Legacy nodal archives without case provenance remain unverified.
-
-Before increasing local refinement to r512, measure a maximum-trace single-cell
-assembly and factorization with the same Q1/P0 spaces, order 4 and original
-criterion. A full campaign, replay and r256-to-r512 increment follow the measured
-resource preflight. This refines the local resolution while retaining the published skeletal spaces.
 
 ## References
 

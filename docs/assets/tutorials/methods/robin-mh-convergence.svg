@@ -8,7 +8,7 @@
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>robin-mh convergence</dc:title>
-    <dc:description>robin-mh; all 5 measured levels; final four diagnostic levels. P3/r2 locals; P1 Robin trace; nu=1/4. Record examples/results/mh/comparison.json; SHA256 0e49ca0d9f39bf10d94b911b0cd64624194652a5932222bac1f1b00fa0086f39. Barrenechea, Gomes and Paredes (2024), corollary 2.7: smooth energy order two; pressure order three observed. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
+    <dc:description>robin-mh; all 5 measured levels; final four diagnostic levels. P3/r2 locals; P1 Robin trace; nu=1/4. Record examples/results/mh/comparison.json; SHA256 0e49ca0d9f39bf10d94b911b0cd64624194652a5932222bac1f1b00fa0086f39. Barrenechea, Gomes and Paredes (2024), Corollary 2.7: energy order two under Assumption A1, matching regularly refined local partitions and the stated pressure/modified-flux regularity; pressure order three observed separately. CC BY 4.0 — IPES Research Group; https://creativecommons.org/licenses/by/4.0/</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

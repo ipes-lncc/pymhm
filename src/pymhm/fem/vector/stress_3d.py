@@ -99,6 +99,10 @@ def mixed_elasticity_operators_3d(
     each scalar/vector moment. Source is the physical force in -div(sigma)=f.
     Returns M,D,R,f,plain stress-trace moments, weighted trace moments and the
     physical bulk-compliance gauge scale.
+    The complete conforming family has AFW stability and error estimates in
+    Arnold--Falk--Winther (2007), Eq. (7.1), Theorems 7.1--7.2. Restricting
+    its normal traces in MHM requires a separate coupling compatibility check;
+    the two-dimensional polygonal enrichment theorem does not establish it.
     """
     if (
         mesh.kind != "tetrahedron"

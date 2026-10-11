@@ -1,4 +1,6 @@
-"""Independent Basix verification of tensor-product interpolation and derivatives."""
+"""Independent native verification of tensor-product operators and derivatives."""
+
+from typing import Any
 
 import numpy as np
 import pytest
@@ -13,6 +15,51 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
+
+
+@pytest.mark.fem
+def test_native_nonpolynomial_q2_material_and_load_match_adaptive_integrals(
+    oscillatory_q2_reference: dict[str, Any],
+) -> None:
+    """DOLFINx degree-51 forms reproduce the independent Q2 physical integrals."""
+    pytest.importorskip("dolfinx")
+    import basix
+    import basix.ufl
+    import ufl
+
+    from pymhm.backends.forms import assemble_form
+    from pymhm.backends.spaces import bind_space
+
+    reference = oscillatory_q2_reference
+    element = basix.ufl.element(
+        "Lagrange", "quadrilateral", 2, lagrange_variant=basix.LagrangeVariant.equispaced
+    )
+    binding = bind_space(reference["mesh"], element)
+    try:
+        pressure, test = ufl.TrialFunction(binding.space), ufl.TestFunction(binding.space)
+        x = ufl.SpatialCoordinate(binding.mesh)
+        permeability = ufl.as_matrix(
+            (
+                (ufl.exp(1.5 * ufl.sin(16 * np.pi * x[0])), 0.0),
+                (0.0, ufl.exp(1.5 * ufl.cos(16 * np.pi * x[1]))),
+            )
+        )
+        exact = ufl.sin(np.pi * x[0]) * ufl.sin(np.pi * x[1])
+        source = -ufl.div(permeability * ufl.grad(exact))
+        dx = ufl.Measure("dx", domain=binding.mesh, metadata={"quadrature_degree": 51})
+        matrix = assemble_form(ufl.inner(permeability * ufl.grad(pressure), ufl.grad(test)) * dx)
+        mass = assemble_form(pressure * test * dx)
+        load = assemble_form(source * test * dx)
+        mapping = binding.mapping
+        assert_allclose(
+            matrix[mapping][:, mapping].toarray(), reference["stiffness"], rtol=2e-11, atol=2e-12
+        )
+        assert_allclose(
+            mass[mapping][:, mapping].toarray(), reference["mass"], rtol=2e-11, atol=2e-12
+        )
+        assert_allclose(load[mapping], reference["load"], rtol=2e-11, atol=2e-12)
+    finally:
+        binding.close()
 
 
 @pytest.mark.fem

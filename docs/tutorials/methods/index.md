@@ -7,7 +7,7 @@ approximation spaces and hypotheses of its cited estimate. A polynomial patch
 checks the implementation; the refinement studies use solutions outside the chosen local spaces
 and several terminal intervals to examine the asymptotic regime.
 
-## Interpret the convergence plots
+## Convergence plots
 
 Each refinement figure preserves the coarse levels. Dashed curves show the
 cited target powers anchored to the finest measured error. The successive-rate

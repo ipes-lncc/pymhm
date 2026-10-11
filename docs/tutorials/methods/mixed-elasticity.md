@@ -2,13 +2,11 @@
 
 **Follow the complete workflow: meshes → local equations → global equations → assemble → solve → physical fields and errors.**
 
-[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/mixed_stress_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/elasticity/mixed_stress_mhm_workflow.ipynb) · [Theory and degree conditions](../../theory/elasticity.md)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/mixed_stress_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/elasticity/mixed_stress_mhm_workflow.ipynb)
 
-The notebook prepares its verified companion workspace before these cells. `ROOT` denotes that writable workspace. Use the `introduction` environment with DOLFINx, UFL and Basix; see the [installation guide](../../installation.md). The local numerical algorithm remains in the package; this lesson defines the actual variational equations and physical data.
+The notebook prepares its verified companion workspace before these cells. `ROOT` denotes that writable workspace. Use the locked `introduction` Pixi environment with DOLFINx, UFL and Basix for the independent classical UFL control; see the [installation guide](../../installation.md). The multiscale equations themselves use the portable NumPy/SciPy backend. The local numerical algorithm remains in the package; this lesson defines the actual variational equations and physical data.
 
 This notebook uses row-wise BDM stress, discontinuous displacement and weak rotation. You write the compliance, force balance, symmetry and normal-traction equations before assembling. Basix-based package kernels handle finite-element integration and Piola maps. The method follows [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013), with the stable stress spaces of [Arnold, Falk and Winther (2007)](https://doi.org/10.1090/S0025-5718-07-01998-9).
-
-Use the locked `introduction` Pixi environment for the independent classical UFL control. The multiscale equations themselves use the portable NumPy/SciPy backend.
 
 ```python
 from dataclasses import replace
@@ -504,8 +502,6 @@ plt.show()
 
 The archived refinement series uses this same smooth field, BDM2/DG-P1/DG-P1 local spaces, refinement two, interior vector $P_1$ tractions and full exterior fine-edge $P_2$ tractions. It increases the macro resolution through $1,2,4,8,16,32$. The current explicit equations above run its $n=8$ level; reading the remaining attributed records is not another solve.
 
-The compatible smooth mixed stress/rotation estimates give order two. Displacement is shown separately. Rough coefficients, singular domains, different trace partitions or incomplete rigid spaces require their own regularity and stability assessment.
-
 ```python
 import json
 from io import StringIO
@@ -533,6 +529,11 @@ series = dict(
     rates={k: observed_rates(sizes, v).tolist() for k, v in errors.items()},
     expected={"stress L2": 2.0, "rotation L2": 2.0},
     spaces="BDM2 stress / DG P1 displacement and rotation; interior P1, full boundary P2 traces",
+    rate_provenance=(
+        'Devloo et al. (2021), theorem 5.2, equation (5.5): conditional smooth '
+        'two-dimensional compatible mixed estimate; stress and weak rotation target '
+        'order two; displacement measured separately'
+    ),
     refinement="macro grid spacing",
 )
 print("Final measured orders:", {k: v[-1] for k, v in series["rates"].items()})
@@ -562,13 +563,17 @@ rotation and stress-divergence norms to relative differences below
 $1.5\times10^{-13}$; the $n=32$ extension also verifies original uncondensed
 rows, fine-cell force balance, weak symmetry and normal-traction continuity.
 
-The local weak-symmetry estimate and two-level extension assume the stated
+The compatible smooth mixed stress/rotation estimates give order two;
+displacement is measured separately. The local weak-symmetry estimate and
+two-level extension assume the stated
 stable BDM2/P1/P1 family, smooth physical fields, adequate exterior traction
 resolution and complete rigid moments. See
 [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) and
 [Arnold, Falk and Winther (2007)](https://doi.org/10.1090/S0025-5718-07-01998-9).
 The table is an analytical qualification on these declared spaces, rather than
 a digitized or reformulated reproduction of a heterogeneous paper table.
+Rough coefficients, singular domains, different trace partitions or incomplete
+rigid spaces require their own regularity and stability assessment.
 
 The [common convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) preserves each sequence’s spaces, independent refinement variable and attributed numerical record.
 
@@ -576,5 +581,3 @@ The [common convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/n
 
 - [Devloo, Farias, Gomes, Pereira, dos Santos and Valentin (2021), *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*](https://doi.org/10.1051/m2an/2021013).
 - [Arnold, Falk and Winther (2007), *Mixed finite element methods for linear elasticity with weakly imposed symmetry*](https://doi.org/10.1090/S0025-5718-07-01998-9).
-
-This smooth verification uses independently stated analytical data and is not a claim of matching every original heterogeneous table.

@@ -2,13 +2,11 @@
 
 **Follow the complete workflow: meshes → local equations → global equations → assemble → solve → physical fields and errors.**
 
-[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/gals_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/elasticity/gals_mhm_workflow.ipynb) · [Theory and degree conditions](../../theory/elasticity.md)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/gals_mhm_workflow.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/elasticity/gals_mhm_workflow.ipynb)
 
-The notebook prepares its verified companion workspace before these cells. `ROOT` denotes that writable workspace. Use the `introduction` environment with DOLFINx, UFL and Basix; see the [installation guide](../../installation.md). The local numerical algorithm remains in the package; this lesson defines the actual variational equations and physical data.
+The notebook prepares its verified companion workspace before these cells. `ROOT` denotes that writable workspace. Use the locked `introduction` Pixi environment with DOLFINx, UFL and Basix; see the [installation guide](../../installation.md). The source notebook and its companion examples are separate from the installed PyMHM package. The local numerical algorithm remains in the package; this lesson defines the actual variational equations and physical data.
 
-This tutorial builds the complete method from local and global equations. It uses the unit square, a smooth displacement, shear modulus $\mu=1$ and Lamé modulus $\lambda=4999$. The classical control is conforming Taylor–Hood on independent global meshes. See [Gomes, Pereira and Valentin (2024)](https://arxiv.org/abs/2403.16890v1) for the stabilized formulation and its hypotheses.
-
-Run in the locked `introduction` Pixi environment with DOLFINx, UFL and Basix. The source notebook and its companion examples are separate from the installed PyMHM package.
+Use the unit square, a smooth displacement, shear modulus $\mu=1$ and Lamé modulus $\lambda=4999$. The classical control is conforming Taylor–Hood on independent global meshes. See [Gomes, Pereira and Valentin (2024)](https://arxiv.org/abs/2403.16890v1) for the stabilized formulation and its hypotheses.
 
 ```python
 from types import SimpleNamespace
@@ -448,9 +446,9 @@ plt.show()
 
 The pressure panel retains its independent local values. Pressure requires its own refinement and error assessment; a good displacement profile does not qualify the pressure field.
 
-## 8. Refine both skeletal and local scales
+## 8. Refine the skeletal and local discretizations
 
-The smooth convergence campaign uses this same trigonometric data and $\lambda/\mu=4999$. It holds the $4\times4$ macro grid fixed, subdivides every trace into $s=1,2,3,4,6,8$ segments and chooses local refinement $r=4s$. The plotted illustration above uses an independent $8\times8$ macro grid with one trace segment per face. The convergence family uses the same explicit equations on a fixed $4\times4$ macro grid and refines trace/local scales together. Its rows are attributed archived acquisitions, not recomputed by reading them.
+The smooth convergence campaign uses this same trigonometric data and $\lambda/\mu=4999$. It holds the $4\times4$ macro grid fixed, subdivides every trace into $s=1,2,3,4,6,8$ segments and chooses local refinement $r=4s$, so the fine-element and trace-segment sizes decrease together. The plotted illustration above uses an independent $8\times8$ macro grid with one trace segment per face. The campaign's rows are attributed archived acquisitions, not recomputed by reading them.
 
 For this smooth admissible $P_1/P_1$ family, the reference order is one for the
 broken gradient. Theorem 5.2 of
@@ -487,6 +485,11 @@ series = dict(
     rates={k: observed_rates(sizes, v).tolist() for k, v in errors.items()},
     expected={"displacement L2": 2.0, "broken gradient L2": 1.0},
     spaces="P1/P1, segmented P1 traction, r=4*segments",
+    rate_provenance=(
+        'Gomes, Pereira and Valentin (2024), theorem 5.2: conditional smooth energy '
+        'order one; displacement L2 order two additionally requires Remark 5.5 dual '
+        'smoothing; pressure orders reported separately'
+    ),
     refinement="trace/fine size on a fixed macro mesh",
 )
 print("Final measured orders:", {k: v[-1] for k, v in series["rates"].items()})
@@ -504,18 +507,16 @@ The final consecutive intervals confirm the stated smooth regime. A measured ord
 | pressure $L^2$ | observed | 1.4021, 1.4345, 1.4562 | — |
 | broken gradient $L^2$ | 1 | 1.0787, 1.0657, 1.0520 | 1.0663 |
 
-Here the final four levels have $s=3,4,6,8$. The finite-element size $h$
-and macroface segment size decrease together, with $r=4s$; the macro grid
-remains fixed. Both theoretical target amplitudes flatten in this window.
-The pressure curve remains a separately measured observable. Its last three
-orders, 1.4021, 1.4345 and 1.4562, exceed the order-one combined upper estimate
-of Equation (5.8); no order-1.5 theorem is inferred from these measurements.
+The final four levels have $s=3,4,6,8$. Both theoretical target amplitudes
+flatten in this window. The observed pressure orders exceed the order-one
+combined upper estimate of Equation (5.8); no order-1.5 theorem is inferred
+from these measurements.
 
 The [common convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) preserves each sequence’s spaces, independent refinement variable and attributed numerical record.
+
+The trigonometric data here are an analytical verification with explicitly derived source; they are not a claim of matching every table or local solver in the paper.
 
 ## References
 
 - [Gomes, Pereira and Valentin (2024), *A low-order locking-free multiscale finite element method for isotropic elasticity*, preprint v1](https://arxiv.org/abs/2403.16890v1).
 - [Harder, Madureira and Valentin (2016), *A hybrid-mixed method for elasticity*](https://doi.org/10.1051/m2an/2015046).
-
-The trigonometric data here are an analytical verification with explicitly derived source; they are not a claim of matching every table or local solver in the paper.

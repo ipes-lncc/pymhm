@@ -60,6 +60,11 @@ conditioning with large advection, inverse-quadratic growth with small
 advection for cases 1, 2, 3 and 5, and bounded small-advection conditioning
 for case 4. These are parameter-dependent observations, not uniform stability
 of every floating-point system.
+Theorems 5 and 7 also assume the declared basis scaling, quasi-uniform
+partitions, the star-shaped-ball condition, and the local test-function
+condition A3 on cells with an invertible operator. Their constants and
+fine-mesh dependence are part of those bounds. Numerical matrix conditioning
+on this fixed geometry is a separate measured quantity.
 
 At $\epsilon=\omega=1$, the five global condition numbers are approximately
 7350, 4672, 6153, 408 and 1867. The digitized values are respectively

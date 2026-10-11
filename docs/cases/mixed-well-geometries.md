@@ -251,11 +251,10 @@ preserves its physical values.
 
 
 The following panels include pressure and signed differences for the coarsest
-skeletal configuration. They use fresh acquisitions of the same fine-factor-four,
-macro-factor-one configurations; historical numerical records remain unchanged.
+skeletal configuration, with fine factor four and macro factor one.
 The [field replay receipt](../figures/mixed-well-geometries/current-field-replay.json)
-identifies the new coefficient and executed-basis digests, verifies immutable
-sources and records changes in the independently integrated norms. Both the
+identifies the coefficient and executed-basis digests, verifies the source
+records and reports independently integrated norms. Both the
 oriented face transformation and physical field evaluation use each archive's
 stored basis matrix. The error panels use their own full color ranges.
 

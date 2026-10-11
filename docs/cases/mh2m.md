@@ -115,7 +115,10 @@ Section 5 of the article states the two discrete stability assumptions.
 Section 6 gives sufficient mesh conditions: each conormal segment contains
 at least two local boundary edges (M1), and each pressure-trace segment
 contains at least two conormal segments (M2), for the corresponding polynomial
-families. Remark 16 permits particular configurations outside these sufficient
+families. The construction also requires regular aligned baseline partitions,
+local quasi-uniformity of the pressure-trace edges, and comparable lengths for
+the two baseline conormal pieces in M2. These are two-dimensional edge
+arguments. Remark 16 permits particular configurations outside these sufficient
 conditions, including the smooth study below. The implementation rejects a
 rank-deficient local Neumann map and a rank-deficient global system. This
 numerical check does not replace a mesh-uniform inf-sup estimate. In particular,
@@ -123,6 +126,13 @@ a choice admissible with Dirichlet conditions can have additional modes under
 pure Neumann conditions; enrichment of $\Lambda$ must then resolve them.
 
 `conservation_residuals()` checks each macroelement's integrated flux balance.
+With the conormal convention above, this balance is
+
+$$
+\int_{\partial K}\lambda_h=-\int_K f,
+\qquad \int_{\partial K}q\cdot n_K=\int_K f.
+$$
+
 `trace_moment_residuals()` checks the pressure matching tested by $\Lambda$.
 The global equation gives flux continuity tested by $\Gamma$. These weak
 conditions do not assert pointwise normal continuity, an $H(\mathrm{div})$

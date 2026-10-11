@@ -4,7 +4,7 @@ Write a complex plane wave through real and imaginary components, define its
 outgoing physical data and local/global weak forms, then assemble, solve and
 postprocess. The refinement figure uses this same declared family.
 
-[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Theory and resolution conditions](../../theory/waves.md)
+[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/waves/helmholtz/introductory_methods.ipynb)
 
 Run the locked `introduction` environment. The native UFL path executes;
 complex coordinates are never discarded. The notebook also preserves a
@@ -161,13 +161,19 @@ The smooth fixed-frequency study uses polynomial trace degree two and local Q4 p
 | relative gradient $L^2$ | 3 | 2.9906, 2.9928, 2.9941 | 1.0073 |
 
 The plotted sequence retains all six measured levels. Its final four levels
-are $n=24,32,48,64$, and non-dyadic consecutive rates use their actual grid-spacing
-ratios. Normalized amplitudes vary by less than one percent across this window.
+are $n=24,32,48,64$. The refinement variable is the square edge length; non-dyadic
+consecutive rates use the actual grid-spacing ratios. Normalized amplitudes
+vary by less than one percent across this window.
 The comparison concerns fixed frequency, smooth analytical data and resolved
 local polynomial approximation. It does not give a frequency-uniform pollution
 bound or transfer these rates to resonant or unresolved heterogeneous data.
-
-Spaces: Local Q4/r2; polynomial P2 face trace; fixed analytical plane wave and frequency. Refinement variable: macro grid spacing (square edge length).
+The polynomial one-level estimate is Theorem 5.4 of
+[Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616):
+it additionally requires sufficiently small $\omega H$ and
+$C_s(\omega)(\omega H)^{\ell+1}$, global uniqueness, and a regular macro mesh
+compatible with the piecewise smooth coefficient partition. It omits local
+finite element error; the Q4 local discretization above is a separate
+approximation whose accuracy must be resolved.
 
 [Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/helmholtz-article/published-convergence.json), SHA-256 `fcfae8fd22ded4b560dc6ad6fbfb7aecca7da8e2a5681cffaeff886ea6d12e9e`.
 

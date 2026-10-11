@@ -38,6 +38,10 @@ Local potentials are continuous $P_4$ on the cone tetrahedra. Each original
 macroface has one complete affine polynomial, with three coefficients even
 when that face is concave or has more than three vertices. The triangulation
 introduces integration and local-mesh entities, not additional global traces.
+This $k=4$, $\ell=1$ choice satisfies the three-dimensional degree condition
+$k\ge\ell+3$ in Assumption A2 of the cited paper. Its energy estimate also
+requires the stated facet-matching, shape-regular local partitions and uniform
+geometric conditions; a positive kernel ball alone does not supply all of them.
 
 ## Analytical problem and norms
 

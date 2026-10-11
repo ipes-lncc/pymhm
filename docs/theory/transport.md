@@ -11,6 +11,12 @@ $$
 \qquad\sigma+\tfrac12\nabla\cdot\alpha\ge0.
 $$
 
+The diffusion tensor is bounded, symmetric and uniformly positive definite.
+The 2024 analysis assumes $\alpha\in W^{1,\infty}(\Omega)^d$ and bounded
+reaction. Its notation for the effective reaction is
+$\sigma+\operatorname{div}\alpha/2$; this coefficient is distinct from
+the scalar solution $u$ and from all skeletal coefficient vectors.
+
 Its local skew form is
 
 $$
@@ -87,9 +93,36 @@ to preserve the diffusion limit. Mixed boundary
 data prescribe the Robin multiplier; a pure-Neumann diffusion problem imposes
 one global scalar mean.
 
+### Approximation hypotheses and the energy estimate
+
+[Araya et al. (2024), Assumptions A1–A2 and Theorems 2–3](https://doi.org/10.1016/j.cma.2024.117089)
+requires a shape-regular simplicial partition matching every skeletal facet.
+In 2D, local degree $k=\ell$ requires two red refinements for $\ell=0,1$
+and one for $\ell\ge2$; $k=\ell+1$ requires one red refinement, while
+$k\ge\ell+2$ requires none. In 3D the stated sufficient choice is
+$k\ge\ell+3$. The 2D refinement alternatives are not 3D conclusions.
+
+With the stated regularity and admissible spaces, Theorem 2 bounds the broken
+$V$ error by
+
+$$
+\lVert u-u_{H,h}\rVert_V
+\le C\left[
+H_\Gamma^{\ell+1}
+\lvert-\mathsf K\nabla u+\alpha u/2\rvert_{H^{\ell+1}(\mathcal P)}
++h^k\lvert u\rvert_{H^{k+1}(\mathcal P)}\right].
+$$
+
+Here $H_\Gamma$ measures skeletal facets, $h$ measures fine simplices, and
+the macro partition $\mathcal P$ has its own diameter and regularity constants.
+Theorem 3 identifies this hybrid approximation with the local/global MHM
+construction. The extra scalar $L^2$ orders in numerical studies are separate
+observations. SUPG changes the local discretization and is not included in
+that Galerkin estimate.
+
 ## MHM-USFEM: reaction–diffusion stabilization
 
-[Santiago, Valentin and Martins (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270)
+[Martins, Pacazuca and Valentin (CILAMCE 2025), (14)–(20)](https://doi.org/10.55592/cilamce2025.v5i.14270)
 use UNUSUAL local stabilization for the scalar reaction–diffusion equation
 $Lu=-\operatorname{div}(A\nabla u)+\sigma u=f$. The residual construction
 follows [Franca and Valentin (2000)](https://doi.org/10.1016/S0045-7825(00)00190-0).
@@ -128,10 +161,17 @@ variable coefficients include their derivatives. Derivative-based local
 stabilization requires its material alignment/regularity conditions.
 This scalar method is distinct from mixed velocity/pressure USFEM for flow.
 
-The smooth diffusion-dominated P1 local family has first-order broken
-energy/gradient and second-order scalar $L^2$ targets with adequate trace
-resolution. These targets do not imply a singular-perturbation-uniform
-bound or layer accuracy on a fixed coarse local mesh. The
+Theorem 1 requires facet-matching shape-regular partitions and an admissible
+degree/refinement choice. Its estimate (21) includes the skeletal term,
+the local interpolation term, and an additional factor depending on every
+fine cell's reaction–diffusion Péclet number. It is not a coefficient-uniform
+bound of only $H_\Gamma^{\ell+1}+h^k$.
+For fixed smooth diffusion-dominated data, the P1 local/P0 trace family with
+one red refinement has a first-order broken energy/gradient target.
+The second-order scalar $L^2$ behavior is observed in Figure 1 and in the
+qualified implementation study; Theorem 1 does not state that stronger norm
+estimate. These statements do not imply layer accuracy on a fixed coarse
+local mesh. The
 [MHM-USFEM tutorial](../tutorials/methods/mhm-usfem.md) declares the residual
 before adding it to operator and load, and keeps layer and smooth-rate
 studies separate.
@@ -190,6 +230,8 @@ The smooth spatial study uses
 and the local approximation condition A2. For its two-dimensional
 P2/r2 volume and P1 trace family, the broken-gradient target is order two;
 the measured concentration order three is additional observed accuracy.
+The stationary theorem supplies a spatial target for each backward-Euler
+elliptic operator, rather than a uniform-in-time parabolic error estimate.
 The manufactured concentration is linear in time, and an independent
 half-step control separates temporal and spatial error. A steady
 qualification alone does not establish this transient result.
@@ -200,6 +242,6 @@ qualification alone does not establish this transient result.
 
 - Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).
 
-- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
+- Larissa Martins, Juan F. Pacazuca, and Frédéric Valentin (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
 
 - L. P. Franca and Frédéric Valentin (2000). *On an improved unusual stabilized finite element method for the advective–reactive–diffusive equation*. Computer Methods in Applied Mechanics and Engineering 190(13–14), 1785–1800. [DOI: 10.1016/S0045-7825(00)00190-0](https://doi.org/10.1016/S0045-7825(00)00190-0).
