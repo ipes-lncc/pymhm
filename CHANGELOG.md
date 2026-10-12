@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.3.2
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.3.1..0c9eeab91921a9630154fa61b2b76b1e5b1b4e7a -->
+
+### Documentation
+
+- reorganize gallery, tutorials, guides, and theoretical background (#17) ([1dcf0a4](https://github.com/ipes-lncc/pymhm/commit/1dcf0a4ba6ec51f7ef3bd313850602840b978eea))
+
+- publish result reports with verified figures and link checks (#18) ([6a5678f](https://github.com/ipes-lncc/pymhm/commit/6a5678fcb0f9bf7e9d2be59c6f9d203f7a665bfb))
+
+- clarify scientific scope and refresh method tutorials (#19) ([0c9eeab](https://github.com/ipes-lncc/pymhm/commit/0c9eeab91921a9630154fa61b2b76b1e5b1b4e7a))
+
+<!-- pymhm:generated:end -->
+
 ## 1.3.1
 
 <!-- pymhm:generated:start -->

@@ -140,7 +140,7 @@ examples with an installed PyMHM. Method tutorials include refinement plots
 for their stated approximation spaces. Detailed [verification studies](cases/index.md)
 and [performance reports](performance.md) are available under Development.
 
-This is version 1.3.1, an official release of PyMHM. The
+This is version 1.3.2, an official release of PyMHM. The
 [installation guide](installation.md) explains package installation through pip,
 optional backends and the locked environments used for reproducible studies.
 
