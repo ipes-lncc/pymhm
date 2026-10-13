@@ -146,9 +146,11 @@ optional backends and the locked environments used for reproducible studies.
 
 <section class="institutional-support" markdown="1">
 
-Original figures and diagrams are © IPES Research Group and licensed under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Commercial reuse and
-adaptations require attribution; see [figure reuse and attribution](licensing.md).
+!!! info "Figure reuse and attribution"
+
+    Original figures and diagrams are © IPES Research Group and licensed under
+    [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Commercial reuse and
+    adaptations require attribution; see [figure reuse and attribution](licensing.md).
 
 ## Institutional Support
 

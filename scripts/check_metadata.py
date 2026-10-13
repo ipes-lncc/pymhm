@@ -17,11 +17,7 @@ VERSION_FIELDS: dict[str, tuple[str, ...]] = {
     "src/pymhm/__init__.py": (r'(?m)^__version__ = "(?P<version>[^"\r\n]+)"\r?$',),
     "CITATION.cff": (r'(?m)^version: "(?P<version>[^"\r\n]+)"\r?$',),
     "recipe/recipe.yaml": (r'(?m)^  version: "(?P<version>[^"\r\n]+)"\r?$',),
-    "README.md": (
-        r"\[!\[Version: (?P<version>[^\]\r\n]+)\]\(",
-        r"https://img\.shields\.io/badge/version-(?P<version>[^/\r\n]+)-21918c\.svg",
-        r"(?m)^Version (?P<version>\S+) is an official release of PyMHM\.",
-    ),
+    "README.md": (r"(?m)^Version (?P<version>\S+) is an official release of PyMHM\.",),
     "docs/index.md": (r"(?m)^This is version (?P<version>[^,\s]+),",),
 }
 

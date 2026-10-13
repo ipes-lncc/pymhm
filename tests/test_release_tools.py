@@ -46,7 +46,8 @@ def repository(tmp_path: Path) -> Path:
         "CITATION.cff": 'version: "0.1.0"\n',
         "recipe/recipe.yaml": 'context:\n  version: "0.1.0"\n',
         "README.md": (
-            "[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](url)\n"
+            "[![PyPI version](https://img.shields.io/pypi/v/pymhm.svg)]"
+            "(https://pypi.org/project/pymhm/)\n"
             "Version 0.1.0 is an official release of PyMHM.\n"
         ),
         "docs/index.md": "This is version 0.1.0, an official release of PyMHM.\n",
@@ -153,8 +154,10 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
     release.prepare_release(repository, "1.0.0")
     assert validate_metadata(repository) == "1.0.0"
     assert b"Version 1.0.0 is an official release of PyMHM.\r\n" in readme.read_bytes()
-    assert b"version-1.0.0-21918c.svg" in readme.read_bytes()
-    assert b"Version: 1.0.0" in readme.read_bytes()
+    assert (
+        b"[![PyPI version](https://img.shields.io/pypi/v/pymhm.svg)]"
+        b"(https://pypi.org/project/pymhm/)\r\n"
+    ) in readme.read_bytes()
     assert b"0.1.0" not in readme.read_bytes()
     changelog_path = repository / "CHANGELOG.md"
     changelog = changelog_path.read_text(encoding="utf-8")
