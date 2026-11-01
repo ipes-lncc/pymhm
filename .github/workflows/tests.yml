@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           run-install: false
@@ -73,7 +73,7 @@ jobs:
           - {os: ubuntu-latest, environment: test-py312}
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           environments: ${{ matrix.environment }}
@@ -133,7 +133,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends --yes \
             libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libopengl0 libxrender1
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           environments: visualization
@@ -201,7 +201,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           environments: ${{ matrix.environment }}
@@ -317,7 +317,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           environments: test-core
@@ -373,7 +373,7 @@ jobs:
       MPLBACKEND: "Agg"
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.10.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
         with:
           pixi-version: v0.76.2
           environments: test
